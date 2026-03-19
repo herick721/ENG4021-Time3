@@ -1,4 +1,3 @@
-# ENG4021-Time3
 def multiplicaf(n1: float, n2: float) -> float:
     '''
     Função que retorna a multiplicação de dois números (inteiros ou reais).
