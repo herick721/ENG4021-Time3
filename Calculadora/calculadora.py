@@ -1,7 +1,7 @@
 import soma
 import subtrai
 import multiplica
-import divide
+import divisao
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
         resultado = multiplica.multiplicaf(n1, n2)
     elif operador == "/":
         try:
-            resultado = divide.dividef(n1, n2)
+            resultado = divisao.dividef(n1, n2)
         except ValueError as e:
             print(e)
             return
