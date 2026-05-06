@@ -54,14 +54,6 @@ O **PetConect** conecta animais resgatados a famílias amorosas, centralizando e
 
 ---
 
-## Como rodar localmente
-
-```bash
-# EM DESENVOLVIMENTO
-```
-
----
-
 ## Contribuindo
 
 Contribuições são bem-vindas! Abra uma _issue_ para reportar bugs ou sugerir melhorias, ou envie um _pull request_ diretamente.
