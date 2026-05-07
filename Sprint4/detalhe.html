@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Bolinha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --green-card: #c7f0d8;
+    --peach-card: #fce7c8;
+    --red-soft: #fee2e2;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- HEADER ---------- */
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 0;
+    position: relative;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active {
+    color: var(--teal);
+    font-weight: 600;
+  }
+  nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -22px;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .auth-buttons { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-outline {
+    background: #fff;
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+  }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-primary {
+    background: var(--teal);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  /* ---------- BREADCRUMBS ---------- */
+  .breadcrumbs-wrap {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+  }
+  .breadcrumbs {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .back-link {
+    color: var(--teal);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 14px;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .breadcrumb-sep { color: var(--text-light); }
+  .breadcrumbs a:not(.back-link),
+  .breadcrumbs span.crumb {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .breadcrumbs .current { color: var(--teal); font-weight: 500; }
+
+  /* ---------- LAYOUT ---------- */
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 32px 48px 80px;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ---------- IMAGEM PRINCIPAL ---------- */
+  .pet-gallery {
+    background: var(--peach-card);
+    border-radius: 20px;
+    height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 200px;
+    overflow: hidden;
+  }
+
+  .thumbnails {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+  }
+  .thumb {
+    width: 90px;
+    height: 80px;
+    border-radius: 12px;
+    background: var(--peach-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .2s;
+  }
+  .thumb.active { border-color: var(--teal); }
+  .thumb:hover { transform: translateY(-2px); }
+
+  /* ---------- INFO PRINCIPAL ---------- */
+  .pet-header {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .pet-title h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+  .location {
+    color: var(--text-muted);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 18px;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--green-soft);
+    color: #047857;
+    flex-shrink: 0;
+  }
+  .status-pill::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background: #10b981;
+    border-radius: 50%;
+  }
+
+  .quick-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .quick-tag {
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+  }
+
+  /* ---------- SEÇÕES ---------- */
+  .section { margin-top: 36px; }
+  .section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .health-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .health-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .health-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .health-icon {
+    font-size: 20px;
+  }
+  .health-status {
+    color: var(--teal);
+    font-weight: 600;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .description {
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-size: 14.5px;
+  }
+
+  .compat-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .compat {
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .compat.yes {
+    background: var(--green-soft);
+    color: #047857;
+  }
+  .compat.no {
+    background: var(--red-soft);
+    color: #b91c1c;
+  }
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 100px;
+  }
+
+  .ong-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .available-banner {
+    background: var(--green-soft);
+    color: #047857;
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+  .available-banner::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+  }
+
+  .ong-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .ong-avatar {
+    width: 44px;
+    height: 44px;
+    background: var(--peach-card);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .ong-details {
+    flex: 1;
+  }
+  .ong-name-big {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 3px;
+  }
+  .ong-location {
+    color: var(--text-muted);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 4px;
+  }
+  .ong-rating {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .ong-rating .star { color: var(--orange); }
+  .ong-rating strong { color: var(--text); }
+
+  .action-btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    font-family: inherit;
+    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all .2s;
+  }
+  .action-btn:hover { background: var(--border-light); }
+  .action-btn.primary {
+    background: var(--orange);
+    color: #fff;
+    border-color: var(--orange);
+    margin-bottom: 14px;
+    padding: 14px;
+  }
+  .action-btn.primary:hover { background: var(--orange-dark); }
+
+  /* PROCESSO */
+  .process-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .process-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .step.done .step-num { background: var(--teal); }
+  .step.current .step-num { background: var(--orange); }
+  .step.pending .step-num { background: #cbd5e1; }
+  .step.pending { color: var(--text-light); }
+
+  /* ---------- BOTTOM NAV ---------- */
+  .bottom-nav {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 6px;
+    display: flex;
+    gap: 4px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+    z-index: 100;
+  }
+  .bottom-nav a {
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .2s;
+  }
+  .bottom-nav a.active {
+    background: var(--teal);
+    color: #fff;
+  }
+  .bottom-nav a:hover:not(.active) { background: var(--border-light); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1000px) {
+    .container { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .pet-gallery { height: 360px; font-size: 140px; }
+  }
+  @media (max-width: 700px) {
+    header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
+    nav ul { gap: 18px; }
+    nav a.active::after { bottom: -16px; }
+    .breadcrumbs-wrap { padding: 14px 20px; }
+    .container { padding: 20px 20px 100px; }
+    .pet-title h1 { font-size: 28px; }
+    .pet-gallery { height: 280px; font-size: 100px; }
+    .pet-header { flex-direction: column; }
+    .health-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="listagem.html" class="active">Adotar</a></li>
+      <li><a href="#">Lar temporário</a></li>
+      <li><a href="#">Como funciona</a></li>
+      <li><a href="#">Para ONGs</a></li>
+    </ul>
+  </nav>
+  <div class="auth-buttons">
+    <button class="btn btn-outline">Entrar</button>
+    <button class="btn btn-primary">Cadastrar</button>
+  </div>
+</header>
+
+<div class="breadcrumbs-wrap">
+  <div class="breadcrumbs">
+    <a href="listagem.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Voltar
+    </a>
+    <a href="#">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="listagem.html">Adotar</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="current">Bolinha</span>
+  </div>
+</div>
+
+<main class="container">
+  <!-- COLUNA PRINCIPAL -->
+  <div>
+    <div class="pet-gallery">🐶</div>
+    <div class="thumbnails">
+      <div class="thumb active">🐶</div>
+      <div class="thumb">🐕</div>
+      <div class="thumb">🐩</div>
+      <div class="thumb">🐾</div>
+    </div>
+
+    <div class="pet-header">
+      <div class="pet-title">
+        <h1>Bolinha</h1>
+        <p class="location">📍 São Paulo, SP · 3km de você</p>
+        <div class="quick-tags">
+          <span class="quick-tag">🐕 Cão</span>
+          <span class="quick-tag">🎂 2 anos</span>
+          <span class="quick-tag">📏 Porte médio</span>
+          <span class="quick-tag">🦴 SRD</span>
+          <span class="quick-tag">♂️ Macho</span>
+        </div>
+      </div>
+      <span class="status-pill">Disponível</span>
+    </div>
+
+    <div class="section">
+      <h2>Saúde &amp; Vacinas</h2>
+      <div class="health-grid">
+        <div class="health-item">
+          <div class="health-label">
+            <span class="health-icon">💉</span>
+            Vacinado
+          </div>
+          <span class="health-status">✓ Completo</span>
+        </div>
+        <div class="health-item">
+          <div class="health-label">
+            <span class="health-icon">✂️</span>
+            Castrado
+          </div>
+          <span class="health-status">✓ Sim</span>
+        </div>
+        <div class="health-item">
+          <div class="health-label">
+            <span class="health-icon">💊</span>
+            Vermifugado
+          </div>
+          <span class="health-status">✓ Sim</span>
+        </div>
+        <div class="health-item">
+          <div class="health-label">
+            <span class="health-icon">🔬</span>
+            Microchip
+          </div>
+          <span class="health-status">✓ Sim</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Sobre o Bolinha</h2>
+      <p class="description">
+        Bolinha é um cachorro alegre e cheio de energia que adora brincar ao ar livre. Convive bem com crianças e é muito carinhoso com seus tutores. Está em busca de uma família que possa dar muito amor e passeios diários. Ele é dócil, obediente e aprende comandos rapidamente. Adora petiscos e carinhos!
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Compatibilidades</h2>
+      <div class="compat-list">
+        <span class="compat yes">✓ Crianças</span>
+        <span class="compat yes">✓ Outros cães</span>
+        <span class="compat no">✗ Gatos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="ong-card">
+      <div class="available-banner">Disponível para adoção</div>
+      <div class="ong-info">
+        <div class="ong-avatar">🏠</div>
+        <div class="ong-details">
+          <div class="ong-name-big">ONG Patinhas SP</div>
+          <div class="ong-location">📍 Pinheiros, SP</div>
+          <div class="ong-rating"><span class="star">★</span> <strong>4.9</strong> · 120 adoções</div>
+        </div>
+      </div>
+      <button class="action-btn primary">Solicitar adoção</button>
+      <button class="action-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Salvar nos favoritos
+      </button>
+      <button class="action-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Perguntar à ONG
+      </button>
+    </div>
+
+    <div class="process-card">
+      <h3>Processo de adoção</h3>
+      <div class="step-list">
+        <div class="step done">
+          <div class="step-num">1</div>
+          <span>Enviar solicitação</span>
+        </div>
+        <div class="step current">
+          <div class="step-num">2</div>
+          <span>Entrevista com ONG</span>
+        </div>
+        <div class="step pending">
+          <div class="step-num">3</div>
+          <span>Assinar termo</span>
+        </div>
+        <div class="step pending">
+          <div class="step-num">4</div>
+          <span>Buscar o animal</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<div class="bottom-nav">
+  <a href="listagem.html">📋 Página de Listagem</a>
+  <a href="detalhe.html" class="active">🐾 Página de Detalhe</a>
+</div>
+
+</body>
+</html>
