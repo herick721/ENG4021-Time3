@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Meus Favoritos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --pink-card: #fce7e7;
+    --peach-card: #fce7c8;
+    --blue-card: #dbe6ff;
+    --purple-card: #e9d5ff;
+    --green-card: #c7f0d8;
+    --rose-card: #fce4ec;
+    --green-soft: #d1fae5;
+    --yellow-soft: #fef3c7;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 0;
+    position: relative;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--teal); font-weight: 600; }
+  nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -22px;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .auth-buttons { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-outline {
+    background: #fff;
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+  }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-primary {
+    background: var(--teal);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .page-header p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+  .count-badge {
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .pet-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--border-light);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .pet-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  }
+
+  .pet-image {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 72px;
+    position: relative;
+  }
+  .bg-pink { background: var(--pink-card); }
+  .bg-peach { background: var(--peach-card); }
+  .bg-blue { background: var(--blue-card); }
+  .bg-purple { background: var(--purple-card); }
+  .bg-green { background: var(--green-card); }
+  .bg-rose { background: var(--rose-card); }
+
+  .heart-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    background: #fff;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform .2s;
+    color: #ef4444;
+  }
+  .heart-btn:hover { transform: scale(1.15); }
+
+  .pet-info { padding: 16px 18px 20px; }
+  .pet-name {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .pet-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .status-disponivel { background: var(--green-soft); color: #047857; }
+  .status-analise { background: var(--yellow-soft); color: #d97706; }
+
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .feature {
+    font-size: 12px;
+    background: var(--bg);
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .pet-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ong-name {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+  .adopt-btn {
+    background: var(--orange);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s;
+  }
+  .adopt-btn:hover { background: var(--orange-dark); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="listagem.html">Adotar</a></li>
+      <li><a href="#">Lar temporário</a></li>
+      <li><a href="#">Como funciona</a></li>
+      <li><a href="#">Para ONGs</a></li>
+    </ul>
+  </nav>
+  <div class="auth-buttons">
+    <button class="btn btn-outline">Entrar</button>
+    <button class="btn btn-primary">Cadastrar</button>
+  </div>
+</header>
+
+<main class="main-content">
+  <div class="page-header">
+    <div>
+      <h1>Meus Favoritos ❤️</h1>
+      <p>Pets que você salvou para adotar</p>
+    </div>
+    <span class="count-badge">6 pets salvos</span>
+  </div>
+
+  <div class="pets-grid">
+
+    <article class="pet-card">
+      <div class="pet-image bg-pink">
+        <button class="heart-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        🐕
+      </div>
+      <div class="pet-info">
+        <h3 class="pet-name">Bolinha</h3>
+        <span class="status-badge status-disponivel">Disponível</span>
+        <p class="pet-meta">Cão · 2 anos · Médio</p>
+        <div class="features">
+          <span class="feature">💉 Vacinado</span>
+          <span class="feature">✂️ Castrado</span>
+        </div>
+        <div class="pet-footer">
+          <span class="ong-name">ONG Amigos Fiéis</span>
+          <a href="detalhe.html" class="adopt-btn">Adotar →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pet-card">
+      <div class="pet-image bg-peach">
+        <button class="heart-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        🐈
+      </div>
+      <div class="pet-info">
+        <h3 class="pet-name">Mel</h3>
+        <span class="status-badge status-disponivel">Disponível</span>
+        <p class="pet-meta">Gata · 1 ano · Pequena</p>
+        <div class="features">
+          <span class="feature">💉 Vacinado</span>
+          <span class="feature">👶 Amigo de crianças</span>
+        </div>
+        <div class="pet-footer">
+          <span class="ong-name">Resgate Felino SP</span>
+          <a href="#" class="adopt-btn">Adotar →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pet-card">
+      <div class="pet-image bg-blue">
+        <button class="heart-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        🦮
+      </div>
+      <div class="pet-info">
+        <h3 class="pet-name">Thor</h3>
+        <span class="status-badge status-analise">Em análise</span>
+        <p class="pet-meta">Cão · 4 anos · Grande</p>
+        <div class="features">
+          <span class="feature">💉 Vacinado</span>
+          <span class="feature">🐾 Amigo de pets</span>
+        </div>
+        <div class="pet-footer">
+          <span class="ong-name">Cãopanheiros RJ</span>
+          <a href="#" class="adopt-btn">Adotar →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pet-card">
+      <div class="pet-image bg-purple">
+        <button class="heart-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        😺
+      </div>
+      <div class="pet-info">
+        <h3 class="pet-name">Nina</h3>
+        <span class="status-badge status-disponivel">Disponível</span>
+        <p class="pet-meta">Gata · 3 anos · Pequena</p>
+        <div class="features">
+          <span class="feature">💉 Vacinado</span>
+          <span class="feature">✂️ Castrado</span>
+        </div>
+        <div class="pet-footer">
+          <span class="ong-name">Gatinhos do Bem</span>
+          <a href="#" class="adopt-btn">Adotar →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pet-card">
+      <div class="pet-image bg-green">
+        <button class="heart-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        🐕‍🦺
+      </div>
+      <div class="pet-info">
+        <h3 class="pet-name">Rex</h3>
+        <span class="status-badge status-disponivel">Disponível</span>
+        <p class="pet-meta">Cão · 5 anos · Grande</p>
+        <div class="features">
+          <span class="feature">💉 Vacinado</span>
+          <span class="feature">👶 Amigo de crianças</span>
+        </div>
+        <div class="pet-footer">
+          <span class="ong-name">Proteção Animal BH</span>
+          <a href="#" class="adopt-btn">Adotar →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pet-card">
+      <div class="pet-image bg-rose">
+        <button class="heart-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        🐈‍⬛
+      </div>
+      <div class="pet-info">
+        <h3 class="pet-name">Luna</h3>
+        <span class="status-badge status-disponivel">Disponível</span>
+        <p class="pet-meta">Gata · 6 meses · Pequena</p>
+        <div class="features">
+          <span class="feature">💉 Vacinado</span>
+          <span class="feature">🐾 Amigo de pets</span>
+        </div>
+        <div class="pet-footer">
+          <span class="ong-name">Resgate Felino SP</span>
+          <a href="#" class="adopt-btn">Adotar →</a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Perfil do Adotante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --red-soft: #fee2e2;
+    --yellow-soft: #fef3c7;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .breadcrumbs-wrap {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 14px 48px;
+  }
+  .breadcrumbs {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .back-link {
+    color: var(--teal);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 8px;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .breadcrumbs .sep { color: var(--text-light); }
+  .breadcrumbs .current { color: var(--teal); font-weight: 500; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 48px 80px;
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* SIDEBAR */
+  .profile-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--border-light);
+    text-align: center;
+  }
+  .avatar-big {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 16px;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .profile-name {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .profile-location {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+
+  .profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-box {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .stat-box strong {
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--teal);
+    margin-bottom: 2px;
+  }
+  .stat-box span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .contact-list {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .contact-item span:first-child { font-size: 16px; }
+
+  .btn-action {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    transition: all .2s;
+    margin-bottom: 8px;
+  }
+  .btn-action:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-action.primary {
+    background: var(--teal);
+    color: #fff;
+    border-color: var(--teal);
+  }
+  .btn-action.primary:hover { background: var(--teal-dark); }
+
+  /* MAIN */
+  .main-col { display: flex; flex-direction: column; gap: 20px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--border-light);
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .info-item { display: flex; flex-direction: column; gap: 3px; }
+  .info-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .info-value { font-size: 14px; font-weight: 600; }
+
+  /* Badges */
+  .badge-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .badge-green { background: var(--green-soft); color: #047857; }
+  .badge-yellow { background: var(--yellow-soft); color: #d97706; }
+  .badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+
+  /* Histórico de solicitações */
+  .request-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .request-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .request-pet {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .pet-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .request-name { font-weight: 700; font-size: 14px; }
+  .request-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .status-pendente { background: var(--yellow-soft); color: #d97706; }
+  .status-aprovada { background: var(--green-soft); color: #047857; }
+  .status-recusada { background: var(--red-soft); color: #b91c1c; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>ONG Patinhas Felizes</span>
+    <div class="nav-avatar">PF</div>
+  </div>
+</header>
+
+<div class="breadcrumbs-wrap">
+  <div class="breadcrumbs">
+    <a href="solicitacoes.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Voltar
+    </a>
+    <a href="solicitacoes.html">Solicitações</a>
+    <span class="sep">›</span>
+    <span class="current">João Silva</span>
+  </div>
+</div>
+
+<div class="container">
+  <!-- SIDEBAR PERFIL -->
+  <aside>
+    <div class="profile-card">
+      <div class="avatar-big">👤</div>
+      <div class="profile-name">João Silva</div>
+      <div class="profile-location">📍 Rio de Janeiro, RJ</div>
+
+      <div class="profile-stats">
+        <div class="stat-box">
+          <strong>3</strong>
+          <span>Solicitações</span>
+        </div>
+        <div class="stat-box">
+          <strong>1</strong>
+          <span>Adoções</span>
+        </div>
+      </div>
+
+      <div class="contact-list">
+        <div class="contact-item">
+          <span>✉️</span>
+          <span>joao.silva@email.com</span>
+        </div>
+        <div class="contact-item">
+          <span>📱</span>
+          <span>(21) 98888-7777</span>
+        </div>
+        <div class="contact-item">
+          <span>📅</span>
+          <span>Membro desde Jan 2025</span>
+        </div>
+      </div>
+
+      <button class="btn-action primary">Aprovar solicitação</button>
+      <button class="btn-action">Agendar entrevista</button>
+      <button class="btn-action">Recusar</button>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="main-col">
+
+    <!-- Informações pessoais -->
+    <div class="card">
+      <div class="card-title">Informações pessoais</div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Nome completo</span>
+          <span class="info-value">João Pedro Silva</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Idade</span>
+          <span class="info-value">34 anos</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Ocupação</span>
+          <span class="info-value">Analista de sistemas</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Renda mensal</span>
+          <span class="info-value">R$ 5.000 – R$ 10.000</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Tipo de moradia</span>
+          <span class="info-value">Casa com quintal</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Moradores</span>
+          <span class="info-value">3 adultos, 1 criança</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Experiência com pets -->
+    <div class="card">
+      <div class="card-title">Experiência com pets</div>
+      <div class="badge-group">
+        <span class="badge badge-green">✓ Já teve pets antes</span>
+        <span class="badge badge-green">✓ Tempo disponível</span>
+        <span class="badge badge-teal">🏠 Casa com quintal</span>
+        <span class="badge badge-yellow">⚠️ Nunca adotou formalmente</span>
+      </div>
+      <p style="margin-top:16px; font-size:14px; color:var(--text-muted); line-height:1.7;">
+        Já tive dois cães ao longo da vida e sempre os tratei com muito carinho. Atualmente não tenho nenhum animal e gostaria de adotar o Bolinha para dar uma família amorosa a ele. Trabalho em casa e tenho tempo disponível para dedicar ao pet.
+      </p>
+    </div>
+
+    <!-- Histórico de solicitações -->
+    <div class="card">
+      <div class="card-title">Histórico de solicitações</div>
+      <div class="request-row">
+        <div class="request-pet">
+          <div class="pet-icon">🐕</div>
+          <div>
+            <div class="request-name">Bolinha</div>
+            <div class="request-date">Solicitado em 14 Mai 2026 · ONG Patinhas SP</div>
+          </div>
+        </div>
+        <span class="status-badge status-pendente">Pendente</span>
+      </div>
+      <div class="request-row">
+        <div class="request-pet">
+          <div class="pet-icon">🐈</div>
+          <div>
+            <div class="request-name">Mel</div>
+            <div class="request-date">Solicitado em 02 Mar 2026 · Resgate Felino SP</div>
+          </div>
+        </div>
+        <span class="status-badge status-recusada">Recusada</span>
+      </div>
+      <div class="request-row">
+        <div class="request-pet">
+          <div class="pet-icon">🐶</div>
+          <div>
+            <div class="request-name">Rex</div>
+            <div class="request-date">Solicitado em 10 Jan 2026 · Proteção Animal BH</div>
+          </div>
+        </div>
+        <span class="status-badge status-aprovada">Aprovada</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
