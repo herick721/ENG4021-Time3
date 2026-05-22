@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Adoção Confirmada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --beige: #fef3e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--beige) 100%);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  header {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* Bloco de sucesso */
+  .success-block {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--green-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 20px;
+  }
+  .success-block h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .success-block h1 .accent { color: var(--teal); }
+  .success-block p {
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 24px rgba(15, 118, 110, 0.06);
+    border: 1px solid rgba(15, 118, 110, 0.08);
+    margin-bottom: 16px;
+  }
+
+  /* Resumo do pet */
+  .pet-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .pet-emoji {
+    width: 64px;
+    height: 64px;
+    background: var(--orange-soft);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+  .pet-summary-info h2 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+  .pet-summary-info p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--green-soft);
+    color: #047857;
+  }
+  .status-pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+  }
+
+  /* Próximos passos */
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .step-list { display: flex; flex-direction: column; gap: 14px; }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-num.pending { background: #cbd5e1; }
+  .step-text strong {
+    font-size: 14px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .step-text span {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ONG */
+  .ong-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .ong-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--orange-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .ong-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+  .ong-detail { font-size: 13px; color: var(--text-muted); }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+    margin-bottom: 10px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  .btn-secondary {
+    width: 100%;
+    background: #fff;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </a>
+</header>
+
+<div class="container">
+
+  <div class="success-block">
+    <div class="success-icon">✅</div>
+    <h1>Adoção <span class="accent">aprovada!</span></h1>
+    <p>Parabéns! Você e o Bolinha estão prestes a começar uma nova história juntos.</p>
+  </div>
+
+  <!-- Resumo do pet -->
+  <div class="card">
+    <div class="pet-summary">
+      <div class="pet-emoji">🐕</div>
+      <div class="pet-summary-info">
+        <h2>Bolinha</h2>
+        <p>Cão · 2 anos · Médio · SRD · Macho</p>
+        <span class="status-pill">Adoção aprovada</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Próximos passos -->
+  <div class="card">
+    <div class="card-title">Próximos passos</div>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">✓</div>
+        <div class="step-text">
+          <strong>Solicitação enviada</strong>
+          <span>Recebida pela ONG em 14 Mai 2026</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">✓</div>
+        <div class="step-text">
+          <strong>Entrevista realizada</strong>
+          <span>Aprovado na entrevista com a ONG</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Assinar o termo de adoção</strong>
+          <span>A ONG enviará o documento por e-mail em até 24h</span>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num pending">4</div>
+        <div class="step-text">
+          <strong>Buscar o Bolinha</strong>
+          <span>Combine a data e horário com a ONG</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contato ONG -->
+  <div class="card">
+    <div class="card-title">Contato da ONG responsável</div>
+    <div class="ong-row">
+      <div class="ong-avatar">🏠</div>
+      <div>
+        <div class="ong-name">ONG Patinhas SP</div>
+        <div class="ong-detail">📍 Pinheiros, SP · (11) 99999-0000</div>
+        <div class="ong-detail">✉️ contato@patinhassp.org.br</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="listagem.html" class="btn-primary">Ver outros pets</a>
+  <a href="index.html" class="btn-secondary">Voltar ao início</a>
+
+</div>
+
+</body>
+</html>
