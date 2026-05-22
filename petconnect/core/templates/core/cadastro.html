@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Cadastro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Paleta oficial PetConect */
+    --teal: #0d9488;          /* Verde suave - principal */
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;        /* Laranja claro - destaque/CTA */
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --beige: #fef3e2;         /* Bege - complementar */
+    --beige-dark: #d4a373;
+
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --error: #ef4444;
+    --success: #10b981;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--beige) 100%);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ---------- HEADER ---------- */
+  header {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+  }
+  .header-right span { color: var(--text-muted); }
+  .header-right a {
+    color: var(--teal);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .header-right a:hover { text-decoration: underline; }
+
+  /* ---------- WRAPPER ---------- */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ---------- INTRO ---------- */
+  .intro {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .intro h1 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .intro h1 .accent { color: var(--teal); }
+  .intro p {
+    color: var(--text-muted);
+    font-size: 16px;
+  }
+
+  /* ---------- STEPS ---------- */
+  .stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+    gap: 0;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-light);
+    transition: all .3s;
+    flex-shrink: 0;
+  }
+  .step-item.done .step-circle {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #fff;
+  }
+  .step-item.active .step-circle {
+    background: #fff;
+    border-color: var(--teal);
+    color: var(--teal);
+    box-shadow: 0 0 0 4px var(--teal-light);
+  }
+  .step-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    white-space: nowrap;
+  }
+  .step-item.done .step-label,
+  .step-item.active .step-label { color: var(--text); }
+  .step-line {
+    width: 60px;
+    height: 2px;
+    background: var(--border);
+    margin: 0 12px;
+    transition: background .3s;
+  }
+  .step-line.done { background: var(--teal); }
+
+  /* ---------- CARD ---------- */
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(15, 118, 110, 0.06);
+    border: 1px solid rgba(15, 118, 110, 0.08);
+  }
+
+  /* ---------- USER TYPE SELECTOR ---------- */
+  .step-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .step-subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .user-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .user-type {
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+    background: #fff;
+    position: relative;
+  }
+  .user-type:hover {
+    border-color: var(--teal);
+    transform: translateY(-2px);
+  }
+  .user-type.selected {
+    border-color: var(--teal);
+    background: var(--teal-soft);
+  }
+  .user-type.selected::after {
+    content: "✓";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    background: var(--teal);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .user-type-icon {
+    font-size: 44px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .user-type h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .user-type p {
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* ---------- FORM ---------- */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .form-grid.full { grid-template-columns: 1fr; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field.full-width { grid-column: 1 / -1; }
+  .field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .field label .required { color: var(--error); }
+  .field label .hint {
+    color: var(--text-light);
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: 4px;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+  .input-wrap .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    pointer-events: none;
+  }
+  .input-wrap input,
+  .input-wrap select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+  }
+  .input-wrap input.with-icon { padding-left: 42px; }
+  .input-wrap input:focus,
+  .input-wrap select:focus,
+  .field textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+  .input-wrap input::placeholder {
+    color: var(--text-light);
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    padding: 4px;
+    display: flex;
+  }
+  .password-toggle:hover { color: var(--text); }
+
+  /* Password strength */
+  .strength {
+    margin-top: 8px;
+  }
+  .strength-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .strength-segment {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    transition: background .3s;
+  }
+  .strength-segment.active-1 { background: var(--error); }
+  .strength-segment.active-2 { background: var(--orange); }
+  .strength-segment.active-3 { background: var(--success); }
+  .strength-text {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Checkbox */
+  .checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 6px 0 24px;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .checkbox-row input { display: none; }
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all .15s;
+  }
+  .checkbox-row input:checked + .check-box {
+    background: var(--teal);
+    border-color: var(--teal);
+  }
+  .checkbox-row input:checked + .check-box::after {
+    content: "";
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-bottom: 2px;
+  }
+  .checkbox-row a {
+    color: var(--teal);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .checkbox-row a:hover { text-decoration: underline; }
+
+  /* Radio (animais que possui) */
+  .radio-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .radio-pill {
+    cursor: pointer;
+  }
+  .radio-pill input { display: none; }
+  .radio-pill span {
+    display: inline-block;
+    padding: 9px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: #fff;
+    transition: all .2s;
+  }
+  .radio-pill:hover span { border-color: var(--teal); color: var(--teal); }
+  .radio-pill input:checked + span {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal-dark);
+    font-weight: 600;
+  }
+
+  /* ---------- ACTIONS ---------- */
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .actions.split { justify-content: space-between; }
+
+  .btn {
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all .2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: #fff;
+    flex: 1;
+  }
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+  .btn-secondary {
+    background: #fff;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--border-light); }
+  .btn-teal {
+    background: var(--teal);
+    color: #fff;
+    flex: 1;
+  }
+  .btn-teal:hover { background: var(--teal-dark); }
+
+  /* ---------- DIVIDER + SOCIAL ---------- */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 28px 0 20px;
+    color: var(--text-light);
+    font-size: 13px;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .social-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .social-btn {
+    padding: 11px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--text);
+    transition: all .2s;
+  }
+  .social-btn:hover { border-color: var(--teal); background: var(--teal-soft); }
+
+  /* ---------- STEP PANELS ---------- */
+  .step-panel { display: none; animation: fadeIn .3s ease; }
+  .step-panel.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- SUCCESS PANEL ---------- */
+  .success-panel { text-align: center; padding: 20px 0; }
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--teal-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 40px;
+  }
+  .success-panel h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  .success-panel p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .success-panel p strong { color: var(--text); }
+
+  /* Conditional ONG fields - escondido por padrão */
+  .ong-fields { display: none; }
+  body[data-user-type="ong"] .ong-fields { display: contents; }
+  body[data-user-type="ong"] .adopter-fields { display: none; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 700px) {
+    header { padding: 14px 20px; }
+    .container { padding: 24px 16px 80px; }
+    .intro h1 { font-size: 26px; }
+    .card { padding: 24px 20px; border-radius: 16px; }
+    .stepper { gap: 0; }
+    .step-line { width: 24px; margin: 0 6px; }
+    .step-label { display: none; }
+    .form-grid { grid-template-columns: 1fr; }
+    .user-types { grid-template-columns: 1fr; }
+    .social-buttons { grid-template-columns: 1fr; }
+    .actions { flex-direction: column-reverse; }
+    .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="{% url 'listagem' %}" class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </a>
+  <div class="header-right">
+    <span>Já tem conta?</span>
+    <a href="#">Entrar</a>
+  </div>
+</header>
+
+<main class="container">
+
+  <div class="intro">
+    <h1>Crie sua conta no <span class="accent">PetConect</span></h1>
+    <p>Sem burocracia. Em poucos passos você está pronto para conectar uma vida.</p>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step-item active" data-step="1">
+      <div class="step-circle">1</div>
+      <span class="step-label">Tipo de conta</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="2">
+      <div class="step-circle">2</div>
+      <span class="step-label">Seus dados</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="3">
+      <div class="step-circle">3</div>
+      <span class="step-label">Confirmação</span>
+    </div>
+  </div>
+
+  <form class="card" id="signup-form" novalidate method="POST" action="">
+    {% csrf_token %}
+
+    <!-- ============ ETAPA 1 ============ -->
+    <div class="step-panel active" data-panel="1">
+      <h2 class="step-title">Como você quer usar o PetConect?</h2>
+      <p class="step-subtitle">Você poderá mudar isso depois nas configurações da sua conta.</p>
+
+      <div class="user-types">
+        <label class="user-type" data-type="adopter">
+          <input type="radio" name="user-type" value="adopter" checked hidden>
+          <span class="user-type-icon">🏡</span>
+          <h3>Quero adotar</h3>
+          <p>Encontrar um animal compatível com sua casa e rotina.</p>
+        </label>
+
+        <label class="user-type" data-type="ong">
+          <input type="radio" name="user-type" value="ong" hidden>
+          <span class="user-type-icon">🐾</span>
+          <h3>Sou ONG ou resgatador</h3>
+          <p>Cadastrar animais e gerenciar candidatos à adoção.</p>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" data-next="2">
+          Continuar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+
+      <div class="divider">ou continue com</div>
+      <div class="social-buttons">
+        <button type="button" class="social-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+        <button type="button" class="social-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ ETAPA 2 ============ -->
+    <div class="step-panel" data-panel="2">
+      <h2 class="step-title">Seus dados</h2>
+      <p class="step-subtitle">Use informações reais — vamos usar para validar sua conta.</p>
+
+      <!-- Campos comuns -->
+      <div class="form-grid">
+        <div class="field full-width adopter-fields">
+          <label for="fullname">Nome completo <span class="required">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input type="text" id="fullname" name="fullname" placeholder="Ex.: Ana Paula Silva" class="with-icon" required>
+          </div>
+        </div>
+
+        <!-- Campos só para ONG -->
+        <div class="field full-width ong-fields">
+          <label for="ong-name">Nome da ONG / Resgatador <span class="required">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">🏠</span>
+            <input type="text" id="ong-name" name="ong-name" placeholder="Ex.: ONG Patinhas SP" class="with-icon">
+          </div>
+        </div>
+
+        <div class="field ong-fields">
+          <label for="cnpj">CNPJ <span class="hint">(opcional)</span></label>
+          <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0000-00">
+        </div>
+
+        <div class="field ong-fields">
+          <label for="responsible">Responsável <span class="required">*</span></label>
+          <input type="text" id="responsible" name="responsible" placeholder="Nome do responsável">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="email">E-mail <span class="required">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" class="with-icon" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="phone">Celular <span class="required">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999" class="with-icon" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="city">Cidade <span class="required">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">📍</span>
+            <input type="text" id="city" name="city" placeholder="Ex.: São Paulo" class="with-icon" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="state">Estado <span class="required">*</span></label>
+          <select id="state" name="state" required>
+            <option value="">Selecione...</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+            <option>SP</option><option>SE</option><option>TO</option>
+          </select>
+        </div>
+
+        <!-- Tipo de moradia: só para adotante -->
+        <div class="field full-width adopter-fields">
+          <label>Tipo de moradia <span class="hint">(ajuda a sugerir o pet ideal)</span></label>
+          <div class="radio-group">
+            <label class="radio-pill"><input type="radio" name="housing" value="apt"><span>🏢 Apartamento</span></label>
+            <label class="radio-pill"><input type="radio" name="housing" value="house-yard"><span>🏡 Casa com quintal</span></label>
+            <label class="radio-pill"><input type="radio" name="housing" value="house"><span>🏠 Casa sem quintal</span></label>
+            <label class="radio-pill"><input type="radio" name="housing" value="other"><span>Outro</span></label>
+          </div>
+        </div>
+
+        <!-- Sobre a ONG: só para ONG -->
+        <div class="field full-width ong-fields">
+          <label for="about-ong">Sobre a sua atuação <span class="hint">(breve descrição)</span></label>
+          <textarea id="about-ong" name="about-ong" placeholder="Conte um pouco sobre o trabalho que vocês fazem, há quanto tempo atuam, quais regiões cobrem..."></textarea>
+        </div>
+      </div>
+
+      <div class="actions split">
+        <button type="button" class="btn btn-secondary" data-prev="1">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Voltar
+        </button>
+        <button type="button" class="btn btn-primary" data-next="3">
+          Continuar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ ETAPA 3 ============ -->
+    <div class="step-panel" data-panel="3">
+      <h2 class="step-title">Defina sua senha</h2>
+      <p class="step-subtitle">Use uma senha forte. Vamos enviar um e-mail de confirmação para você.</p>
+
+      <div class="form-grid full">
+        <div class="field">
+          <label for="password">Senha <span class="required">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="password" name="password" placeholder="Crie uma senha segura" class="with-icon" required>
+            <button type="button" class="password-toggle" id="toggle-pw">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="strength">
+            <div class="strength-bar">
+              <div class="strength-segment" id="seg-1"></div>
+              <div class="strength-segment" id="seg-2"></div>
+              <div class="strength-segment" id="seg-3"></div>
+            </div>
+            <span class="strength-text" id="strength-text">Use ao menos 8 caracteres, com letras e números.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password-confirm">Confirme a senha <span class="required">*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="password-confirm" name="password-confirm" placeholder="Repita a senha" class="with-icon" required>
+          </div>
+        </div>
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="terms" required>
+        <span class="check-box"></span>
+        <span>Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do PetConect.</span>
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="newsletter">
+        <span class="check-box"></span>
+        <span>Quero receber novidades, dicas de adoção responsável e histórias de pets adotados.</span>
+      </label>
+
+      <div class="actions split">
+        <button type="button" class="btn btn-secondary" data-prev="2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Voltar
+        </button>
+        <button type="submit" class="btn btn-teal">
+          Criar minha conta
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ SUCESSO ============ -->
+    <div class="step-panel" data-panel="success">
+      <div class="success-panel">
+        <div class="success-icon">🎉</div>
+        <h2>Quase lá!</h2>
+        <p>Enviamos um e-mail de confirmação para <strong id="success-email">seu@email.com</strong>. Clique no link recebido para ativar sua conta.</p>
+        <button type="button" class="btn btn-primary" onclick="window.location.href='listagem.html'" style="max-width:280px;margin:0 auto;">
+          Voltar para a listagem
+        </button>
+      </div>
+    </div>
+
+  </form>
+</main>
+
+<script>
+  // ---------- TIPO DE USUÁRIO ----------
+  const userTypes = document.querySelectorAll('.user-type');
+  userTypes.forEach(el => {
+    el.addEventListener('click', () => {
+      userTypes.forEach(u => u.classList.remove('selected'));
+      el.classList.add('selected');
+      const type = el.dataset.type;
+      document.body.dataset.userType = type;
+      el.querySelector('input').checked = true;
+    });
+  });
+  // selecionar o primeiro por padrão
+  userTypes[0].classList.add('selected');
+  document.body.dataset.userType = 'adopter';
+
+  // ---------- STEPPER ----------
+  const panels = document.querySelectorAll('.step-panel');
+  const stepItems = document.querySelectorAll('.step-item');
+  const stepLines = document.querySelectorAll('.step-line');
+
+  function goToStep(n) {
+    panels.forEach(p => p.classList.remove('active'));
+    document.querySelector(`[data-panel="${n}"]`).classList.add('active');
+
+    if (n === 'success') {
+      // marca tudo como done no stepper
+      stepItems.forEach(s => { s.classList.remove('active'); s.classList.add('done'); });
+      stepLines.forEach(l => l.classList.add('done'));
+    } else {
+      stepItems.forEach(s => {
+        s.classList.remove('active', 'done');
+        const step = parseInt(s.dataset.step);
+        if (step < parseInt(n)) s.classList.add('done');
+        if (step === parseInt(n)) s.classList.add('active');
+      });
+      stepLines.forEach((l, i) => {
+        if (i < parseInt(n) - 1) l.classList.add('done');
+        else l.classList.remove('done');
+      });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('[data-next]').forEach(btn => {
+    btn.addEventListener('click', () => goToStep(btn.dataset.next));
+  });
+  document.querySelectorAll('[data-prev]').forEach(btn => {
+    btn.addEventListener('click', () => goToStep(btn.dataset.prev));
+  });
+
+  // ---------- SENHA: TOGGLE + STRENGTH ----------
+  const pwInput = document.getElementById('password');
+  const pwToggle = document.getElementById('toggle-pw');
+  pwToggle.addEventListener('click', () => {
+    pwInput.type = pwInput.type === 'password' ? 'text' : 'password';
+  });
+
+  const seg1 = document.getElementById('seg-1');
+  const seg2 = document.getElementById('seg-2');
+  const seg3 = document.getElementById('seg-3');
+  const strengthText = document.getElementById('strength-text');
+
+  pwInput.addEventListener('input', () => {
+    const v = pwInput.value;
+    let score = 0;
+    if (v.length >= 8) score++;
+    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+    if (/\d/.test(v) && /[^A-Za-z0-9]/.test(v)) score++;
+
+    [seg1, seg2, seg3].forEach(s => s.className = 'strength-segment');
+
+    if (v.length === 0) {
+      strengthText.textContent = 'Use ao menos 8 caracteres, com letras e números.';
+      strengthText.style.color = '';
+    } else if (score === 1) {
+      seg1.classList.add('active-1');
+      strengthText.textContent = 'Senha fraca';
+      strengthText.style.color = 'var(--error)';
+    } else if (score === 2) {
+      seg1.classList.add('active-2'); seg2.classList.add('active-2');
+      strengthText.textContent = 'Senha média';
+      strengthText.style.color = 'var(--orange-dark)';
+    } else if (score >= 3) {
+      seg1.classList.add('active-3'); seg2.classList.add('active-3'); seg3.classList.add('active-3');
+      strengthText.textContent = 'Senha forte 💪';
+      strengthText.style.color = 'var(--success)';
+    }
+  });
+
+  // ---------- SUBMIT ----------
+  document.getElementById('signup-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const email = document.getElementById('email').value || 'seu@email.com';
+    document.getElementById('success-email').textContent = email;
+    goToStep('success');
+  });
+</script>
+
+</body>
+</html>
