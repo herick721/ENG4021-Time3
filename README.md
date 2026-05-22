@@ -69,11 +69,27 @@ Com o ambiente ativado, instale as bibliotecas necessárias:
 pip install -r requirements.txt
 ```
 
-**3. Instale as dependências**
-Com o ambiente ativado, instale as bibliotecas necessárias:
+**4. Aplique as migrações do banco de dados**
+Configure o banco de dados inicial do Django:
 ```bash
-pip install -r requirements.txt
+python manage.py migrate
 ```
+
+**5. (Opcional) Popule o banco com dados de teste**
+Para ter alguns dados iniciais já cadastrados para testar o sistema, você pode usar o script de população:
+```bash
+python populate.py
+```
+
+**6. Inicie o servidor**
+Por fim, rode o servidor de desenvolvimento:
+```bash
+python manage.py runserver
+```
+
+**7. Acesse o site**
+Abra o seu navegador e acesse a seguinte URL:
+[http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 Abrir no navegador: **http://127.0.0.1:8000**
 
