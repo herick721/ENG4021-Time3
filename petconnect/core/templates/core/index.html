@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetConect — Encontre seu companheiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─── */
+:root {
+  --teal:        #1A9E8F;
+  --teal-dark:   #0D7268;
+  --teal-light:  #E6F7F5;
+  --teal-mid:    #5BBFB5;
+  --orange:      #F5A623;
+  --orange-dark: #D4881A;
+  --orange-light:#FEF3DC;
+  --off-white:   #F7F6F2;
+  --cream:       #FDFCF8;
+  --gray-100:    #F1F0EC;
+  --gray-200:    #E2E0D8;
+  --gray-500:    #9E9B8E;
+  --gray-700:    #4A4840;
+  --gray-900:    #1E1C18;
+  --white:       #FFFFFF;
+  --radius-pill: 999px;
+  --radius-lg:   20px;
+  --radius-md:   14px;
+  --shadow-card: 0 2px 12px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.05);
+  --shadow-hover:0 12px 32px rgba(26,158,143,.15), 0 2px 8px rgba(0,0,0,.08);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--gray-900);
+  overflow-x:hidden;
+}
+
+/* ─── NAVBAR ─── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  height:68px;
+  transition:background .3s,box-shadow .3s;
+}
+.nav.scrolled{
+  background:rgba(253,252,248,.92);
+  backdrop-filter:blur(12px);
+  box-shadow:0 1px 0 var(--gray-200);
+}
+.nav-logo{
+  font-family:'Nunito',sans-serif;
+  font-weight:900;font-size:22px;
+  display:flex;align-items:center;gap:2px;
+  text-decoration:none;
+}
+.nav-logo .pet{color:var(--teal)}
+.nav-logo .conect{color:var(--orange)}
+.nav-links{
+  display:flex;gap:32px;align-items:center;
+  list-style:none;
+}
+.nav-links a{
+  font-size:14px;font-weight:500;color:var(--gray-700);
+  text-decoration:none;
+  position:relative;
+  transition:color .2s;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;left:0;
+  width:0;height:2px;background:var(--teal);
+  transition:width .25s;border-radius:2px;
+}
+.nav-links a:hover{color:var(--teal)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{display:flex;gap:10px;align-items:center}
+.btn-ghost{
+  padding:8px 18px;border-radius:var(--radius-pill);
+  border:1.5px solid var(--gray-200);background:transparent;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  color:var(--gray-700);cursor:pointer;
+  transition:border-color .2s,color .2s;text-decoration:none;
+  display:inline-flex;align-items:center;
+}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
+.btn-primary{
+  padding:9px 22px;border-radius:var(--radius-pill);
+  border:none;background:var(--teal);
+  font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;
+  color:var(--white);cursor:pointer;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary:hover{background:var(--teal-dark);transform:translateY(-1px);box-shadow:0 6px 16px rgba(26,158,143,.3)}
+.btn-orange{
+  padding:14px 30px;border-radius:var(--radius-pill);
+  border:none;background:var(--orange);
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;
+  color:var(--white);cursor:pointer;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-orange:hover{background:var(--orange-dark);transform:translateY(-2px);box-shadow:0 10px 28px rgba(245,166,35,.35)}
+.btn-outline-teal{
+  padding:13px 28px;border-radius:var(--radius-pill);
+  border:2px solid var(--teal);background:transparent;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;
+  color:var(--teal);cursor:pointer;
+  transition:background .2s,color .2s,transform .15s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-outline-teal:hover{background:var(--teal);color:var(--white);transform:translateY(-2px)}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:100px 5% 60px;
+  gap:60px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 70% at 110% 20%, rgba(26,158,143,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at -10% 80%, rgba(245,166,35,.08) 0%, transparent 60%);
+  pointer-events:none;
+}
+/* blob shapes */
+.hero-blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(60px);
+  pointer-events:none;
+  animation:blobFloat 8s ease-in-out infinite;
+}
+.hero-blob-1{
+  width:500px;height:500px;
+  background:rgba(26,158,143,.07);
+  top:-100px;right:-100px;
+  animation-delay:0s;
+}
+.hero-blob-2{
+  width:300px;height:300px;
+  background:rgba(245,166,35,.07);
+  bottom:50px;left:30%;
+  animation-delay:3s;
+}
+@keyframes blobFloat{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(15px,-20px) scale(1.05)}
+  66%{transform:translate(-10px,10px) scale(.97)}
+}
+
+.hero-left{position:relative;z-index:1}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--teal-light);
+  border:1.5px solid rgba(26,158,143,.25);
+  border-radius:var(--radius-pill);
+  padding:6px 16px;
+  font-size:13px;font-weight:600;color:var(--teal-dark);
+  margin-bottom:24px;
+  animation:fadeUp .6s ease both;
+}
+.hero-badge span{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--teal);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(26,158,143,.4)}
+  50%{box-shadow:0 0 0 6px rgba(26,158,143,0)}
+}
+.hero h1{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(36px,4.5vw,58px);
+  font-weight:900;
+  line-height:1.1;
+  letter-spacing:-1px;
+  color:var(--gray-900);
+  margin-bottom:20px;
+  animation:fadeUp .6s .1s ease both;
+}
+.hero h1 .accent{color:var(--teal)}
+.hero h1 .accent-orange{color:var(--orange)}
+.hero p{
+  font-size:17px;font-weight:300;
+  color:var(--gray-500);line-height:1.7;
+  max-width:460px;margin-bottom:36px;
+  animation:fadeUp .6s .2s ease both;
+}
+.hero-cta{
+  display:flex;gap:14px;flex-wrap:wrap;
+  animation:fadeUp .6s .3s ease both;
+}
+.hero-trust{
+  display:flex;align-items:center;gap:12px;
+  margin-top:36px;
+  animation:fadeUp .6s .4s ease both;
+}
+.hero-avatars{
+  display:flex;
+}
+.hero-avatar{
+  width:36px;height:36px;border-radius:50%;
+  border:2px solid var(--cream);
+  background:var(--teal-light);
+  margin-left:-10px;
+  font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.hero-avatar:first-child{margin-left:0}
+.hero-trust-text{font-size:13px;color:var(--gray-500)}
+.hero-trust-text strong{color:var(--gray-900)}
+
+/* right side visual */
+.hero-right{
+  position:relative;z-index:1;
+  display:flex;justify-content:center;align-items:center;
+  animation:fadeRight .8s .2s ease both;
+}
+@keyframes fadeRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+.hero-card-stack{
+  position:relative;
+  width:340px;height:440px;
+}
+.hero-card{
+  position:absolute;
+  background:var(--white);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  overflow:hidden;
+  transition:transform .3s;
+}
+.hero-card-main{
+  width:240px;height:300px;
+  bottom:0;left:50%;transform:translateX(-50%);
+  z-index:3;
+  animation:cardFloat 4s ease-in-out infinite;
+}
+@keyframes cardFloat{
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(-10px)}
+}
+.hero-card-back-l{
+  width:200px;height:260px;
+  bottom:20px;left:0;
+  z-index:2;
+  transform:rotate(-6deg);
+  opacity:.85;
+}
+.hero-card-back-r{
+  width:200px;height:260px;
+  bottom:20px;right:0;
+  z-index:2;
+  transform:rotate(6deg);
+  opacity:.85;
+}
+.hcard-img{
+  width:100%;height:60%;
+  background:linear-gradient(135deg,var(--teal-light) 0%,rgba(26,158,143,.15) 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:56px;
+}
+.hcard-body{padding:14px}
+.hcard-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:var(--gray-900)}
+.hcard-meta{font-size:12px;color:var(--gray-500);margin:3px 0 8px}
+.hcard-status{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:var(--radius-pill);
+  font-size:11px;font-weight:700;
+  background:#D1FAE5;color:#065F46;
+}
+.hcard-status span{width:6px;height:6px;border-radius:50%;background:#10B981}
+
+/* floating pills */
+.float-pill{
+  position:absolute;
+  background:var(--white);
+  border-radius:var(--radius-pill);
+  padding:8px 14px;
+  box-shadow:var(--shadow-card);
+  font-size:12px;font-weight:600;
+  display:flex;align-items:center;gap:6px;
+  z-index:10;
+  animation:pillFloat 5s ease-in-out infinite;
+}
+.pill-1{top:20px;right:0;color:var(--teal-dark);animation-delay:0s}
+.pill-2{top:120px;left:0;color:var(--orange-dark);animation-delay:1.5s}
+.pill-3{bottom:60px;right:10px;color:var(--gray-700);animation-delay:3s}
+@keyframes pillFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+/* ─── STATS ─── */
+.stats{
+  background:var(--white);
+  border-top:1px solid var(--gray-200);
+  border-bottom:1px solid var(--gray-200);
+  padding:0 5%;
+}
+.stats-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  divide-gap:0;
+}
+.stat-item{
+  padding:32px 20px;
+  text-align:center;
+  border-right:1px solid var(--gray-200);
+  position:relative;
+}
+.stat-item:last-child{border-right:none}
+.stat-num{
+  font-family:'Nunito',sans-serif;
+  font-size:36px;font-weight:900;
+  color:var(--teal);
+  line-height:1;
+  margin-bottom:6px;
+}
+.stat-label{font-size:13px;color:var(--gray-500);font-weight:400}
+
+/* ─── SECTIONS ─── */
+section{padding:100px 5%}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--teal);
+  margin-bottom:14px;
+}
+.section-tag::before{
+  content:'';width:20px;height:2px;background:var(--teal);border-radius:2px;
+}
+.section-h2{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(28px,3vw,42px);font-weight:900;
+  line-height:1.15;letter-spacing:-.5px;
+  color:var(--gray-900);
+  margin-bottom:14px;
+}
+.section-sub{
+  font-size:16px;color:var(--gray-500);font-weight:300;
+  max-width:500px;line-height:1.7;margin-bottom:48px;
+}
+
+/* ─── ANIMAL CARDS ─── */
+.section-header-row{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:36px;
+}
+.see-all{
+  font-size:13px;font-weight:600;color:var(--teal);
+  text-decoration:none;display:flex;align-items:center;gap:4px;
+  transition:gap .2s;
+}
+.see-all:hover{gap:8px}
+.cards-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+}
+.animal-card{
+  background:var(--white);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow-card);
+  transition:transform .25s,box-shadow .25s;
+  cursor:pointer;position:relative;
+}
+.animal-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover)}
+.card-fav{
+  position:absolute;top:12px;right:12px;z-index:2;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.9);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;transition:transform .2s;cursor:pointer;
+  border:none;
+}
+.card-fav:hover{transform:scale(1.2)}
+.card-img{
+  height:180px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:64px;
+  position:relative;
+  overflow:hidden;
+}
+.card-img-1{background:linear-gradient(135deg,#E6F7F5 0%,#B2EFE9 100%)}
+.card-img-2{background:linear-gradient(135deg,#FEF3DC 0%,#FDDA84 100%)}
+.card-img-3{background:linear-gradient(135deg,#F0EBFE 0%,#D9C9FC 100%)}
+.card-img-4{background:linear-gradient(135deg,#FFE8E8 0%,#FFC5C5 100%)}
+.card-body{padding:16px}
+.card-name{
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:17px;color:var(--gray-900);
+  margin-bottom:4px;
+}
+.card-meta{font-size:12px;color:var(--gray-500);margin-bottom:12px}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.card-status{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:var(--radius-pill);
+  font-size:11px;font-weight:700;
+}
+.status-green{background:#D1FAE5;color:#065F46}
+.status-green .dot{background:#10B981}
+.status-yellow{background:#FEF3C7;color:#92400E}
+.status-yellow .dot{background:#F59E0B}
+.status-blue{background:#DBEAFE;color:#1E40AF}
+.status-blue .dot{background:#3B82F6}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.card-link{
+  font-size:12px;font-weight:700;color:var(--teal);
+  text-decoration:none;
+  display:flex;align-items:center;gap:3px;
+  transition:gap .2s;
+}
+.card-link:hover{gap:6px}
+
+/* ─── HOW IT WORKS ─── */
+.how-section{background:var(--off-white)}
+.steps-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  position:relative;
+}
+.steps-grid::before{
+  content:'';
+  position:absolute;
+  top:40px;left:calc(12.5% + 20px);right:calc(12.5% + 20px);
+  height:2px;
+  background:linear-gradient(90deg,var(--teal-light),var(--teal),var(--teal-light));
+  z-index:0;
+}
+.step{
+  text-align:center;padding:0 24px;
+  position:relative;z-index:1;
+}
+.step-icon{
+  width:80px;height:80px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 20px;
+  position:relative;
+  transition:transform .3s;
+}
+.step:hover .step-icon{transform:scale(1.1)}
+.step-icon-1{background:var(--teal-light);border:2px solid rgba(26,158,143,.2)}
+.step-icon-2{background:var(--orange-light);border:2px solid rgba(245,166,35,.2)}
+.step-icon-3{background:#F0EBFE;border:2px solid rgba(139,92,246,.2)}
+.step-icon-4{background:#D1FAE5;border:2px solid rgba(16,185,129,.2)}
+.step-num{
+  position:absolute;top:-6px;right:-6px;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--teal);color:var(--white);
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+}
+.step h3{
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:17px;color:var(--gray-900);margin-bottom:8px;
+}
+.step p{font-size:13px;color:var(--gray-500);line-height:1.6}
+
+/* ─── MISSION BANNER ─── */
+.mission{
+  background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal) 100%);
+  padding:80px 5%;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.mission::before{
+  content:'🐾';
+  position:absolute;font-size:300px;
+  opacity:.04;top:-60px;right:-40px;
+  pointer-events:none;
+}
+.mission::after{
+  content:'🐾';
+  position:absolute;font-size:200px;
+  opacity:.04;bottom:-40px;left:-20px;
+  pointer-events:none;
+  transform:rotate(20deg);
+}
+.mission-inner{max-width:700px;margin:0 auto;position:relative;z-index:1}
+.mission h2{
+  font-family:'Nunito',sans-serif;font-size:clamp(28px,3.5vw,44px);font-weight:900;
+  color:var(--white);line-height:1.2;margin-bottom:18px;
+}
+.mission p{
+  font-size:17px;color:rgba(255,255,255,.8);font-weight:300;
+  line-height:1.7;margin-bottom:36px;
+}
+.mission-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-white{
+  padding:14px 30px;border-radius:var(--radius-pill);
+  border:none;background:var(--white);
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;
+  color:var(--teal-dark);cursor:pointer;
+  transition:transform .15s,box-shadow .2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.15)}
+.btn-outline-white{
+  padding:13px 28px;border-radius:var(--radius-pill);
+  border:2px solid rgba(255,255,255,.5);background:transparent;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;
+  color:var(--white);cursor:pointer;
+  transition:background .2s,transform .15s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-outline-white:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+
+/* ─── FEATURES HIGHLIGHTS ─── */
+.features-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.feature-card{
+  background:var(--white);border-radius:var(--radius-lg);
+  padding:32px;border:1px solid var(--gray-200);
+  transition:border-color .2s,box-shadow .2s,transform .2s;
+}
+.feature-card:hover{
+  border-color:var(--teal);
+  box-shadow:0 4px 20px rgba(26,158,143,.1);
+  transform:translateY(-3px);
+}
+.feature-card.wide{grid-column:span 2}
+.feature-icon{
+  width:52px;height:52px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;margin-bottom:18px;
+}
+.fi-teal{background:var(--teal-light)}
+.fi-orange{background:var(--orange-light)}
+.fi-purple{background:#F0EBFE}
+.fi-green{background:#D1FAE5}
+.feature-card h3{
+  font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:18px;color:var(--gray-900);margin-bottom:8px;
+}
+.feature-card p{font-size:14px;color:var(--gray-500);line-height:1.65}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--gray-900);
+  padding:60px 5% 30px;
+  color:rgba(255,255,255,.6);
+}
+.footer-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;
+  margin-bottom:48px;
+}
+.footer-brand{}
+.footer-logo{
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;
+  margin-bottom:14px;display:block;text-decoration:none;
+}
+.footer-logo .pet{color:var(--teal-mid)}
+.footer-logo .conect{color:var(--orange)}
+.footer-brand p{font-size:13px;line-height:1.7;max-width:260px;margin-bottom:20px}
+.footer-social{display:flex;gap:10px}
+.social-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:background .2s;
+  text-decoration:none;border:1px solid rgba(255,255,255,.08);
+}
+.social-btn:hover{background:rgba(26,158,143,.3)}
+.footer-col h4{
+  font-family:'Nunito',sans-serif;font-weight:700;
+  font-size:13px;color:var(--white);letter-spacing:.5px;
+  margin-bottom:18px;text-transform:uppercase;
+}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:10px}
+.footer-col ul a{
+  font-size:13px;color:rgba(255,255,255,.5);
+  text-decoration:none;transition:color .2s;
+}
+.footer-col ul a:hover{color:var(--teal-mid)}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-top:28px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.3)}
+.footer-legal{display:flex;gap:24px}
+.footer-legal a{font-size:12px;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s}
+.footer-legal a:hover{color:var(--teal-mid)}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal{
+  opacity:0;transform:translateY(24px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.reveal.visible{opacity:1;transform:none}
+
+/* ─── MOBILE MENU ─── */
+.menu-toggle{
+  display:none;flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;padding:4px;
+}
+.menu-toggle span{
+  width:22px;height:2px;background:var(--gray-700);
+  border-radius:2px;transition:transform .3s,opacity .3s;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .nav-links,.nav-cta{display:none}
+  .menu-toggle{display:flex}
+  .hero{grid-template-columns:1fr;padding:90px 5% 50px;text-align:center;gap:40px}
+  .hero p{margin:0 auto 36px}
+  .hero-cta{justify-content:center}
+  .hero-trust{justify-content:center}
+  .hero-right{order:-1}
+  .hero-card-stack{width:280px;height:340px}
+  .hero-card-main{width:190px;height:240px}
+  .hero-card-back-l,.hero-card-back-r{width:160px;height:210px}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .stat-item:nth-child(2){border-right:none}
+  .stat-item:nth-child(3){border-top:1px solid var(--gray-200)}
+  .cards-grid{grid-template-columns:repeat(2,1fr)}
+  .steps-grid{grid-template-columns:repeat(2,1fr);gap:32px}
+  .steps-grid::before{display:none}
+  .features-grid{grid-template-columns:1fr}
+  .feature-card.wide{grid-column:span 1}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:32px}
+  .section-header-row{flex-direction:column;align-items:flex-start;gap:12px}
+}
+@media(max-width:600px){
+  .cards-grid{grid-template-columns:1fr}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .footer-inner{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAVBAR ═══════ -->
+<nav class="nav" id="navbar">
+  <a href="#" class="nav-logo"><span class="pet">Pet</span><span class="conect">C🐾nect</span></a>
+  <ul class="nav-links">
+    <li><a href="{% url 'listagem' %}">Adotar</a></li>
+    <li><a href="#cuidados">Cuidados</a></li>
+    <li><a href="#mapa">Perto de mim</a></li>
+    <li><a href="#parceiros">Parceiros</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#" class="btn-ghost">Entrar</a>
+    <a href="{% url 'cadastro' %}" class="btn-primary">Cadastrar ✦</a>
+  </div>
+  <button class="menu-toggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero" id="home">
+  <div class="hero-blob hero-blob-1"></div>
+  <div class="hero-blob hero-blob-2"></div>
+
+  <div class="hero-left">
+    <div class="hero-badge">
+      <span></span>
+      +1.200 animais aguardando um lar
+    </div>
+    <h1>
+      Encontre seu<br>
+      próximo <span class="accent">companheiro</span><br>
+      <span class="accent-orange">de vida</span>
+    </h1>
+    <p>
+      O PetConect é o hub completo para donos de pets, adotantes e clínicas.
+      Adote, cuide e conecte-se com a comunidade pet mais amorosa do Brasil.
+    </p>
+    <div class="hero-cta">
+      <a href="#animais" class="btn-orange">Ver animais 🐾</a>
+      <a href="#cuidados" class="btn-outline-teal">Guia de cuidados</a>
+    </div>
+    <div class="hero-trust">
+      <div class="hero-avatars">
+        <div class="hero-avatar">😊</div>
+        <div class="hero-avatar">🙋</div>
+        <div class="hero-avatar">👨</div>
+        <div class="hero-avatar">👩</div>
+      </div>
+      <div class="hero-trust-text">
+        <strong>+3.400 famílias</strong> já encontraram seu pet aqui
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-card-stack">
+      <!-- back cards -->
+      <div class="hero-card hero-card-back-l">
+        <div class="hcard-img card-img-2">🐈</div>
+        <div class="hcard-body">
+          <div class="hcard-name">Mel</div>
+          <div class="hcard-meta">Gata · 1 ano</div>
+        </div>
+      </div>
+      <div class="hero-card hero-card-back-r">
+        <div class="hcard-img card-img-3">🐕</div>
+        <div class="hcard-body">
+          <div class="hcard-name">Thor</div>
+          <div class="hcard-meta">Cão · 4 anos</div>
+        </div>
+      </div>
+      <!-- main card -->
+      <div class="hero-card hero-card-main">
+        <div class="hcard-img card-img-1">🐶</div>
+        <div class="hcard-body">
+          <div class="hcard-name">Bolinha</div>
+          <div class="hcard-meta">Cão · 2 anos · Médio · SP</div>
+          <div class="hcard-status">
+            <span></span> Disponível
+          </div>
+        </div>
+      </div>
+      <!-- floating pills -->
+      <div class="float-pill pill-1">🏥 Vacinado ✓</div>
+      <div class="float-pill pill-2">🐾 842 adoções</div>
+      <div class="float-pill pill-3">📍 3km de você</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ STATS ═══════ -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <div class="stat-num" data-target="1247">0</div>
+      <div class="stat-label">Animais cadastrados</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.1s">
+      <div class="stat-num" data-target="842">0</div>
+      <div class="stat-label">Adoções realizadas</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.2s">
+      <div class="stat-num" data-target="315">0</div>
+      <div class="stat-label">Lares temporários</div>
+    </div>
+    <div class="stat-item reveal" style="transition-delay:.3s">
+      <div class="stat-num" data-target="198">0</div>
+      <div class="stat-label">ONGs parceiras</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ANIMAIS EM DESTAQUE ═══════ -->
+<section id="animais">
+  <div class="section-inner">
+    <div class="section-header-row reveal">
+      <div>
+        <div class="section-tag">Adoção</div>
+        <h2 class="section-h2">Animais em destaque</h2>
+        <p class="section-sub" style="margin-bottom:0">Cada um desses companheiros está esperando por uma família. Que tal começar por aqui?</p>
+      </div>
+      <a href="#" class="see-all">Ver todos os animais →</a>
+    </div>
+    <div class="cards-grid">
+      {% for pet in pets_destaque %}
+      <div class="animal-card reveal" style="transition-delay:.05s">
+        <button class="card-fav">🤍</button>
+        <div class="card-img {{ pet.cor_fundo }}">
+          {% if pet.urgente %}
+          <span class="urgent-badge" style="position: absolute; top: 12px; left: 12px; background: var(--red); color: #fff; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 600;">🔥 Urgente</span>
+          {% endif %}
+          {{ pet.imagem_emoji }}
+        </div>
+        <div class="card-body">
+          <div class="card-name">{{ pet.nome }}</div>
+          <div class="card-meta">{{ pet.get_especie_display }} · {{ pet.idade_texto }} · {{ pet.get_porte_display }}</div>
+          <div class="card-footer">
+            <span class="card-status status-green"><span class="dot"></span>{{ pet.get_status_display }}</span>
+            <a href="{% url 'detalhe' pet.id %}" class="card-link">Ver mais →</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p>Nenhum pet encontrado.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ COMO FUNCIONA ═══════ -->
+<section class="how-section" id="como-funciona">
+  <div class="section-inner">
+    <div style="text-align:center" class="reveal">
+      <div class="section-tag" style="justify-content:center">Processo</div>
+      <h2 class="section-h2">Como funciona</h2>
+      <p class="section-sub" style="margin:0 auto 56px">Em 4 passos simples você pode mudar a vida de um animal — e a sua.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step reveal" style="transition-delay:.05s">
+        <div class="step-icon step-icon-1">
+          🔍
+          <div class="step-num">1</div>
+        </div>
+        <h3>Encontre</h3>
+        <p>Use os filtros para descobrir o pet ideal para o seu estilo de vida e tipo de moradia.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.15s">
+        <div class="step-icon step-icon-2">
+          💌
+          <div class="step-num">2</div>
+        </div>
+        <h3>Solicite</h3>
+        <p>Preencha o formulário de adoção e aguarde o contato da ONG ou resgatador responsável.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.25s">
+        <div class="step-icon step-icon-3">
+          ✅
+          <div class="step-num">3</div>
+        </div>
+        <h3>Aprove</h3>
+        <p>Passe pela entrevista, assine o termo digital e confirme seu compromisso com o animal.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.35s">
+        <div class="step-icon step-icon-4">
+          🏠
+          <div class="step-num">4</div>
+        </div>
+        <h3>Leve pra casa</h3>
+        <p>Retire seu novo companheiro e conte com suporte pós-adoção da nossa comunidade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FEATURES ═══════ -->
+<section id="cuidados">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-tag">Hub completo</div>
+      <h2 class="section-h2">Tudo que você precisa<br>em um só lugar</h2>
+      <p class="section-sub">Do resgate à adoção, do guia de vacinas ao mapa de clínicas. O PetConect é o seu parceiro de jornada.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal" style="transition-delay:.05s">
+        <div class="feature-icon fi-teal">💉</div>
+        <h3>Guia de Vacinas</h3>
+        <p>Calendário completo de vacinação para cães e gatos, com lembretes personalizados por idade e espécie do seu pet.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:.1s">
+        <div class="feature-icon fi-orange">📍</div>
+        <h3>Clínicas Próximas</h3>
+        <p>Mapa integrado com Google Maps mostrando clínicas veterinárias, petshops e abrigos perto de você, com avaliações reais.</p>
+      </div>
+      <div class="feature-card reveal" style="transition-delay:.15s">
+        <div class="feature-icon fi-purple">🛟</div>
+        <h3>Grupos de Resgate</h3>
+        <p>Diretório de grupos e ONGs de resgate animal organizados por cidade, com informações de contato e formas de apoiar.</p>
+      </div>
+      <div class="feature-card reveal wide" style="transition-delay:.2s">
+        <div class="feature-icon fi-green">🛒</div>
+        <h3>Loja de Parceiros</h3>
+        <p>Produtos e serviços de petshops e clínicas verificadas com condições exclusivas para membros do PetConect. Compre com confiança e apoie negócios responsáveis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MISSION CTA ═══════ -->
+<div class="mission">
+  <div class="mission-inner">
+    <h2>Cada adoção transforma<br>duas vidas</h2>
+    <p>
+      Um animal encontra amor e segurança. Uma família ganha um companheiro para sempre.
+      Junte-se à maior rede de adoção responsável do Brasil.
+    </p>
+    <div class="mission-cta">
+      <a href="#" class="btn-white">Quero adotar 🐾</a>
+      <a href="#" class="btn-outline-white">Cadastrar meu animal</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="footer-logo"><span class="pet">Pet</span><span class="conect">C🐾nect</span></a>
+      <p>Conectando animais vulneráveis a famílias amorosas. Plataforma web de adoção e hub completo para donos de pets.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn">📸</a>
+        <a href="#" class="social-btn">💙</a>
+        <a href="#" class="social-btn">🐦</a>
+        <a href="#" class="social-btn">▶️</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Plataforma</h4>
+      <ul>
+        <li><a href="#">Adotar</a></li>
+        <li><a href="#">Lar temporário</a></li>
+        <li><a href="#">Cadastrar animal</a></li>
+        <li><a href="#">Guia de vacinas</a></li>
+        <li><a href="#">Dicas para donos</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Comunidade</h4>
+      <ul>
+        <li><a href="#">ONGs parceiras</a></li>
+        <li><a href="#">Grupos de resgate</a></li>
+        <li><a href="#">Clínicas</a></li>
+        <li><a href="#">Doe para ONGs</a></li>
+        <li><a href="#">Seja voluntário</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#">Sobre nós</a></li>
+        <li><a href="#">Como funciona</a></li>
+        <li><a href="#">Para clínicas</a></li>
+        <li><a href="#">Termos de uso</a></li>
+        <li><a href="#">Privacidade</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 PetConect — ENG4021 · Time 3</p>
+    <div class="footer-legal">
+      <a href="#">Termos</a>
+      <a href="#">Privacidade</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAVBAR SCROLL ──
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// ── COUNTER ANIMATION ──
+function animateCount(el, target, duration = 1800) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = Math.floor(start).toLocaleString('pt-BR');
+    if (start >= target) clearInterval(timer);
+  }, 16);
+}
+
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = +e.target.dataset.target;
+      animateCount(e.target, target);
+      statObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-target]').forEach(el => statObserver.observe(el));
+
+// ── FAVORITE TOGGLE ──
+document.querySelectorAll('.card-fav').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    btn.textContent = btn.textContent === '🤍' ? '❤️' : '🤍';
+    btn.style.transform = 'scale(1.3)';
+    setTimeout(() => btn.style.transform = '', 200);
+  });
+});
+</script>
+</body>
+</html>

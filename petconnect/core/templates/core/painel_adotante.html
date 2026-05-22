@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Meu Painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #0d9488; --teal-dark: #0f766e; --teal-light: #ccfbf1; --teal-soft: #ecfdf5;
+    --orange: #f59e0b; --orange-dark: #d97706; --orange-soft: #fef3c7;
+    --bg: #f8fafc; --card: #fff; --text: #0f172a; --text-muted: #64748b; --text-light: #94a3b8;
+    --border: #e2e8f0; --border-light: #f1f5f9;
+    --green-soft: #d1fae5; --red-soft: #fee2e2; --blue-soft: #dbeafe; --yellow-soft: #fef3c7;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,.06); --shadow-md: 0 4px 20px rgba(0,0,0,.08);
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); font-size: 15px;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  header {
+    background: #fff; border-bottom: 1px solid var(--border-light);
+    padding: 0 48px; display: flex; align-items: center;
+    justify-content: space-between; height: 64px;
+    position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow-sm);
+  }
+  .logo { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 5px; text-decoration: none; }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+  nav ul { list-style: none; display: flex; gap: 36px; }
+  nav a {
+    text-decoration: none; color: var(--text-muted); font-weight: 500;
+    font-size: 14px; padding: 22px 0; display: block;
+    position: relative; transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--teal); font-weight: 700; }
+  nav a.active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0;
+    height: 3px; background: var(--teal); border-radius: 2px 2px 0 0;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .notif-btn {
+    width: 36px; height: 36px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: #fff; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; color: var(--text-muted); transition: all .2s;
+  }
+  .notif-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .notif-dot {
+    position: absolute; top: 5px; right: 5px;
+    width: 7px; height: 7px; background: var(--orange);
+    border-radius: 50%; border: 2px solid #fff;
+  }
+  .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 12px 5px 6px; border-radius: 999px;
+    border: 1.5px solid var(--border); background: #fff;
+    cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s;
+  }
+  .user-pill:hover { border-color: var(--teal); }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--teal); color: #fff; font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* PAGE LAYOUT */
+  .page-wrap {
+    max-width: 1180px; margin: 0 auto;
+    padding: 36px 48px 100px;
+    display: grid; grid-template-columns: 280px 1fr;
+    gap: 28px; align-items: start;
+  }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .profile-card {
+    background: #fff; border-radius: 20px; padding: 28px 20px;
+    box-shadow: var(--shadow-sm); text-align: center;
+    border: 1px solid var(--border-light);
+  }
+  .avatar-wrap { position: relative; width: 80px; margin: 0 auto 14px; }
+  .avatar-big {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff; font-size: 28px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid var(--teal-light);
+  }
+  .avatar-edit-btn {
+    position: absolute; bottom: 0; right: 0;
+    width: 24px; height: 24px; background: var(--orange); color: #fff;
+    border-radius: 50%; border: 2px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; cursor: pointer;
+  }
+  .profile-name { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+  .profile-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--teal-light); color: var(--teal-dark);
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px; margin-bottom: 14px;
+  }
+  .profile-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 3px; }
+  .divider-line { height: 1px; background: var(--border-light); margin: 16px 0; }
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat-mini { background: var(--bg); border-radius: 10px; padding: 10px 6px; text-align: center; }
+  .stat-mini strong { display: block; font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 3px; }
+  .stat-mini span { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+  .stat-mini.s1 strong { color: var(--teal); }
+  .stat-mini.s2 strong { color: var(--orange-dark); }
+  .stat-mini.s3 strong { color: #8b5cf6; }
+
+  .nav-card {
+    background: #fff; border-radius: 16px; padding: 8px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    font-size: 13px; font-weight: 500; color: var(--text-muted);
+    transition: all .15s; text-decoration: none;
+  }
+  .nav-item:hover { background: var(--border-light); color: var(--text); }
+  .nav-item.active { background: var(--teal-soft); color: var(--teal-dark); font-weight: 700; }
+  .nav-badge {
+    margin-left: auto; background: var(--orange); color: #fff;
+    font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 999px;
+  }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  /* MAIN COL */
+  .main-col { display: flex; flex-direction: column; gap: 24px; }
+  .section-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .section-head h2 { font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+  .section-head p { font-size: 13px; color: var(--text-muted); }
+  .see-all {
+    font-size: 13px; font-weight: 600; color: var(--teal);
+    text-decoration: none; white-space: nowrap; margin-top: 4px;
+  }
+  .see-all:hover { text-decoration: underline; }
+
+  /* ADOPTION CARD */
+  .adoption-card {
+    background: #fff; border-radius: 18px; padding: 22px;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+    margin-bottom: 14px; transition: box-shadow .2s;
+  }
+  .adoption-card:last-child { margin-bottom: 0; }
+  .adoption-card:hover { box-shadow: var(--shadow-md); }
+  .card-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+  .pet-thumb {
+    width: 58px; height: 58px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+  }
+  .bg-pink  { background: #fce7f3; }
+  .bg-blue  { background: #dbeafe; }
+  .bg-peach { background: #fef3e2; }
+  .bg-grn   { background: #d1fae5; }
+  .bg-purp  { background: #ede9fe; }
+  .card-top-info { flex: 1; min-width: 0; }
+  .pet-name { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+  .pet-sub  { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .ong-tag  { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); }
+  .ong-dot  { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+  .card-top-right { text-align: right; flex-shrink: 0; }
+  .req-date { font-size: 11px; color: var(--text-light); margin-bottom: 6px; }
+
+  /* CHIPS */
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .chip-waiting  { background: var(--yellow-soft); color: #92400e; }
+  .chip-analysis { background: var(--blue-soft);   color: #1e40af; }
+  .chip-approved { background: var(--green-soft);  color: #065f46; }
+  .chip-done     { background: var(--teal-light);  color: var(--teal-dark); }
+  .chip-rejected { background: var(--red-soft);    color: #b91c1c; }
+
+  /* FLOW */
+  .flow { display: flex; align-items: center; margin-bottom: 16px; }
+  .flow-step {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 5px; position: relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content: ""; position: absolute; top: 14px; left: 50%;
+    width: 100%; height: 2px; background: var(--border); z-index: 0;
+  }
+  .flow-step.done:not(:last-child)::after   { background: var(--teal); }
+  .flow-step.active:not(:last-child)::after { background: linear-gradient(to right, var(--teal), var(--border)); }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%; z-index: 1;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+    border: 2px solid var(--border); background: #fff; color: var(--text-light);
+    transition: all .3s;
+  }
+  .flow-step.done     .step-dot { background: var(--teal);   border-color: var(--teal);   color: #fff; }
+  .flow-step.active   .step-dot { background: var(--orange); border-color: var(--orange); color: #fff; animation: pulse 2s infinite; }
+  .flow-step.rejected .step-dot { background: #ef4444; border-color: #ef4444; color: #fff; }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(245,158,11,.45); }
+    70%  { box-shadow: 0 0 0 8px rgba(245,158,11,0);   }
+    100% { box-shadow: 0 0 0 0   rgba(245,158,11,0);   }
+  }
+  .step-lbl { font-size: 10px; font-weight: 600; color: var(--text-light); text-align: center; line-height: 1.2; }
+  .flow-step.done     .step-lbl { color: var(--teal-dark); }
+  .flow-step.active   .step-lbl { color: var(--orange-dark); }
+  .flow-step.rejected .step-lbl { color: #ef4444; }
+
+  /* CARD FOOTER */
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 14px; border-top: 1px solid var(--border-light);
+  }
+  .action-msg { font-size: 12px; color: var(--text-muted); }
+  .action-msg strong { color: var(--orange-dark); }
+  .btn-card {
+    font-size: 12px; font-weight: 700; color: var(--teal);
+    text-decoration: none; padding: 6px 14px; border-radius: 8px;
+    background: var(--teal-soft); transition: background .2s;
+  }
+  .btn-card:hover { background: var(--teal-light); }
+
+  /* FAVORITOS GRID */
+  .fav-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .fav-card {
+    background: #fff; border-radius: 14px; overflow: hidden;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+    transition: transform .2s, box-shadow .2s; cursor: pointer;
+  }
+  .fav-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .fav-img { height: 72px; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+  .fav-body { padding: 10px 12px 12px; }
+  .fav-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .fav-meta { font-size: 11px; color: var(--text-muted); }
+  .fav-badge { display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+  .fav-avail   { background: var(--green-soft); color: #047857; }
+  .fav-analise { background: var(--yellow-soft); color: #d97706; }
+
+  /* PANEL SYSTEM */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* PERFIL GRID */
+  .perfil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .info-item { display: flex; flex-direction: column; gap: 3px; }
+  .info-label { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: .05em; }
+  .info-value { font-size: 14px; font-weight: 700; }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 24px; right: 24px;
+    background: #fff; border-radius: 14px; padding: 6px;
+    display: flex; gap: 4px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.12); z-index: 100;
+    border: 1px solid var(--border-light);
+  }
+  .bottom-nav a {
+    text-decoration: none; padding: 9px 14px; border-radius: 10px;
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    display: flex; align-items: center; gap: 5px; transition: all .2s;
+  }
+  .bottom-nav a.active { background: var(--teal); color: #fff; }
+  .bottom-nav a:hover:not(.active) { background: var(--border-light); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="listagem.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="{% url 'listagem' %}">Adotar</a></li>
+      <li><a href="#">Lar temporário</a></li>
+      <li><a href="#">Como funciona</a></li>
+      <li><a href="{% url 'painel_adotante' %}" class="active">Meu painel</a></li>
+    </ul>
+  </nav>
+  <div class="header-right">
+    <button class="notif-btn" title="Notificações">
+      <div class="notif-dot"></div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </button>
+    <div class="user-pill">
+      <div class="user-avatar">{{ adotante.usuario.username|make_list|first|upper }}</div>
+      {{ adotante.usuario.get_full_name|default:adotante.usuario.username }}
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="profile-card">
+      <div class="avatar-wrap">
+        <div class="avatar-big">{{ adotante.usuario.username|make_list|first|upper }}</div>
+        <div class="avatar-edit-btn">✏️</div>
+      </div>
+      <div class="profile-name">{{ adotante.usuario.get_full_name|default:adotante.usuario.username }}</div>
+      <div class="profile-badge">🐾 Adotante</div>
+      <div class="profile-meta">📍 {{ adotante.usuario.cidade }}, {{ adotante.usuario.estado }}</div>
+      <div class="profile-meta">✉️ {{ adotante.usuario.email }}</div>
+      <div class="divider-line"></div>
+      <div class="stats-row">
+        <div class="stat-mini s1"><strong>{{ pedidos.count }}</strong><span>Pedidos</span></div>
+        <div class="stat-mini s2"><strong>{{ favoritos.count }}</strong><span>Favoritos</span></div>
+        <div class="stat-mini s3"><strong>0</strong><span>Adoções</span></div>
+      </div>
+    </div>
+
+    <div class="nav-card">
+      <a href="#" class="nav-item active" onclick="showPanel('pedidos',this);return false;">
+        <span class="nav-icon">📋</span> Meus pedidos
+        <span class="nav-badge">{{ pedidos.count }}</span>
+      </a>
+      <a href="#" class="nav-item" onclick="showPanel('favoritos',this);return false;">
+        <span class="nav-icon">❤️</span> Favoritos
+      </a>
+      <a href="#" class="nav-item" onclick="showPanel('perfil',this);return false;">
+        <span class="nav-icon">👤</span> Meu perfil
+      </a>
+      <a href="{% url 'listagem' %}" class="nav-item">
+        <span class="nav-icon">🔍</span> Buscar pets
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-col">
+
+    <!-- PEDIDOS -->
+    <div id="panel-pedidos" class="tab-panel active">
+      <div class="section-head">
+        <div>
+          <h2>Meus pedidos de adoção</h2>
+          <p>Acompanhe o status de cada solicitação</p>
+        </div>
+        <a href="{% url 'listagem' %}" class="see-all">+ Novo pedido</a>
+      </div>
+
+      {% for pedido in pedidos %}
+      <div class="adoption-card">
+        <div class="card-top">
+          <div class="pet-thumb {{ pedido.pet.cor_fundo }}">{{ pedido.pet.imagem_emoji }}</div>
+          <div class="card-top-info">
+            <div class="pet-name">{{ pedido.pet.nome }}</div>
+            <div class="pet-sub">{{ pedido.pet.get_especie_display }} · {{ pedido.pet.idade_texto }} · {{ pedido.pet.get_porte_display }} · {{ pedido.pet.raca }} · {{ pedido.pet.get_sexo_display }}</div>
+            <div class="ong-tag"><span class="ong-dot"></span> {{ pedido.pet.ong.nome_ong }} — {{ pedido.pet.ong.usuario.cidade }}, {{ pedido.pet.ong.usuario.estado }}</div>
+          </div>
+          <div class="card-top-right">
+            <div class="req-date">Solicitado em {{ pedido.data_solicitacao|date:"d M Y" }}</div>
+            {% if pedido.status == 'pendente' %}
+            <span class="chip chip-analysis">🔵 Pendente</span>
+            {% elif pedido.status == 'entrevista' %}
+            <span class="chip chip-analysis">🟡 Em Entrevista</span>
+            {% elif pedido.status == 'aprovada' %}
+            <span class="chip chip-approved">🟢 Aprovada</span>
+            {% elif pedido.status == 'concluida' %}
+            <span class="chip chip-done">✅ Concluída</span>
+            {% elif pedido.status == 'recusada' %}
+            <span class="chip chip-rejected">❌ Recusada</span>
+            {% endif %}
+          </div>
+        </div>
+        
+        <div class="flow">
+          <div class="flow-step done">
+            <div class="step-dot">✓</div>
+            <div class="step-lbl">Solicitar</div>
+          </div>
+          <div class="flow-step {% if pedido.status in 'entrevista,aprovada,concluida,recusada' %}done{% else %}active{% endif %} {% if pedido.status == 'recusada' %}rejected{% endif %}">
+            <div class="step-dot">{% if pedido.status in 'aprovada,concluida' %}✓{% elif pedido.status == 'recusada' %}✕{% else %}2{% endif %}</div>
+            <div class="step-lbl">Entrevista</div>
+          </div>
+          <div class="flow-step {% if pedido.status in 'aprovada,concluida' %}done{% elif pedido.status == 'entrevista' %}active{% endif %}">
+            <div class="step-dot">{% if pedido.status in 'concluida' %}✓{% else %}3{% endif %}</div>
+            <div class="step-lbl">Aprovação</div>
+          </div>
+          <div class="flow-step {% if pedido.status == 'concluida' %}done{% elif pedido.status == 'aprovada' %}active{% endif %}">
+            <div class="step-dot">4</div>
+            <div class="step-lbl">Levar p/ casa</div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="action-msg">
+            {% if pedido.status == 'recusada' %}
+            Motivo: {{ pedido.motivo_recusa }}
+            {% elif pedido.status == 'concluida' %}
+            🎉 Adoção concluída
+            {% else %}
+            ⏳ <strong>Aguardando</strong> próximos passos
+            {% endif %}
+          </div>
+          <a href="{% url 'detalhe' pedido.pet.id %}" class="btn-card">Ver pet →</a>
+        </div>
+      </div>
+      {% empty %}
+      <p>Você ainda não fez nenhum pedido de adoção.</p>
+      {% endfor %}
+    </div>
+
+    <!-- FAVORITOS -->
+    <div id="panel-favoritos" class="tab-panel">
+      <div class="section-head">
+        <div><h2>Pets favoritos</h2><p>Pets que você salvou</p></div>
+        <a href="{% url 'listagem' %}" class="see-all">Ver todos →</a>
+      </div>
+      <div class="fav-grid">
+        {% for fav in favoritos %}
+        <div class="fav-card" onclick="window.location='{% url 'detalhe' fav.pet.id %}'">
+          <div class="fav-img {{ fav.pet.cor_fundo }}">{{ fav.pet.imagem_emoji }}</div>
+          <div class="fav-body">
+            <div class="fav-name">{{ fav.pet.nome }}</div>
+            <div class="fav-meta">{{ fav.pet.get_especie_display }} · {{ fav.pet.idade_texto }} · {{ fav.pet.get_porte_display }}</div>
+            <span class="fav-badge fav-avail">{{ fav.pet.get_status_display }}</span>
+          </div>
+        </div>
+        {% empty %}
+        <p>Você não tem favoritos.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div id="panel-perfil" class="tab-panel">
+      <div class="section-head">
+        <div><h2>Meu perfil</h2><p>Suas informações cadastradas</p></div>
+        <a href="{% url 'editar_usuario' %}" class="see-all">Editar ✏️</a>
+      </div>
+      <div class="adoption-card">
+        <div class="perfil-grid">
+          <div class="info-item"><span class="info-label">Nome completo</span><span class="info-value">{{ adotante.usuario.get_full_name|default:adotante.usuario.username }}</span></div>
+          <div class="info-item"><span class="info-label">Idade</span><span class="info-value">{{ adotante.idade|default:"-" }} anos</span></div>
+          <div class="info-item"><span class="info-label">E-mail</span><span class="info-value">{{ adotante.usuario.email|default:"-" }}</span></div>
+          <div class="info-item"><span class="info-label">Telefone</span><span class="info-value">{{ adotante.usuario.telefone|default:"-" }}</span></div>
+          <div class="info-item"><span class="info-label">Tipo de moradia</span><span class="info-value">{{ adotante.get_tipo_moradia_display|default:"-" }}</span></div>
+          <div class="info-item"><span class="info-label">Localização</span><span class="info-value">{{ adotante.usuario.cidade }}, {{ adotante.usuario.estado }}</span></div>
+          <div class="info-item"><span class="info-label">Ocupação</span><span class="info-value">{{ adotante.ocupacao|default:"-" }}</span></div>
+          <div class="info-item"><span class="info-label">Moradores</span><span class="info-value">{{ adotante.moradores|default:"-" }}</span></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <a href="{% url 'listagem' %}">📋 Listagem</a>
+  <a href="#">🐾 Detalhe</a>
+  <a href="{% url 'painel_adotante' %}" class="active">👤 Painel</a>
+</div>
+
+<script>
+  function showPanel(name, el) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
