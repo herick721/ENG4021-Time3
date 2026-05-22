@@ -43,33 +43,36 @@ O **PetConect** é um hub completo para donos de pets, adotantes, resgatadores e
 
 ### Passo a passo
 
+**1. Clone o repositório**
+Abra o seu terminal e rode o comando abaixo para clonar o repositório:
 ```bash
-# 1. Clonar apenas a pasta da aplicação
-git clone --no-checkout https://github.com/herick721/ENG4021-Time3.git
-cd ENG4021-Time3
-git sparse-checkout init --cone
-git sparse-checkout set petconnect
-git checkout main
+git clone https://github.com/herick721/ENG4021-Time3
+cd /ENG4021-Time3/petconnect
+```
 
-# 2. Entrar na pasta
-cd petconnect
-
-# 3. Criar e ativar o ambiente virtual
+**2. Crie e ative um ambiente virtual**
+É recomendado usar um ambiente virtual para instalar as dependências.
+```bash
+# Criar o ambiente virtual (chamado 'venv')
 python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # Mac/Linux
 
-# 4. Instalar dependências
+# Ativar no Windows:
+venv\Scripts\activate
+
+# Ativar no Linux/Mac:
+source venv/bin/activate
+```
+
+**3. Instale as dependências**
+Com o ambiente ativado, instale as bibliotecas necessárias:
+```bash
 pip install -r requirements.txt
+```
 
-# 5. Rodar as migrations
-python manage.py migrate
-
-# 6. Popular o banco com dados de exemplo
-python populate.py
-
-# 7. Iniciar o servidor
-python manage.py runserver
+**3. Instale as dependências**
+Com o ambiente ativado, instale as bibliotecas necessárias:
+```bash
+pip install -r requirements.txt
 ```
 
 Abrir no navegador: **http://127.0.0.1:8000**
