@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Cadastrar Pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --beige: #fef3e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --error: #ef4444;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .intro {
+    margin-bottom: 32px;
+  }
+  .intro h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .intro p { color: var(--text-muted); font-size: 15px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(15, 118, 110, 0.06);
+    border: 1px solid rgba(15, 118, 110, 0.08);
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .field label .required { color: var(--error); }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+    appearance: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+  .field textarea { resize: vertical; min-height: 100px; }
+
+  /* Upload area */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 40px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    background: var(--bg);
+  }
+  .upload-area:hover {
+    border-color: var(--teal);
+    background: var(--teal-soft);
+  }
+  .upload-icon { font-size: 36px; margin-bottom: 12px; }
+  .upload-area p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .upload-area span {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  /* Checkboxes */
+  .check-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .2s;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .check-item input[type="checkbox"] {
+    accent-color: var(--teal);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  .check-item:has(input:checked) {
+    border-color: var(--teal);
+    background: var(--teal-soft);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .btn-cancel {
+    padding: 13px 28px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
+  .btn-submit {
+    padding: 13px 32px;
+    border-radius: 10px;
+    border: none;
+    background: var(--teal);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-submit:hover { background: var(--teal-dark); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>ONG Patinhas Felizes</span>
+    <div class="nav-avatar">PF</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="intro">
+    <h1>Cadastrar novo pet 🐾</h1>
+    <p>Preencha as informações do animal para colocá-lo disponível para adoção.</p>
+  </div>
+
+  <form>
+    <!-- INFORMAÇÕES BÁSICAS -->
+    <div class="card">
+      <div class="card-title">📋 Informações básicas</div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="nome">Nome do pet <span class="required">*</span></label>
+          <input type="text" id="nome" placeholder="Ex: Bolinha" />
+        </div>
+        <div class="field">
+          <label for="especie">Espécie <span class="required">*</span></label>
+          <select id="especie">
+            <option value="">Selecione</option>
+            <option>Cão</option>
+            <option>Gato</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="raca">Raça</label>
+          <input type="text" id="raca" placeholder="Ex: SRD, Labrador..." />
+        </div>
+        <div class="field">
+          <label for="sexo">Sexo <span class="required">*</span></label>
+          <select id="sexo">
+            <option value="">Selecione</option>
+            <option>Macho</option>
+            <option>Fêmea</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="idade">Idade <span class="required">*</span></label>
+          <input type="text" id="idade" placeholder="Ex: 2 anos, 6 meses" />
+        </div>
+        <div class="field">
+          <label for="porte">Porte <span class="required">*</span></label>
+          <select id="porte">
+            <option value="">Selecione</option>
+            <option>Pequeno</option>
+            <option>Médio</option>
+            <option>Grande</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="descricao">Descrição <span class="required">*</span></label>
+          <textarea id="descricao" placeholder="Conte a história e personalidade do pet..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTOS -->
+    <div class="card">
+      <div class="card-title">📸 Fotos do pet</div>
+      <div class="upload-area">
+        <div class="upload-icon">📷</div>
+        <p>Clique para enviar fotos ou arraste aqui</p>
+        <span>PNG, JPG até 5MB · Mínimo 1 foto</span>
+      </div>
+    </div>
+
+    <!-- SAÚDE -->
+    <div class="card">
+      <div class="card-title">💉 Saúde</div>
+      <div class="check-grid">
+        <label class="check-item">
+          <input type="checkbox" /> 💉 Vacinado
+        </label>
+        <label class="check-item">
+          <input type="checkbox" /> ✂️ Castrado
+        </label>
+        <label class="check-item">
+          <input type="checkbox" /> 💊 Vermifugado
+        </label>
+        <label class="check-item">
+          <input type="checkbox" /> 🔬 Microchip
+        </label>
+      </div>
+    </div>
+
+    <!-- COMPATIBILIDADES -->
+    <div class="card">
+      <div class="card-title">🤝 Compatibilidades</div>
+      <div class="check-grid">
+        <label class="check-item">
+          <input type="checkbox" /> 👶 Crianças
+        </label>
+        <label class="check-item">
+          <input type="checkbox" /> 🐕 Outros cães
+        </label>
+        <label class="check-item">
+          <input type="checkbox" /> 🐱 Gatos
+        </label>
+        <label class="check-item">
+          <input type="checkbox" /> 🏠 Apartamento
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="solicitacoes.html" class="btn-cancel">Cancelar</a>
+      <button type="submit" class="btn-submit">Publicar pet</button>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>
