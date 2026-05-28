@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Busca Avançada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --yellow-soft: #fef3c7;
+    --pink-card: #fce7e7;
+    --peach-card: #fce7c8;
+    --blue-card: #dbe6ff;
+    --purple-card: #e9d5ff;
+    --green-card: #c7f0d8;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  nav ul { list-style: none; display: flex; gap: 40px; }
+  nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 15px;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--teal); font-weight: 600; }
+
+  .auth-buttons { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-outline { background: #fff; color: var(--teal); border: 1.5px solid var(--teal); }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  .layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 36px 48px 80px;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* FILTROS SIDEBAR */
+  .filters-sidebar {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 90px;
+  }
+  .filters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .filters-header h2 { font-size: 15px; font-weight: 700; }
+  .clear-btn {
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .clear-btn:hover { text-decoration: underline; }
+
+  .filter-group { margin-bottom: 20px; }
+  .filter-group-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .filter-options { display: flex; flex-wrap: wrap; gap: 7px; }
+  .filter-chip {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .filter-chip.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .filter-chip:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+
+  .filter-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    appearance: none;
+    transition: border-color .2s;
+  }
+  .filter-select:focus { border-color: var(--teal); }
+
+  .btn-aplicar {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: 4px;
+  }
+  .btn-aplicar:hover { background: var(--teal-dark); }
+
+  /* RESULTADOS */
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .results-header h1 { font-size: 20px; font-weight: 800; }
+  .results-header p { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
+
+  .sort-select {
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    appearance: none;
+    transition: border-color .2s;
+  }
+  .sort-select:focus { border-color: var(--teal); }
+
+  /* Active filters */
+  .active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .active-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .active-tag button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--teal-dark);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .pets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .pet-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .pet-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,0.08); }
+
+  .pet-image {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    position: relative;
+  }
+  .bg-pink { background: var(--pink-card); }
+  .bg-peach { background: var(--peach-card); }
+  .bg-blue { background: var(--blue-card); }
+  .bg-purple { background: var(--purple-card); }
+  .bg-green { background: var(--green-card); }
+
+  .heart-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .pet-info { padding: 14px 16px 18px; }
+  .pet-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .pet-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .pet-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .pet-tag {
+    font-size: 11px;
+    background: var(--bg);
+    padding: 3px 8px;
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .pet-footer { display: flex; align-items: center; justify-content: space-between; }
+  .ong-name { font-size: 11px; color: var(--text-light); font-weight: 500; }
+  .adopt-btn {
+    background: var(--orange);
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s;
+  }
+  .adopt-btn:hover { background: var(--orange-dark); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="listagem.html" class="active">Adotar</a></li>
+      <li><a href="lar_temporario.html">Lar temporário</a></li>
+      <li><a href="#">Como funciona</a></li>
+    </ul>
+  </nav>
+  <div class="auth-buttons">
+    <button class="btn btn-outline">Entrar</button>
+    <button class="btn btn-primary">Cadastrar</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- FILTROS -->
+  <aside class="filters-sidebar">
+    <div class="filters-header">
+      <h2>Filtros</h2>
+      <button class="clear-btn">Limpar tudo</button>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Espécie</div>
+      <div class="filter-options">
+        <button class="filter-chip active">🐕 Cão</button>
+        <button class="filter-chip">🐈 Gato</button>
+        <button class="filter-chip">🐾 Outro</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Porte</div>
+      <div class="filter-options">
+        <button class="filter-chip active">Pequeno</button>
+        <button class="filter-chip">Médio</button>
+        <button class="filter-chip">Grande</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Sexo</div>
+      <div class="filter-options">
+        <button class="filter-chip">Macho</button>
+        <button class="filter-chip">Fêmea</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Idade</div>
+      <div class="filter-options">
+        <button class="filter-chip">Filhote</button>
+        <button class="filter-chip active">Jovem</button>
+        <button class="filter-chip">Adulto</button>
+        <button class="filter-chip">Idoso</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Cidade</div>
+      <select class="filter-select">
+        <option>São Paulo, SP</option>
+        <option>Rio de Janeiro, RJ</option>
+        <option>Belo Horizonte, MG</option>
+        <option>Todas as cidades</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Saúde</div>
+      <div class="filter-options">
+        <button class="filter-chip">💉 Vacinado</button>
+        <button class="filter-chip">✂️ Castrado</button>
+        <button class="filter-chip">💊 Vermifugado</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-group-title">Compatível com</div>
+      <div class="filter-options">
+        <button class="filter-chip">👶 Crianças</button>
+        <button class="filter-chip">🐕 Outros cães</button>
+        <button class="filter-chip">🐱 Gatos</button>
+        <button class="filter-chip">🏠 Apartamento</button>
+      </div>
+    </div>
+
+    <button class="btn-aplicar">Aplicar filtros</button>
+  </aside>
+
+  <!-- RESULTADOS -->
+  <main>
+    <div class="results-header">
+      <div>
+        <h1>Resultados da busca</h1>
+        <p>24 pets encontrados</p>
+      </div>
+      <select class="sort-select">
+        <option>Mais recentes</option>
+        <option>Mais antigos</option>
+        <option>Menor para maior</option>
+      </select>
+    </div>
+
+    <div class="active-filters">
+      <span class="active-tag">🐕 Cão <button>×</button></span>
+      <span class="active-tag">Pequeno <button>×</button></span>
+      <span class="active-tag">Jovem <button>×</button></span>
+      <span class="active-tag">São Paulo <button>×</button></span>
+    </div>
+
+    <div class="pets-grid">
+
+      <div class="pet-card">
+        <div class="pet-image bg-pink">
+          <button class="heart-btn">🤍</button>🐕
+        </div>
+        <div class="pet-info">
+          <div class="pet-name">Bolinha</div>
+          <div class="pet-meta">Cão · 2 anos · Médio · SRD</div>
+          <div class="pet-tags">
+            <span class="pet-tag">💉 Vacinado</span>
+            <span class="pet-tag">✂️ Castrado</span>
+          </div>
+          <div class="pet-footer">
+            <span class="ong-name">ONG Patinhas SP</span>
+            <a href="detalhe.html" class="adopt-btn">Adotar →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-card">
+        <div class="pet-image bg-peach">
+          <button class="heart-btn">❤️</button>🐕
+        </div>
+        <div class="pet-info">
+          <div class="pet-name">Buddy</div>
+          <div class="pet-meta">Cão · 1 ano · Pequeno · SRD</div>
+          <div class="pet-tags">
+            <span class="pet-tag">💉 Vacinado</span>
+            <span class="pet-tag">👶 Crianças</span>
+          </div>
+          <div class="pet-footer">
+            <span class="ong-name">Amigos Fiéis SP</span>
+            <a href="#" class="adopt-btn">Adotar →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-card">
+        <div class="pet-image bg-blue">
+          <button class="heart-btn">🤍</button>🦮
+        </div>
+        <div class="pet-info">
+          <div class="pet-name">Thor</div>
+          <div class="pet-meta">Cão · 4 anos · Grande · SRD</div>
+          <div class="pet-tags">
+            <span class="pet-tag">💉 Vacinado</span>
+            <span class="pet-tag">🐾 Pets</span>
+          </div>
+          <div class="pet-footer">
+            <span class="ong-name">Cãopanheiros RJ</span>
+            <a href="#" class="adopt-btn">Adotar →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-card">
+        <div class="pet-image bg-purple">
+          <button class="heart-btn">🤍</button>🐕
+        </div>
+        <div class="pet-info">
+          <div class="pet-name">Max</div>
+          <div class="pet-meta">Cão · 3 anos · Médio · Labrador</div>
+          <div class="pet-tags">
+            <span class="pet-tag">💉 Vacinado</span>
+            <span class="pet-tag">✂️ Castrado</span>
+          </div>
+          <div class="pet-footer">
+            <span class="ong-name">Proteção Animal BH</span>
+            <a href="#" class="adopt-btn">Adotar →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-card">
+        <div class="pet-image bg-green">
+          <button class="heart-btn">🤍</button>🐕‍🦺
+        </div>
+        <div class="pet-info">
+          <div class="pet-name">Luna</div>
+          <div class="pet-meta">Cão · 2 anos · Pequeno · SRD</div>
+          <div class="pet-tags">
+            <span class="pet-tag">💉 Vacinado</span>
+            <span class="pet-tag">🏠 Apartamento</span>
+          </div>
+          <div class="pet-footer">
+            <span class="ong-name">ONG Patinhas SP</span>
+            <a href="#" class="adopt-btn">Adotar →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-card">
+        <div class="pet-image bg-pink">
+          <button class="heart-btn">❤️</button>🐕
+        </div>
+        <div class="pet-info">
+          <div class="pet-name">Pipoca</div>
+          <div class="pet-meta">Cão · 6 meses · Pequeno · SRD</div>
+          <div class="pet-tags">
+            <span class="pet-tag">💉 Vacinado</span>
+            <span class="pet-tag">👶 Crianças</span>
+          </div>
+          <div class="pet-footer">
+            <span class="ong-name">Resgate Animal SP</span>
+            <a href="#" class="adopt-btn">Adotar →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+</body>
+</html>
