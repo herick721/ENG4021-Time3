@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Painel de Aprovações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --red-soft: #fee2e2;
+    --red: #ef4444;
+    --red-dark: #dc2626;
+    --yellow-soft: #fef3c7;
+    --yellow: #eab308;
+    --blue-soft: #dbeafe;
+    --blue: #3b82f6;
+    --purple-soft: #ede9fe;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  nav ul { list-style: none; display: flex; gap: 40px; }
+  nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 0;
+    position: relative;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--teal); font-weight: 600; }
+  nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -22px;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .user-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .user-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    border: 2px solid var(--teal);
+  }
+  .user-name {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .user-role {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ---- PAGE LAYOUT ---- */
+  .page-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+  }
+
+  /* ---- PAGE HEADER ---- */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .page-header p {
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+
+  /* ---- STATS BAR ---- */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .stat-icon.orange { background: #fef3c7; }
+  .stat-icon.teal { background: var(--teal-light); }
+  .stat-icon.green { background: var(--green-soft); }
+  .stat-icon.red { background: var(--red-soft); }
+  .stat-value {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ---- TABS ---- */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--border-light);
+    border-radius: 12px;
+    padding: 4px;
+    width: fit-content;
+    margin-bottom: 28px;
+  }
+  .tab {
+    padding: 9px 20px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab.active {
+    background: #fff;
+    color: var(--text);
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .tab-badge {
+    background: var(--orange);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 7px;
+    min-width: 20px;
+    text-align: center;
+  }
+  .tab.active .tab-badge { background: var(--teal); }
+
+  /* ---- ANIMAL SECTION ---- */
+  .animal-section {
+    margin-bottom: 32px;
+  }
+  .animal-section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: box-shadow .2s;
+    border: 2px solid transparent;
+  }
+  .animal-section-header:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .animal-section-header.expanded { border-color: var(--teal); }
+
+  .animal-emoji {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .animal-info { flex: 1; }
+  .animal-info h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .animal-info p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .animal-badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .badge {
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-pending { background: var(--yellow-soft); color: #92400e; }
+  .badge-available { background: var(--green-soft); color: #065f46; }
+  .badge-adopted { background: var(--teal-light); color: var(--teal-dark); }
+  .badge-count {
+    background: var(--orange);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+  }
+  .chevron {
+    color: var(--text-light);
+    transition: transform .2s;
+    flex-shrink: 0;
+  }
+  .chevron.open { transform: rotate(180deg); }
+
+  /* ---- CANDIDATES LIST ---- */
+  .candidates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 20px;
+    border-left: 3px solid var(--teal-light);
+    margin-left: 26px;
+  }
+
+  .candidate-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1.5px solid var(--border);
+    transition: border-color .2s, box-shadow .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .candidate-card:hover { border-color: var(--teal); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+  .candidate-card.approved { border-color: #10b981; background: #f0fdf4; }
+  .candidate-card.rejected { border-color: var(--red); background: #fff8f8; }
+  .candidate-card.reviewing { border-left: 4px solid var(--orange); }
+
+  .card-accent {
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 14px 0 0 14px;
+  }
+  .card-accent.pending { background: var(--orange); }
+  .card-accent.approved { background: #10b981; }
+  .card-accent.rejected { background: var(--red); }
+
+  .candidate-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .candidate-avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    flex-shrink: 0;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .candidate-meta { flex: 1; }
+  .candidate-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .candidate-details {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .candidate-details span { display: flex; align-items: center; gap: 4px; }
+  .candidate-status {
+    display: flex;
+    align-items: center;
+  }
+
+  .status-pill {
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .status-pill::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .status-pill.pending { background: var(--yellow-soft); color: #92400e; }
+  .status-pill.pending::before { background: var(--yellow); }
+  .status-pill.approved { background: var(--green-soft); color: #065f46; }
+  .status-pill.approved::before { background: #10b981; }
+  .status-pill.rejected { background: var(--red-soft); color: #991b1b; }
+  .status-pill.rejected::before { background: var(--red); }
+
+  /* ---- INFO GRID ---- */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .info-item {
+    background: var(--border-light);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .info-item label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+  .info-item p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ---- MOTIVATION BOX ---- */
+  .motivation-box {
+    background: var(--border-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--teal);
+  }
+  .motivation-box label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .motivation-box p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ---- ACTION AREA ---- */
+  .action-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .action-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all .2s;
+  }
+  .btn-approve {
+    background: #10b981;
+    color: #fff;
+  }
+  .btn-approve:hover { background: #059669; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16,185,129,0.35); }
+  .btn-reject {
+    background: var(--red-soft);
+    color: var(--red-dark);
+    border: 1.5px solid #fca5a5;
+  }
+  .btn-reject:hover { background: var(--red); color: #fff; transform: translateY(-1px); }
+  .btn-view {
+    background: #fff;
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-view:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-schedule {
+    background: var(--blue-soft);
+    color: #1d4ed8;
+    border: 1.5px solid #bfdbfe;
+  }
+  .btn-schedule:hover { background: var(--blue); color: #fff; }
+
+  .action-date {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  /* ---- FEEDBACK AREA ---- */
+  .feedback-area {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: none;
+  }
+  .feedback-area.visible { display: block; }
+  .feedback-area label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .feedback-area textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: border-color .2s;
+    color: var(--text);
+  }
+  .feedback-area textarea:focus { border-color: var(--teal); }
+  .feedback-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: flex-end;
+  }
+  .btn-confirm-reject {
+    background: var(--red);
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: background .2s;
+  }
+  .btn-confirm-reject:hover { background: var(--red-dark); }
+  .btn-cancel {
+    background: var(--border-light);
+    color: var(--text-muted);
+    padding: 9px 18px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background .2s;
+  }
+  .btn-cancel:hover { background: var(--border); }
+
+  /* ---- APPROVED/REJECTED RESULT ---- */
+  .result-banner {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+  }
+  .result-banner.show { display: flex; }
+  .result-banner.approved-banner { background: var(--green-soft); color: #065f46; }
+  .result-banner.rejected-banner { background: var(--red-soft); color: #991b1b; }
+
+  /* ---- EMPTY STATE ---- */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 14px; }
+  .empty-state h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ---- MODAL ---- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    animation: modalIn .25s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .modal-title { font-size: 20px; font-weight: 800; }
+  .modal-close {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: var(--border-light);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: background .2s;
+  }
+  .modal-close:hover { background: var(--border); }
+  .modal-body { font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+  .modal-profile {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 16px;
+    background: var(--border-light);
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  .modal-avatar {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    flex-shrink: 0;
+  }
+  .modal-profile-info h4 { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+  .modal-profile-info p { font-size: 13px; color: var(--text-muted); }
+  .modal-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 14px;
+  }
+  .modal-detail-row:last-of-type { border-bottom: none; }
+  .modal-detail-row span:first-child { color: var(--text-muted); }
+  .modal-detail-row span:last-child { font-weight: 600; }
+  .modal-footer {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* ---- TOAST ---- */
+  .toast-container {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--text);
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    animation: toastIn .3s ease;
+    pointer-events: all;
+    max-width: 320px;
+  }
+  .toast.success { background: #065f46; }
+  .toast.error { background: #991b1b; }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(12px); }
+  }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 900px) {
+    header { padding: 16px 20px; flex-wrap: wrap; gap: 12px; }
+    nav ul { gap: 20px; }
+    .page-wrap { padding: 28px 20px 60px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="listagem.html">Adotar</a></li>
+      <li><a href="#">Lar temporário</a></li>
+      <li><a href="#" class="active">Meu Painel</a></li>
+      <li><a href="#">Para ONGs</a></li>
+    </ul>
+  </nav>
+  <div class="user-area">
+    <div>
+      <div class="user-name">ONG Amigos Fiéis</div>
+      <div class="user-role">Resgatadora · Rio de Janeiro</div>
+    </div>
+    <div class="user-avatar">🏠</div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="page-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Painel de Solicitações</h1>
+      <p>Gerencie os candidatos à adoção dos seus animais cadastrados</p>
+    </div>
+    <a href="listagem.html" style="text-decoration:none;">
+      <button class="action-btn btn-view" style="padding:11px 20px;font-size:14px;">
+        ← Voltar à listagem
+      </button>
+    </a>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-icon orange">⏳</div>
+      <div>
+        <div class="stat-value">5</div>
+        <div class="stat-label">Aguardando análise</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon teal">🐾</div>
+      <div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">Animais com solicitações</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">✅</div>
+      <div>
+        <div class="stat-value">12</div>
+        <div class="stat-label">Adoções aprovadas</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red">📋</div>
+      <div>
+        <div class="stat-value">8</div>
+        <div class="stat-label">Total de candidatos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'pending')">
+      Em análise <span class="tab-badge">5</span>
+    </button>
+    <button class="tab" onclick="switchTab(this,'approved')">
+      Aprovados <span class="tab-badge" style="background:var(--teal)">12</span>
+    </button>
+    <button class="tab" onclick="switchTab(this,'rejected')">
+      Rejeitados <span class="tab-badge" style="background:var(--text-light)">4</span>
+    </button>
+  </div>
+
+  <!-- ===== TAB: PENDING ===== -->
+  <div id="tab-pending">
+
+    <!-- ANIMAL: BOLINHA -->
+    <div class="animal-section">
+      <div class="animal-section-header expanded" onclick="toggleSection(this)">
+        <div class="animal-emoji" style="background:#fde2e4;">🐕</div>
+        <div class="animal-info">
+          <h3>Bolinha</h3>
+          <p>Cão · Macho · 2 anos · Médio · Rio de Janeiro</p>
+        </div>
+        <div class="animal-badges">
+          <span class="badge badge-pending">Em análise</span>
+          <span class="badge-count">3 candidatos</span>
+        </div>
+        <svg class="chevron open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <div class="candidates-list" id="section-bolinha">
+
+        <!-- Candidato 1 -->
+        <div class="candidate-card" id="card-1">
+          <div class="card-accent pending"></div>
+          <div class="candidate-header">
+            <div class="candidate-avatar">MA</div>
+            <div class="candidate-meta">
+              <div class="candidate-name">Maria Aparecida Santos</div>
+              <div class="candidate-details">
+                <span>📧 maria.santos@email.com</span>
+                <span>📱 (21) 99123-4567</span>
+                <span>🏠 Apartamento · Tijuca</span>
+              </div>
+            </div>
+            <div class="candidate-status">
+              <span class="status-pill pending">Em análise</span>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Moradia</label>
+              <p>Apartamento 80m²</p>
+            </div>
+            <div class="info-item">
+              <label>Outros pets</label>
+              <p>Nenhum</p>
+            </div>
+            <div class="info-item">
+              <label>Experiência</label>
+              <p>Teve cão antes</p>
+            </div>
+          </div>
+
+          <div class="motivation-box">
+            <label>Motivação da candidata</label>
+            <p>"Sempre tive cachorros e meu último faleceu há 6 meses. Estou pronta para dar muito amor para um novo companheiro. Moro perto de um parque e faço caminhadas diárias."</p>
+          </div>
+
+          <div class="action-area">
+            <button class="action-btn btn-approve" onclick="approve('card-1', 'Maria Aparecida')">
+              ✅ Aprovar adoção
+            </button>
+            <button class="action-btn btn-reject" onclick="showRejectArea('card-1')">
+              ❌ Rejeitar
+            </button>
+            <button class="action-btn btn-schedule" onclick="openModal('modal-1')">
+              📅 Agendar entrevista
+            </button>
+            <button class="action-btn btn-view" onclick="openModal('modal-1')">
+              👤 Ver perfil completo
+            </button>
+            <span class="action-date">Solicitado em 24/05/2026</span>
+          </div>
+
+          <div class="feedback-area" id="reject-area-card-1">
+            <label>Motivo da rejeição (opcional, mas recomendado):</label>
+            <textarea id="reject-reason-card-1" placeholder="Ex: O espaço disponível não atende ao porte do animal, recomendamos buscar um animal menor..."></textarea>
+            <div class="feedback-buttons">
+              <button class="btn-cancel" onclick="hideRejectArea('card-1')">Cancelar</button>
+              <button class="btn-confirm-reject" onclick="reject('card-1', 'Maria Aparecida')">Confirmar rejeição</button>
+            </div>
+          </div>
+
+          <div class="result-banner approved-banner" id="result-card-1"></div>
+        </div>
+
+        <!-- Candidato 2 -->
+        <div class="candidate-card" id="card-2">
+          <div class="card-accent pending"></div>
+          <div class="candidate-header">
+            <div class="candidate-avatar" style="background:linear-gradient(135deg,#fef3c7,var(--orange));color:#92400e;">JP</div>
+            <div class="candidate-meta">
+              <div class="candidate-name">João Pedro Oliveira</div>
+              <div class="candidate-details">
+                <span>📧 joao.pedro@gmail.com</span>
+                <span>📱 (21) 98765-4321</span>
+                <span>🏠 Casa · Botafogo</span>
+              </div>
+            </div>
+            <div class="candidate-status">
+              <span class="status-pill pending">Em análise</span>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Moradia</label>
+              <p>Casa com quintal</p>
+            </div>
+            <div class="info-item">
+              <label>Outros pets</label>
+              <p>1 gato castrado</p>
+            </div>
+            <div class="info-item">
+              <label>Experiência</label>
+              <p>Primeira adoção</p>
+            </div>
+          </div>
+
+          <div class="motivation-box">
+            <label>Motivação do candidato</label>
+            <p>"Tenho uma casa grande com quintal gramado e muito espaço para um cachorro. Meu gato é super tranquilo e já conviveu com cães antes. Busco um companheiro para a família."</p>
+          </div>
+
+          <div class="action-area">
+            <button class="action-btn btn-approve" onclick="approve('card-2', 'João Pedro')">
+              ✅ Aprovar adoção
+            </button>
+            <button class="action-btn btn-reject" onclick="showRejectArea('card-2')">
+              ❌ Rejeitar
+            </button>
+            <button class="action-btn btn-schedule">
+              📅 Agendar entrevista
+            </button>
+            <button class="action-btn btn-view">
+              👤 Ver perfil completo
+            </button>
+            <span class="action-date">Solicitado em 25/05/2026</span>
+          </div>
+
+          <div class="feedback-area" id="reject-area-card-2">
+            <label>Motivo da rejeição (opcional, mas recomendado):</label>
+            <textarea id="reject-reason-card-2" placeholder="Ex: Incompatibilidade com os outros pets da família..."></textarea>
+            <div class="feedback-buttons">
+              <button class="btn-cancel" onclick="hideRejectArea('card-2')">Cancelar</button>
+              <button class="btn-confirm-reject" onclick="reject('card-2', 'João Pedro')">Confirmar rejeição</button>
+            </div>
+          </div>
+
+          <div class="result-banner approved-banner" id="result-card-2"></div>
+        </div>
+
+        <!-- Candidato 3 -->
+        <div class="candidate-card" id="card-3">
+          <div class="card-accent pending"></div>
+          <div class="candidate-header">
+            <div class="candidate-avatar" style="background:linear-gradient(135deg,var(--purple-soft),#a78bfa);color:#5b21b6;">LC</div>
+            <div class="candidate-meta">
+              <div class="candidate-name">Luciana Costa</div>
+              <div class="candidate-details">
+                <span>📧 luciana.c@outlook.com</span>
+                <span>📱 (21) 97654-3210</span>
+                <span>🏠 Apartamento · Flamengo</span>
+              </div>
+            </div>
+            <div class="candidate-status">
+              <span class="status-pill pending">Em análise</span>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Moradia</label>
+              <p>Apto 120m² + vaga</p>
+            </div>
+            <div class="info-item">
+              <label>Outros pets</label>
+              <p>Nenhum</p>
+            </div>
+            <div class="info-item">
+              <label>Experiência</label>
+              <p>Criou cão por 10 anos</p>
+            </div>
+          </div>
+
+          <div class="motivation-box">
+            <label>Motivação da candidata</label>
+            <p>"Perdi meu labrador em março e sinto muito a falta de ter um pet em casa. Trabalho em home office e estaria com o animal a maior parte do tempo. Tenho experiência com cães de médio porte."</p>
+          </div>
+
+          <div class="action-area">
+            <button class="action-btn btn-approve" onclick="approve('card-3', 'Luciana Costa')">
+              ✅ Aprovar adoção
+            </button>
+            <button class="action-btn btn-reject" onclick="showRejectArea('card-3')">
+              ❌ Rejeitar
+            </button>
+            <button class="action-btn btn-schedule">
+              📅 Agendar entrevista
+            </button>
+            <button class="action-btn btn-view">
+              👤 Ver perfil completo
+            </button>
+            <span class="action-date">Solicitado em 27/05/2026</span>
+          </div>
+
+          <div class="feedback-area" id="reject-area-card-3">
+            <label>Motivo da rejeição (opcional, mas recomendado):</label>
+            <textarea id="reject-reason-card-3" placeholder="Digite o motivo..."></textarea>
+            <div class="feedback-buttons">
+              <button class="btn-cancel" onclick="hideRejectArea('card-3')">Cancelar</button>
+              <button class="btn-confirm-reject" onclick="reject('card-3', 'Luciana Costa')">Confirmar rejeição</button>
+            </div>
+          </div>
+
+          <div class="result-banner approved-banner" id="result-card-3"></div>
+        </div>
+
+      </div><!-- /candidates-list bolinha -->
+    </div><!-- /animal-section bolinha -->
+
+    <!-- ANIMAL: MEL -->
+    <div class="animal-section">
+      <div class="animal-section-header expanded" onclick="toggleSection(this)">
+        <div class="animal-emoji" style="background:#fef3c7;">🐈</div>
+        <div class="animal-info">
+          <h3>Mel</h3>
+          <p>Gata · Fêmea · 1 ano · Pequena · Rio de Janeiro</p>
+        </div>
+        <div class="animal-badges">
+          <span class="badge badge-pending">Em análise</span>
+          <span class="badge-count">2 candidatos</span>
+        </div>
+        <svg class="chevron open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <div class="candidates-list" id="section-mel">
+
+        <!-- Candidato 4 -->
+        <div class="candidate-card" id="card-4">
+          <div class="card-accent pending"></div>
+          <div class="candidate-header">
+            <div class="candidate-avatar" style="background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af;">RF</div>
+            <div class="candidate-meta">
+              <div class="candidate-name">Rafael Ferreira</div>
+              <div class="candidate-details">
+                <span>📧 rafael.f@email.com</span>
+                <span>📱 (21) 96543-2109</span>
+                <span>🏠 Apartamento · Ipanema</span>
+              </div>
+            </div>
+            <div class="candidate-status">
+              <span class="status-pill pending">Em análise</span>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Moradia</label>
+              <p>Apartamento 65m²</p>
+            </div>
+            <div class="info-item">
+              <label>Outros pets</label>
+              <p>1 gato castrado</p>
+            </div>
+            <div class="info-item">
+              <label>Experiência</label>
+              <p>Tem gato há 3 anos</p>
+            </div>
+          </div>
+
+          <div class="motivation-box">
+            <label>Motivação do candidato</label>
+            <p>"Meu gato Pedro fica sozinho quando trabalho e achei que um companheiro faria bem para ele. Moro em apto espaçoso, tela em todas as janelas e muito carinho para dar."</p>
+          </div>
+
+          <div class="action-area">
+            <button class="action-btn btn-approve" onclick="approve('card-4', 'Rafael Ferreira')">
+              ✅ Aprovar adoção
+            </button>
+            <button class="action-btn btn-reject" onclick="showRejectArea('card-4')">
+              ❌ Rejeitar
+            </button>
+            <button class="action-btn btn-schedule">
+              📅 Agendar entrevista
+            </button>
+            <button class="action-btn btn-view">
+              👤 Ver perfil completo
+            </button>
+            <span class="action-date">Solicitado em 26/05/2026</span>
+          </div>
+
+          <div class="feedback-area" id="reject-area-card-4">
+            <label>Motivo da rejeição (opcional, mas recomendado):</label>
+            <textarea id="reject-reason-card-4" placeholder="Digite o motivo..."></textarea>
+            <div class="feedback-buttons">
+              <button class="btn-cancel" onclick="hideRejectArea('card-4')">Cancelar</button>
+              <button class="btn-confirm-reject" onclick="reject('card-4', 'Rafael Ferreira')">Confirmar rejeição</button>
+            </div>
+          </div>
+
+          <div class="result-banner approved-banner" id="result-card-4"></div>
+        </div>
+
+        <!-- Candidato 5 -->
+        <div class="candidate-card" id="card-5">
+          <div class="card-accent pending"></div>
+          <div class="candidate-header">
+            <div class="candidate-avatar" style="background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d;">BM</div>
+            <div class="candidate-meta">
+              <div class="candidate-name">Beatriz Mendes</div>
+              <div class="candidate-details">
+                <span>📧 bia.mendes@gmail.com</span>
+                <span>📱 (21) 95432-1098</span>
+                <span>🏠 Casa · Santa Teresa</span>
+              </div>
+            </div>
+            <div class="candidate-status">
+              <span class="status-pill pending">Em análise</span>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Moradia</label>
+              <p>Casa 2 andares</p>
+            </div>
+            <div class="info-item">
+              <label>Outros pets</label>
+              <p>Nenhum</p>
+            </div>
+            <div class="info-item">
+              <label>Experiência</label>
+              <p>Primeira adoção</p>
+            </div>
+          </div>
+
+          <div class="motivation-box">
+            <label>Motivação da candidata</label>
+            <p>"Sempre sonhei em ter uma gata. Tenho uma casa tranquila em Santa Teresa, trabalho de casa e toda minha família apoia. Pesquisei muito sobre cuidados felinos."</p>
+          </div>
+
+          <div class="action-area">
+            <button class="action-btn btn-approve" onclick="approve('card-5', 'Beatriz Mendes')">
+              ✅ Aprovar adoção
+            </button>
+            <button class="action-btn btn-reject" onclick="showRejectArea('card-5')">
+              ❌ Rejeitar
+            </button>
+            <button class="action-btn btn-schedule">
+              📅 Agendar entrevista
+            </button>
+            <button class="action-btn btn-view">
+              👤 Ver perfil completo
+            </button>
+            <span class="action-date">Solicitado em 28/05/2026</span>
+          </div>
+
+          <div class="feedback-area" id="reject-area-card-5">
+            <label>Motivo da rejeição (opcional, mas recomendado):</label>
+            <textarea id="reject-reason-card-5" placeholder="Digite o motivo..."></textarea>
+            <div class="feedback-buttons">
+              <button class="btn-cancel" onclick="hideRejectArea('card-5')">Cancelar</button>
+              <button class="btn-confirm-reject" onclick="reject('card-5', 'Beatriz Mendes')">Confirmar rejeição</button>
+            </div>
+          </div>
+
+          <div class="result-banner approved-banner" id="result-card-5"></div>
+        </div>
+
+      </div>
+    </div><!-- /mel -->
+
+  </div><!-- /tab-pending -->
+
+  <!-- ===== TAB: APPROVED ===== -->
+  <div id="tab-approved" style="display:none;">
+    <div class="empty-state">
+      <div class="icon">✅</div>
+      <h3>12 adoções aprovadas</h3>
+      <p>Todas as solicitações aprovadas aparecem aqui com o histórico completo.</p>
+    </div>
+  </div>
+
+  <!-- ===== TAB: REJECTED ===== -->
+  <div id="tab-rejected" style="display:none;">
+    <div class="empty-state">
+      <div class="icon">📋</div>
+      <h3>4 solicitações rejeitadas</h3>
+      <p>O histórico de rejeições com os feedbacks enviados fica registrado aqui.</p>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<!-- MODAL: Perfil Completo -->
+<div class="modal-overlay" id="modal-1">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Perfil completo do candidato</div>
+      <button class="modal-close" onclick="closeModal('modal-1')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-profile">
+        <div class="modal-avatar">MA</div>
+        <div class="modal-profile-info">
+          <h4>Maria Aparecida Santos</h4>
+          <p>Candidata para adoção de <strong>Bolinha</strong></p>
+        </div>
+      </div>
+      <div class="modal-detail-row">
+        <span>Tipo de moradia</span>
+        <span>Apartamento 80m² · Tijuca, RJ</span>
+      </div>
+      <div class="modal-detail-row">
+        <span>Outros animais na casa</span>
+        <span>Nenhum</span>
+      </div>
+      <div class="modal-detail-row">
+        <span>Crianças em casa</span>
+        <span>Não</span>
+      </div>
+      <div class="modal-detail-row">
+        <span>Experiência anterior</span>
+        <span>Teve cão por 8 anos (faleceu)</span>
+      </div>
+      <div class="modal-detail-row">
+        <span>Horas fora de casa/dia</span>
+        <span>~4 horas</span>
+      </div>
+      <div class="modal-detail-row">
+        <span>Castração pretendida</span>
+        <span>Sim (já castrado)</span>
+      </div>
+      <div class="modal-detail-row">
+        <span>Data da solicitação</span>
+        <span>24/05/2026 às 14h32</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-1')" style="padding:10px 20px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;background:var(--border-light);color:var(--text-muted);">Fechar</button>
+      <button class="action-btn btn-approve" onclick="approve('card-1','Maria Aparecida'); closeModal('modal-1')">✅ Aprovar agora</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+  // --- TAB SWITCHING ---
+  function switchTab(btn, tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    ['pending','approved','rejected'].forEach(t => {
+      document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+    });
+  }
+
+  // --- SECTION TOGGLE ---
+  function toggleSection(header) {
+    const chevron = header.querySelector('.chevron');
+    const sectionId = header.closest('.animal-section').querySelector('.candidates-list');
+    const isOpen = chevron.classList.contains('open');
+    chevron.classList.toggle('open', !isOpen);
+    header.classList.toggle('expanded', !isOpen);
+    sectionId.style.display = isOpen ? 'none' : 'flex';
+  }
+
+  // --- REJECT AREA ---
+  function showRejectArea(cardId) {
+    document.getElementById('reject-area-' + cardId).classList.add('visible');
+  }
+  function hideRejectArea(cardId) {
+    document.getElementById('reject-area-' + cardId).classList.remove('visible');
+  }
+
+  // --- APPROVE ---
+  function approve(cardId, name) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+
+    // Update accent + card style
+    card.querySelector('.card-accent').className = 'card-accent approved';
+    card.classList.add('approved');
+
+    // Update status pill
+    const pill = card.querySelector('.status-pill');
+    pill.className = 'status-pill approved';
+    pill.textContent = 'Aprovado ✓';
+
+    // Hide actions
+    card.querySelector('.action-area').style.display = 'none';
+    hideRejectArea(cardId);
+
+    // Show result banner
+    const banner = document.getElementById('result-' + cardId);
+    banner.className = 'result-banner approved-banner show';
+    banner.innerHTML = '✅ Adoção aprovada! ' + name + ' será notificado(a) por e-mail com as próximas etapas.';
+
+    showToast('Adoção de ' + name + ' aprovada com sucesso!', 'success');
+    updateCounters();
+  }
+
+  // --- REJECT ---
+  function reject(cardId, name) {
+    const card = document.getElementById(cardId);
+    const reason = document.getElementById('reject-reason-' + cardId).value;
+    if (!card) return;
+
+    card.querySelector('.card-accent').className = 'card-accent rejected';
+    card.classList.add('rejected');
+
+    const pill = card.querySelector('.status-pill');
+    pill.className = 'status-pill rejected';
+    pill.textContent = 'Rejeitado';
+
+    card.querySelector('.action-area').style.display = 'none';
+    hideRejectArea(cardId);
+
+    const banner = document.getElementById('result-' + cardId);
+    banner.className = 'result-banner rejected-banner show';
+    banner.innerHTML = '❌ Solicitação rejeitada. ' + name + ' será notificado(a)' + (reason ? ' com o feedback fornecido.' : ' sem feedback adicional.');
+
+    showToast('Solicitação de ' + name + ' rejeitada.', 'error');
+    updateCounters();
+  }
+
+  // --- MODAL ---
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) closeModal(this.id);
+    });
+  });
+
+  // --- TOAST ---
+  function showToast(msg, type = '') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.innerHTML = (type === 'success' ? '✅ ' : '❌ ') + msg;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.animation = 'toastOut .3s ease forwards';
+      setTimeout(() => toast.remove(), 300);
+    }, 3500);
+  }
+
+  // --- UPDATE COUNTERS ---
+  function updateCounters() {
+    const pendingCards = document.querySelectorAll('#tab-pending .candidate-card:not(.approved):not(.rejected)').length;
+    const firstTabBadge = document.querySelector('.tab.active .tab-badge') ||
+                          document.querySelectorAll('.tab')[0].querySelector('.tab-badge');
+    if (firstTabBadge) firstTabBadge.textContent = pendingCards;
+  }
+</script>
+</body>
+</html>
