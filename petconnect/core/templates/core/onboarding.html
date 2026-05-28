@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Bem-vindo!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --beige: #fef3e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --purple-soft: #f3e8ff;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--beige) 100%);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  .onboarding-wrap { width: 100%; max-width: 620px; }
+
+  /* Indicador de passos */
+  .steps-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all .3s;
+  }
+  .dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background: var(--teal);
+  }
+  .dot.done { background: var(--teal-light); }
+
+  /* STEP 1 — Boas-vindas */
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .step-intro {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .step-icon { font-size: 64px; display: block; margin-bottom: 16px; }
+  .step-intro h1 {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .step-intro h1 .accent { color: var(--teal); }
+  .step-intro p { color: var(--text-muted); font-size: 15px; line-height: 1.7; max-width: 460px; margin: 0 auto; }
+
+  /* Perfis */
+  .profiles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .profile-option {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px 16px;
+    border: 2px solid var(--border-light);
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .profile-option:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .profile-option.selected { border-color: var(--teal); background: var(--teal-soft); }
+  .profile-icon { font-size: 40px; margin-bottom: 12px; display: block; }
+  .profile-name { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+  .profile-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* STEP 2 — Preferências */
+  .prefs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .pref-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px;
+    border: 2px solid var(--border-light);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .pref-card:hover { border-color: var(--teal); }
+  .pref-card.selected { border-color: var(--teal); background: var(--teal-soft); }
+  .pref-card.selected .pref-check { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .pref-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .pref-icon { font-size: 24px; flex-shrink: 0; }
+  .pref-label { font-size: 13px; font-weight: 700; }
+
+  /* STEP 3 — Cidade */
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .field input,
+  .field select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none;
+  }
+  .field input:focus,
+  .field select:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+
+  /* Card wrapper */
+  .step-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow: 0 4px 24px rgba(15,118,110,0.07);
+    border: 1px solid rgba(15,118,110,0.08);
+    margin-bottom: 16px;
+  }
+
+  /* Botões */
+  .step-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn-back {
+    padding: 13px 24px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-back:hover { border-color: var(--text-muted); color: var(--text); }
+  .btn-next {
+    flex: 1;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-next:hover { background: var(--teal-dark); }
+
+  .skip-link {
+    display: block;
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .skip-link:hover { color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+</header>
+
+<div class="container">
+  <div class="onboarding-wrap">
+
+    <!-- Indicador -->
+    <div class="steps-indicator">
+      <div class="dot active" id="dot1"></div>
+      <div class="dot" id="dot2"></div>
+      <div class="dot" id="dot3"></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step active" id="step1">
+      <div class="step-card">
+        <div class="step-intro">
+          <span class="step-icon">🐾</span>
+          <h1>Bem-vindo ao <span class="accent">Petconnect!</span></h1>
+          <p>Para personalizar sua experiência, nos diga como você pretende usar a plataforma.</p>
+        </div>
+
+        <div class="profiles-grid">
+          <div class="profile-option selected">
+            <span class="profile-icon">🏠</span>
+            <div class="profile-name">Quero adotar</div>
+            <div class="profile-desc">Encontrar um pet para me tornar seu lar definitivo</div>
+          </div>
+          <div class="profile-option">
+            <span class="profile-icon">🐾</span>
+            <div class="profile-name">Sou ONG</div>
+            <div class="profile-desc">Cadastrar pets e gerenciar processos de adoção</div>
+          </div>
+          <div class="profile-option">
+            <span class="profile-icon">💛</span>
+            <div class="profile-name">Lar temporário</div>
+            <div class="profile-desc">Acolher pets enquanto aguardam uma família</div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-next" onclick="goStep(2)">Continuar →</button>
+        </div>
+      </div>
+      <span class="skip-link" onclick="goStep(2)">Pular personalização</span>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step2">
+      <div class="step-card">
+        <div class="step-intro">
+          <span class="step-icon">🐕</span>
+          <h1>O que você está <span class="accent">procurando?</span></h1>
+          <p>Selecione suas preferências para ver os pets mais relevantes para você.</p>
+        </div>
+
+        <div class="prefs-grid">
+          <div class="pref-card selected">
+            <div class="pref-check">✓</div>
+            <span class="pref-icon">🐕</span>
+            <span class="pref-label">Cães</span>
+          </div>
+          <div class="pref-card">
+            <div class="pref-check"></div>
+            <span class="pref-icon">🐈</span>
+            <span class="pref-label">Gatos</span>
+          </div>
+          <div class="pref-card">
+            <div class="pref-check"></div>
+            <span class="pref-icon">🐣</span>
+            <span class="pref-label">Filhotes</span>
+          </div>
+          <div class="pref-card selected">
+            <div class="pref-check">✓</div>
+            <span class="pref-icon">🧓</span>
+            <span class="pref-label">Adultos</span>
+          </div>
+          <div class="pref-card">
+            <div class="pref-check"></div>
+            <span class="pref-icon">📏</span>
+            <span class="pref-label">Pequeno porte</span>
+          </div>
+          <div class="pref-card">
+            <div class="pref-check"></div>
+            <span class="pref-icon">📐</span>
+            <span class="pref-label">Grande porte</span>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-back" onclick="goStep(1)">← Voltar</button>
+          <button class="btn-next" onclick="goStep(3)">Continuar →</button>
+        </div>
+      </div>
+      <span class="skip-link" onclick="goStep(3)">Pular</span>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step3">
+      <div class="step-card">
+        <div class="step-intro">
+          <span class="step-icon">📍</span>
+          <h1>Onde você <span class="accent">mora?</span></h1>
+          <p>Vamos mostrar pets disponíveis perto de você.</p>
+        </div>
+
+        <div class="field">
+          <label for="estado">Estado</label>
+          <select id="estado">
+            <option value="">Selecione seu estado</option>
+            <option>São Paulo</option>
+            <option>Rio de Janeiro</option>
+            <option>Minas Gerais</option>
+            <option>Rio Grande do Sul</option>
+            <option>Paraná</option>
+            <option>Santa Catarina</option>
+            <option>Bahia</option>
+            <option>Outros</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="cidade">Cidade</label>
+          <input type="text" id="cidade" placeholder="Ex: São Paulo" />
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-back" onclick="goStep(2)">← Voltar</button>
+          <a href="listagem.html" class="btn-next" style="text-decoration:none; text-align:center; display:flex; align-items:center; justify-content:center;">Começar a explorar 🐾</a>
+        </div>
+      </div>
+      <span class="skip-link"><a href="listagem.html" style="color:inherit; text-decoration:none;">Pular e explorar sem filtros</a></span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function goStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.dot').forEach(d => d.classList.remove('active', 'done'));
+    document.getElementById('step' + n).classList.add('active');
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.getElementById('dot' + i);
+      if (i < n) dot.classList.add('done');
+      else if (i === n) dot.classList.add('active');
+    }
+  }
+</script>
+
+</body>
+</html>
