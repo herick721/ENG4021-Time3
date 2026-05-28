@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Histórico de Adoções</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --yellow-soft: #fef3c7;
+    --red-soft: #fee2e2;
+    --blue-soft: #dbeafe;
+    --pink-card: #fce7e7;
+    --peach-card: #fce7c8;
+    --blue-card: #dbe6ff;
+    --purple-card: #e9d5ff;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  nav ul { list-style: none; display: flex; gap: 40px; }
+  nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 0;
+    position: relative;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--teal); font-weight: 600; }
+  nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -22px;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .auth-buttons { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-outline { background: #fff; color: var(--teal); border: 1.5px solid var(--teal); }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* SIDEBAR */
+  .profile-sidebar {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 90px;
+  }
+  .avatar-big {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    margin: 0 auto 14px;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .profile-name { font-size: 16px; font-weight: 800; text-align: center; margin-bottom: 4px; }
+  .profile-location { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px; }
+
+  .profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .stat-box strong { display: block; font-size: 18px; font-weight: 800; color: var(--teal); }
+  .stat-box span { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+  .sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all .2s;
+  }
+  .sidebar-link:hover { background: var(--bg); color: var(--text); }
+  .sidebar-link.active { background: var(--teal-soft); color: var(--teal); }
+
+  /* MAIN */
+  .main-col { display: flex; flex-direction: column; gap: 0; }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-header h1 { font-size: 22px; font-weight: 800; }
+  .page-header p { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Filtros */
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .filter-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .filter-btn:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+
+  /* Cards de histórico */
+  .history-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .history-card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    align-items: center;
+  }
+
+  .pet-thumb {
+    height: 100%;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+  }
+  .bg-pink { background: var(--pink-card); }
+  .bg-peach { background: var(--peach-card); }
+  .bg-blue { background: var(--blue-card); }
+  .bg-purple { background: var(--purple-card); }
+
+  .history-info { padding: 20px; }
+  .history-pet-name { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+  .history-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+  .history-ong { font-size: 12px; color: var(--text-light); font-weight: 500; margin-bottom: 10px; }
+
+  .timeline {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .timeline-step {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+  }
+  .timeline-step.done { background: var(--green-soft); color: #047857; border-color: transparent; }
+  .timeline-step.current { background: var(--teal); color: #fff; border-color: transparent; }
+  .timeline-sep { color: var(--text-light); font-size: 11px; }
+
+  .history-right {
+    padding: 20px 24px 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .status-badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .status-adotado { background: var(--green-soft); color: #047857; }
+  .status-pendente { background: var(--yellow-soft); color: #d97706; }
+  .status-recusada { background: var(--red-soft); color: #b91c1c; }
+  .status-entrevista { background: var(--blue-soft); color: #1d4ed8; }
+
+  .history-date { font-size: 12px; color: var(--text-light); }
+  .btn-ver {
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .btn-ver:hover { border-color: var(--teal); color: var(--teal); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="listagem.html">Adotar</a></li>
+      <li><a href="#">Lar temporário</a></li>
+      <li><a href="#">Como funciona</a></li>
+    </ul>
+  </nav>
+  <div class="auth-buttons">
+    <button class="btn btn-outline">Entrar</button>
+    <button class="btn btn-primary">Cadastrar</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="profile-sidebar">
+      <div class="avatar-big">👤</div>
+      <div class="profile-name">João Silva</div>
+      <div class="profile-location">📍 Rio de Janeiro, RJ</div>
+      <div class="profile-stats">
+        <div class="stat-box">
+          <strong>4</strong>
+          <span>Solicitações</span>
+        </div>
+        <div class="stat-box">
+          <strong>1</strong>
+          <span>Adoções</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="sidebar-link">👤 Meu perfil</a>
+        <a href="favoritos.html" class="sidebar-link">❤️ Favoritos</a>
+        <a href="#" class="sidebar-link active">📋 Histórico</a>
+        <a href="editar_usuario.html" class="sidebar-link">✏️ Editar perfil</a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="main-col">
+    <div class="page-header">
+      <div>
+        <h1>Histórico de adoções</h1>
+        <p>Acompanhe todas as suas solicitações</p>
+      </div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active">Todos</button>
+      <button class="filter-btn">Adotados</button>
+      <button class="filter-btn">Pendentes</button>
+      <button class="filter-btn">Recusados</button>
+    </div>
+
+    <div class="history-list">
+
+      <!-- Adoção concluída -->
+      <div class="history-card">
+        <div class="pet-thumb bg-pink">🐕</div>
+        <div class="history-info">
+          <div class="history-pet-name">Rex</div>
+          <div class="history-meta">Cão · 5 anos · Grande · SRD · Macho</div>
+          <div class="history-ong">🏠 Proteção Animal BH</div>
+          <div class="timeline">
+            <span class="timeline-step done">Solicitação</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step done">Entrevista</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step done">Termo</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step done">Adotado</span>
+          </div>
+        </div>
+        <div class="history-right">
+          <span class="status-badge status-adotado">✓ Adotado</span>
+          <span class="history-date">10 Jan 2026</span>
+          <a href="detalhe.html" class="btn-ver">Ver pet</a>
+        </div>
+      </div>
+
+      <!-- Em entrevista -->
+      <div class="history-card">
+        <div class="pet-thumb bg-peach">🐕</div>
+        <div class="history-info">
+          <div class="history-pet-name">Bolinha</div>
+          <div class="history-meta">Cão · 2 anos · Médio · SRD · Macho</div>
+          <div class="history-ong">🏠 ONG Patinhas SP</div>
+          <div class="timeline">
+            <span class="timeline-step done">Solicitação</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step current">Entrevista</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Termo</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Retirada</span>
+          </div>
+        </div>
+        <div class="history-right">
+          <span class="status-badge status-entrevista">Em entrevista</span>
+          <span class="history-date">14 Mai 2026</span>
+          <a href="detalhe.html" class="btn-ver">Ver pet</a>
+        </div>
+      </div>
+
+      <!-- Recusada -->
+      <div class="history-card">
+        <div class="pet-thumb bg-blue">🐈</div>
+        <div class="history-info">
+          <div class="history-pet-name">Mel</div>
+          <div class="history-meta">Gata · 1 ano · Pequena · Fêmea</div>
+          <div class="history-ong">🏠 Resgate Felino SP</div>
+          <div class="timeline">
+            <span class="timeline-step done">Solicitação</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Entrevista</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Termo</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Retirada</span>
+          </div>
+        </div>
+        <div class="history-right">
+          <span class="status-badge status-recusada">Recusada</span>
+          <span class="history-date">02 Mar 2026</span>
+          <a href="#" class="btn-ver">Ver pet</a>
+        </div>
+      </div>
+
+      <!-- Pendente -->
+      <div class="history-card">
+        <div class="pet-thumb bg-purple">🦮</div>
+        <div class="history-info">
+          <div class="history-pet-name">Thor</div>
+          <div class="history-meta">Cão · 4 anos · Grande · Macho</div>
+          <div class="history-ong">🏠 Cãopanheiros RJ</div>
+          <div class="timeline">
+            <span class="timeline-step current">Solicitação</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Entrevista</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Termo</span>
+            <span class="timeline-sep">›</span>
+            <span class="timeline-step">Retirada</span>
+          </div>
+        </div>
+        <div class="history-right">
+          <span class="status-badge status-pendente">Pendente</span>
+          <span class="history-date">20 Mai 2026</span>
+          <a href="#" class="btn-ver">Ver pet</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
