@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Notificações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --yellow-soft: #fef3c7;
+    --blue-soft: #dbeafe;
+    --red-soft: #fee2e2;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .page-header h1 { font-size: 26px; font-weight: 800; }
+  .page-header p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+  .mark-all {
+    font-size: 13px;
+    color: var(--teal);
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .mark-all:hover { text-decoration: underline; }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .filter-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .filter-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .filter-btn:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+
+  .notif-group { margin-bottom: 28px; }
+  .notif-group-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+
+  .notif-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .notif-item {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid var(--border-light);
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: border-color .2s;
+    position: relative;
+  }
+  .notif-item.unread {
+    border-color: var(--teal-light);
+    background: var(--teal-soft);
+  }
+  .notif-item:hover { border-color: var(--teal); }
+
+  .unread-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--teal);
+    border-radius: 50%;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    flex-shrink: 0;
+  }
+
+  .notif-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .icon-green { background: var(--green-soft); }
+  .icon-yellow { background: var(--yellow-soft); }
+  .icon-blue { background: var(--blue-soft); }
+  .icon-red { background: var(--red-soft); }
+  .icon-teal { background: var(--teal-light); }
+
+  .notif-body { flex: 1; min-width: 0; }
+  .notif-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .notif-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 6px; }
+  .notif-time { font-size: 12px; color: var(--text-light); font-weight: 500; }
+
+  .notif-action {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .notif-action:hover { border-color: var(--teal); color: var(--teal); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>João Silva</span>
+    <div class="nav-avatar">JS</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="page-header">
+    <div>
+      <h1>Notificações</h1>
+      <p>3 não lidas</p>
+    </div>
+    <button class="mark-all">Marcar todas como lidas</button>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active">Todas</button>
+    <button class="filter-btn">Adoções</button>
+    <button class="filter-btn">Mensagens</button>
+    <button class="filter-btn">Favoritos</button>
+  </div>
+
+  <!-- HOJE -->
+  <div class="notif-group">
+    <div class="notif-group-title">Hoje</div>
+    <div class="notif-list">
+
+      <div class="notif-item unread">
+        <div class="unread-dot"></div>
+        <div class="notif-icon icon-green">✅</div>
+        <div class="notif-body">
+          <div class="notif-title">Solicitação aprovada!</div>
+          <div class="notif-desc">A ONG Patinhas SP aprovou sua solicitação para adotar o Bolinha. Próximo passo: assinar o termo de adoção.</div>
+          <div class="notif-time">Há 32 minutos</div>
+          <a href="confirmacao_adocao.html" class="notif-action">Ver detalhes →</a>
+        </div>
+      </div>
+
+      <div class="notif-item unread">
+        <div class="unread-dot"></div>
+        <div class="notif-icon icon-teal">💬</div>
+        <div class="notif-body">
+          <div class="notif-title">Nova mensagem da ONG Patinhas SP</div>
+          <div class="notif-desc">Olá! Podemos agendar a visita para conhecer o Bolinha. Qual dia seria melhor para você?</div>
+          <div class="notif-time">Há 1 hora</div>
+          <a href="chat_ong.html" class="notif-action">Responder →</a>
+        </div>
+      </div>
+
+      <div class="notif-item unread">
+        <div class="unread-dot"></div>
+        <div class="notif-icon icon-yellow">⏰</div>
+        <div class="notif-body">
+          <div class="notif-title">Entrevista agendada</div>
+          <div class="notif-desc">Sua entrevista com a ONG Cãopanheiros RJ sobre o Thor está marcada para amanhã às 15h.</div>
+          <div class="notif-time">Há 3 horas</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ONTEM -->
+  <div class="notif-group">
+    <div class="notif-group-title">Ontem</div>
+    <div class="notif-list">
+
+      <div class="notif-item">
+        <div class="notif-icon icon-red">💔</div>
+        <div class="notif-body">
+          <div class="notif-title">Pet favorito adotado</div>
+          <div class="notif-desc">A Nina, que estava nos seus favoritos, foi adotada por outra família. Que ela seja muito feliz! 🐱</div>
+          <div class="notif-time">Ontem às 18:40</div>
+          <a href="listagem.html" class="notif-action">Ver outros pets</a>
+        </div>
+      </div>
+
+      <div class="notif-item">
+        <div class="notif-icon icon-blue">📋</div>
+        <div class="notif-body">
+          <div class="notif-title">Solicitação recebida pela ONG</div>
+          <div class="notif-desc">A Resgate Felino SP recebeu sua solicitação para adotar a Mel e vai analisar em breve.</div>
+          <div class="notif-time">Ontem às 10:15</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEMANA PASSADA -->
+  <div class="notif-group">
+    <div class="notif-group-title">Semana passada</div>
+    <div class="notif-list">
+
+      <div class="notif-item">
+        <div class="notif-icon icon-green">🎉</div>
+        <div class="notif-body">
+          <div class="notif-title">Bem-vindo ao Petconnect!</div>
+          <div class="notif-desc">Sua conta foi criada com sucesso. Comece explorando os pets disponíveis para adoção.</div>
+          <div class="notif-time">20 Mai 2026</div>
+          <a href="listagem.html" class="notif-action">Explorar pets</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
