@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Avaliar ONG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --beige: #fef3e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--beige) 100%);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .container {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .intro {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .intro-icon {
+    font-size: 56px;
+    display: block;
+    margin-bottom: 16px;
+  }
+  .intro h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .intro p { color: var(--text-muted); font-size: 15px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: 0 4px 24px rgba(15,118,110,0.06);
+    border: 1px solid rgba(15,118,110,0.08);
+    margin-bottom: 16px;
+  }
+
+  /* Resumo da adoção */
+  .adoption-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg);
+    border-radius: 14px;
+    margin-bottom: 28px;
+  }
+  .pet-emoji {
+    width: 56px;
+    height: 56px;
+    background: var(--orange-soft);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+  .adoption-info h3 { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+  .adoption-info p { font-size: 13px; color: var(--text-muted); }
+
+  /* Estrelas */
+  .rating-section { margin-bottom: 28px; }
+  .rating-label {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .stars {
+    display: flex;
+    gap: 8px;
+  }
+  .star {
+    font-size: 36px;
+    cursor: pointer;
+    transition: transform .15s;
+    line-height: 1;
+  }
+  .star:hover { transform: scale(1.2); }
+  .star.filled { filter: none; }
+  .star.empty { filter: grayscale(1) opacity(0.3); }
+
+  /* Critérios */
+  .criteria-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .criteria-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .criteria-name { font-size: 14px; font-weight: 600; }
+  .criteria-stars { display: flex; gap: 4px; }
+  .criteria-star { font-size: 20px; cursor: pointer; transition: transform .15s; }
+  .criteria-star:hover { transform: scale(1.15); }
+
+  /* Campo de texto */
+  .field { margin-bottom: 24px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    resize: vertical;
+    min-height: 110px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .field textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+
+  /* Tags */
+  .tags-label { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: block; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .tag {
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .tag.selected { background: var(--teal-soft); color: var(--teal); border-color: var(--teal); }
+  .tag:hover:not(.selected) { border-color: var(--teal); color: var(--teal); }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+    margin-bottom: 10px;
+  }
+  .btn-submit:hover { background: var(--teal-dark); }
+  .btn-skip {
+    width: 100%;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 10px;
+    transition: color .2s;
+  }
+  .btn-skip:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+</header>
+
+<div class="container">
+  <div class="intro">
+    <span class="intro-icon">⭐</span>
+    <h1>Como foi sua experiência?</h1>
+    <p>Sua avaliação ajuda outras pessoas a escolherem boas ONGs para adotar.</p>
+  </div>
+
+  <div class="card">
+    <div class="adoption-summary">
+      <div class="pet-emoji">🐕</div>
+      <div class="adoption-info">
+        <h3>Adoção do Bolinha</h3>
+        <p>ONG Patinhas SP · Concluída em 28 Mai 2026</p>
+      </div>
+    </div>
+
+    <form>
+      <!-- Nota geral -->
+      <div class="rating-section">
+        <span class="rating-label">Nota geral para a ONG Patinhas SP</span>
+        <div class="stars">
+          <span class="star filled">⭐</span>
+          <span class="star filled">⭐</span>
+          <span class="star filled">⭐</span>
+          <span class="star filled">⭐</span>
+          <span class="star empty">⭐</span>
+        </div>
+      </div>
+
+      <!-- Critérios -->
+      <div class="criteria-list">
+        <div class="criteria-item">
+          <span class="criteria-name">Atendimento</span>
+          <div class="criteria-stars">
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+          </div>
+        </div>
+        <div class="criteria-item">
+          <span class="criteria-name">Transparência</span>
+          <div class="criteria-stars">
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+          </div>
+        </div>
+        <div class="criteria-item">
+          <span class="criteria-name">Cuidado com os pets</span>
+          <div class="criteria-stars">
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+          </div>
+        </div>
+        <div class="criteria-item">
+          <span class="criteria-name">Processo de adoção</span>
+          <div class="criteria-stars">
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+            <span class="criteria-star">⭐</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags rápidas -->
+      <span class="tags-label">O que você destacaria? (opcional)</span>
+      <div class="tags">
+        <button type="button" class="tag selected">👍 Atendimento rápido</button>
+        <button type="button" class="tag selected">❤️ Muito cuidadosos</button>
+        <button type="button" class="tag">📋 Processo claro</button>
+        <button type="button" class="tag">💬 Boa comunicação</button>
+        <button type="button" class="tag">🏠 Ambiente limpo</button>
+        <button type="button" class="tag">✅ Recomendo</button>
+      </div>
+
+      <!-- Comentário -->
+      <div class="field">
+        <label for="comentario">Deixe um comentário (opcional)</label>
+        <textarea id="comentario" placeholder="Conte como foi sua experiência com a ONG..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit">Enviar avaliação</button>
+      <button type="button" class="btn-skip">Pular por agora</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
