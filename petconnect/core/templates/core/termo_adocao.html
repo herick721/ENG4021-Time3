@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Termo de Adoção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --error: #ef4444;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .page-header { margin-bottom: 28px; }
+  .page-header h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+  .page-header p { color: var(--text-muted); font-size: 15px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Partes envolvidas */
+  .parties-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .party-box {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .party-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .party-name { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .party-detail { font-size: 13px; color: var(--text-muted); margin-bottom: 2px; }
+
+  /* Pet */
+  .pet-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .pet-emoji-box {
+    width: 56px;
+    height: 56px;
+    background: var(--orange-soft);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+  .pet-row-name { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+  .pet-row-meta { font-size: 13px; color: var(--text-muted); }
+
+  /* Cláusulas */
+  .clausulas { display: flex; flex-direction: column; gap: 16px; }
+  .clausula { display: flex; gap: 14px; }
+  .clausula-num {
+    width: 24px;
+    height: 24px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .clausula-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+  .clausula-text strong { color: var(--text); }
+
+  /* Checkboxes */
+  .check-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    cursor: pointer;
+  }
+  .check-item input[type="checkbox"] {
+    accent-color: var(--teal);
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Assinatura */
+  .signature-area {
+    border: 1.5px dashed var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    text-align: center;
+    background: var(--bg);
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: 20px;
+  }
+  .signature-area:hover { border-color: var(--teal); background: var(--teal-soft); }
+  .signature-icon { font-size: 32px; margin-bottom: 10px; }
+  .signature-area p { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+  .signature-area span { font-size: 12px; color: var(--text-light); }
+
+  .info-box {
+    background: var(--teal-soft);
+    border: 1px solid var(--teal-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--teal-dark);
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .info-box span:first-child { flex-shrink: 0; font-size: 16px; }
+
+  .form-actions { display: flex; gap: 12px; }
+  .btn-cancel {
+    padding: 13px 28px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
+  .btn-submit {
+    flex: 1;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .btn-submit:hover { background: var(--teal-dark); }
+
+  .doc-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>João Silva</span>
+    <div class="nav-avatar">JS</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="page-header">
+    <h1>Termo de Adoção 📄</h1>
+    <p>Leia com atenção e assine digitalmente para concluir a adoção.</p>
+  </div>
+
+  <div class="doc-meta">
+    <span>Documento nº 2026-00487</span>
+    <span>Gerado em 28 de Maio de 2026</span>
+  </div>
+
+  <!-- Partes -->
+  <div class="card">
+    <div class="card-title">👥 Partes envolvidas</div>
+    <div class="parties-grid">
+      <div class="party-box">
+        <div class="party-label">Cedente (ONG)</div>
+        <div class="party-name">ONG Patinhas SP</div>
+        <div class="party-detail">CNPJ: 12.345.678/0001-90</div>
+        <div class="party-detail">📍 Pinheiros, São Paulo, SP</div>
+        <div class="party-detail">✉️ contato@patinhassp.org.br</div>
+      </div>
+      <div class="party-box">
+        <div class="party-label">Adotante</div>
+        <div class="party-name">João Pedro Silva</div>
+        <div class="party-detail">CPF: 123.456.789-00</div>
+        <div class="party-detail">📍 Rio de Janeiro, RJ</div>
+        <div class="party-detail">✉️ joao.silva@email.com</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animal -->
+  <div class="card">
+    <div class="card-title">🐾 Animal adotado</div>
+    <div class="pet-row">
+      <div class="pet-emoji-box">🐕</div>
+      <div>
+        <div class="pet-row-name">Bolinha</div>
+        <div class="pet-row-meta">Cão · SRD · Macho · 2 anos · Médio porte</div>
+        <div class="pet-row-meta" style="margin-top:4px;">💉 Vacinado · ✂️ Castrado · 💊 Vermifugado</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cláusulas -->
+  <div class="card">
+    <div class="card-title">📋 Cláusulas do termo</div>
+    <div class="clausulas">
+      <div class="clausula">
+        <div class="clausula-num">1</div>
+        <div class="clausula-text">O adotante compromete-se a oferecer ao animal <strong>ambiente seguro, alimentação adequada, cuidados veterinários e carinho</strong>, responsabilizando-se integralmente pelo seu bem-estar.</div>
+      </div>
+      <div class="clausula">
+        <div class="clausula-num">2</div>
+        <div class="clausula-text">O animal <strong>não poderá ser repassado, vendido ou doado</strong> sem o conhecimento e autorização prévia da ONG cedente.</div>
+      </div>
+      <div class="clausula">
+        <div class="clausula-num">3</div>
+        <div class="clausula-text">O adotante autoriza a ONG a realizar <strong>visitas de acompanhamento</strong> nos primeiros 6 meses após a adoção para verificar as condições de vida do animal.</div>
+      </div>
+      <div class="clausula">
+        <div class="clausula-num">4</div>
+        <div class="clausula-text">Em caso de <strong>impossibilidade de manter a guarda</strong> do animal, o adotante deverá entrar em contato com a ONG para que seja encontrada uma solução adequada.</div>
+      </div>
+      <div class="clausula">
+        <div class="clausula-num">5</div>
+        <div class="clausula-text">O descumprimento deste termo autoriza a ONG a <strong>resgatar o animal</strong> e tomar as medidas legais cabíveis.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmação -->
+  <div class="card">
+    <div class="card-title">✅ Confirmação</div>
+    <div class="check-list">
+      <label class="check-item">
+        <input type="checkbox" />
+        Li e concordo com todas as cláusulas deste termo de adoção.
+      </label>
+      <label class="check-item">
+        <input type="checkbox" />
+        Declaro que as informações fornecidas são verdadeiras e me responsabilizo pelo bem-estar do animal.
+      </label>
+      <label class="check-item">
+        <input type="checkbox" />
+        Estou ciente de que este documento tem validade jurídica após a assinatura digital.
+      </label>
+    </div>
+
+    <div class="info-box">
+      <span>🔒</span>
+      <span>Sua assinatura digital é protegida e tem validade jurídica conforme a Lei 14.063/2020.</span>
+    </div>
+
+    <div class="signature-area">
+      <div class="signature-icon">✍️</div>
+      <p>Clique aqui para assinar digitalmente</p>
+      <span>Será gerado um código de autenticação único</span>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel">Cancelar</button>
+      <button class="btn-submit">Assinar e concluir adoção</button>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
