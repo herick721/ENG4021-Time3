@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Fale Conosco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --beige: #fef3e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --error: #ef4444;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  nav ul { list-style: none; display: flex; gap: 40px; }
+  nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 0;
+    position: relative;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--teal); font-weight: 600; }
+  nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -22px;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .auth-buttons { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-outline { background: #fff; color: var(--teal); border: 1.5px solid var(--teal); }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--beige) 100%);
+    padding: 56px 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .hero-icon { font-size: 52px; display: block; margin-bottom: 16px; }
+  .hero h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .hero h1 .accent { color: var(--teal); }
+  .hero p { color: var(--text-muted); font-size: 16px; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+  /* CANAIS RÁPIDOS */
+  .channels-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 48px 48px 0;
+  }
+  .channels-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .channel-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    text-align: center;
+    transition: border-color .2s, transform .2s;
+  }
+  .channel-card:hover { border-color: var(--teal); transform: translateY(-3px); }
+  .channel-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+  .channel-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .channel-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px; }
+  .channel-detail { font-size: 13px; font-weight: 700; color: var(--teal); }
+
+  /* LAYOUT PRINCIPAL */
+  .main-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* FORMULÁRIO */
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 13px; font-weight: 600; }
+  .field label .required { color: var(--error); }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+  .field textarea { resize: vertical; min-height: 130px; }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: 20px;
+  }
+  .btn-submit:hover { background: var(--teal-dark); }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 10px; }
+  .faq-item {
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .faq-question {
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    transition: background .2s;
+  }
+  .faq-question:hover { background: var(--teal-soft); }
+  .faq-answer {
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    border-top: 1px solid var(--border-light);
+    background: #fff;
+  }
+
+  /* SIDEBAR */
+  .sidebar-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .sidebar-card:last-child { margin-bottom: 0; }
+  .sidebar-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+
+  .contact-list { display: flex; flex-direction: column; gap: 12px; }
+  .contact-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
+  .contact-item span:first-child { font-size: 18px; flex-shrink: 0; }
+  .contact-item div strong { display: block; font-weight: 700; font-size: 13px; margin-bottom: 1px; }
+  .contact-item div span { color: var(--text-muted); }
+
+  .hours-list { display: flex; flex-direction: column; gap: 8px; }
+  .hours-row { display: flex; justify-content: space-between; font-size: 13px; }
+  .hours-row span:first-child { color: var(--text-muted); }
+  .hours-row span:last-child { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="listagem.html">Adotar</a></li>
+      <li><a href="lar_temporario.html">Lar temporário</a></li>
+      <li><a href="como_funciona.html">Como funciona</a></li>
+      <li><a href="#" class="active">Fale conosco</a></li>
+    </ul>
+  </nav>
+  <div class="auth-buttons">
+    <button class="btn btn-outline">Entrar</button>
+    <button class="btn btn-primary">Cadastrar</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-icon">💬</span>
+  <h1>Como podemos <span class="accent">ajudar?</span></h1>
+  <p>Nossa equipe está pronta para responder suas dúvidas sobre adoção, ONGs ou a plataforma.</p>
+</div>
+
+<!-- CANAIS -->
+<div class="channels-section">
+  <div class="channels-grid">
+    <div class="channel-card">
+      <span class="channel-icon">✉️</span>
+      <h3>E-mail</h3>
+      <p>Para dúvidas gerais e suporte técnico</p>
+      <span class="channel-detail">contato@petconnect.com.br</span>
+    </div>
+    <div class="channel-card">
+      <span class="channel-icon">📱</span>
+      <h3>WhatsApp</h3>
+      <p>Atendimento rápido de seg a sex</p>
+      <span class="channel-detail">(11) 99999-0000</span>
+    </div>
+    <div class="channel-card">
+      <span class="channel-icon">⏱️</span>
+      <h3>Tempo de resposta</h3>
+      <p>Respondemos em até 24 horas úteis</p>
+      <span class="channel-detail">Seg–Sex, 9h às 18h</span>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT PRINCIPAL -->
+<div class="main-layout">
+
+  <!-- FORMULÁRIO + FAQ -->
+  <div>
+    <div class="card">
+      <div class="card-title">📩 Enviar mensagem</div>
+      <form>
+        <div class="form-grid">
+          <div class="field">
+            <label for="nome">Nome <span class="required">*</span></label>
+            <input type="text" id="nome" placeholder="Seu nome" />
+          </div>
+          <div class="field">
+            <label for="email">E-mail <span class="required">*</span></label>
+            <input type="email" id="email" placeholder="seu@email.com" />
+          </div>
+          <div class="field full">
+            <label for="assunto">Assunto <span class="required">*</span></label>
+            <select id="assunto">
+              <option value="">Selecione o assunto</option>
+              <option>Dúvida sobre adoção</option>
+              <option>Problema com minha conta</option>
+              <option>Reportar uma ONG</option>
+              <option>Cadastro de ONG</option>
+              <option>Sugestão de melhoria</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="mensagem">Mensagem <span class="required">*</span></label>
+            <textarea id="mensagem" placeholder="Descreva sua dúvida ou problema com o máximo de detalhes possível..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit">Enviar mensagem</button>
+      </form>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card">
+      <div class="card-title">❓ Perguntas frequentes</div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question">
+            A adoção pelo Petconnect tem algum custo?
+            <span>›</span>
+          </div>
+          <div class="faq-answer">Não! A plataforma é totalmente gratuita para adotantes. Algumas ONGs podem cobrar taxas de adoção referentes a vacinas e castração, mas isso é definido por cada organização.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Quanto tempo demora o processo de adoção?
+            <span>›</span>
+          </div>
+          <div class="faq-answer">O prazo varia de acordo com cada ONG, mas em média o processo leva de 7 a 21 dias, desde a solicitação até a retirada do pet.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Como cadastro minha ONG na plataforma?
+            <span>›</span>
+          </div>
+          <div class="faq-answer">Acesse a página de cadastro de ONG, preencha os dados da organização e aguarde a verificação da nossa equipe em até 3 dias úteis.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Posso adotar de qualquer cidade do Brasil?
+            <span>›</span>
+          </div>
+          <div class="faq-answer">Sim! A plataforma atende todo o Brasil. Porém, recomendamos buscar pets em sua cidade ou região para facilitar a logística de retirada.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-card">
+      <div class="sidebar-title">Informações de contato</div>
+      <div class="contact-list">
+        <div class="contact-item">
+          <span>✉️</span>
+          <div>
+            <strong>E-mail geral</strong>
+            <span>contato@petconnect.com.br</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span>🏢</span>
+          <div>
+            <strong>Suporte para ONGs</strong>
+            <span>ongs@petconnect.com.br</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span>📱</span>
+          <div>
+            <strong>WhatsApp</strong>
+            <span>(11) 99999-0000</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span>📍</span>
+          <div>
+            <strong>Endereço</strong>
+            <span>São Paulo, SP — Brasil</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">Horário de atendimento</div>
+      <div class="hours-list">
+        <div class="hours-row">
+          <span>Segunda a sexta</span>
+          <span>9h às 18h</span>
+        </div>
+        <div class="hours-row">
+          <span>Sábado</span>
+          <span>9h às 13h</span>
+        </div>
+        <div class="hours-row">
+          <span>Domingo</span>
+          <span>Fechado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">Redes sociais</div>
+      <div class="contact-list">
+        <div class="contact-item">
+          <span>📸</span>
+          <div>
+            <strong>Instagram</strong>
+            <span>@petconnect.br</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span>📘</span>
+          <div>
+            <strong>Facebook</strong>
+            <span>/petconnectbr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+</body>
+</html>
