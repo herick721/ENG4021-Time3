@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Acompanhamento Pós-Adoção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --pink-card: #fce7e7;
+    --error: #ef4444;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .page-header { margin-bottom: 24px; }
+  .page-header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .page-header p { color: var(--text-muted); font-size: 14px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Pet header */
+  .pet-hero {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--pink-card);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .pet-emoji-big {
+    font-size: 52px;
+    flex-shrink: 0;
+  }
+  .pet-hero-name { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
+  .pet-hero-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+  .days-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-soft);
+    color: #047857;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  /* Timeline de check-ins */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 24px;
+    position: relative;
+  }
+  .timeline-item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-light);
+  }
+  .timeline-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    background: var(--teal-light);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--teal-light);
+  }
+  .timeline-dot.pending {
+    background: var(--border-light);
+    box-shadow: 0 0 0 2px var(--border-light);
+  }
+  .timeline-content { flex: 1; padding-top: 6px; }
+  .timeline-date { font-size: 12px; color: var(--text-light); font-weight: 500; margin-bottom: 4px; }
+  .timeline-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+  .timeline-pending { font-size: 13px; color: var(--text-light); font-style: italic; }
+
+  /* Formulário de atualização */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-size: 13px; font-weight: 600; }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+  .field textarea { resize: vertical; min-height: 90px; }
+
+  /* Upload fotos */
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    background: var(--bg);
+  }
+  .upload-area:hover { border-color: var(--teal); background: var(--teal-soft); }
+  .upload-area p { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; }
+  .upload-area span { font-size: 12px; color: var(--text-light); }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 13px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: 4px;
+  }
+  .btn-submit:hover { background: var(--teal-dark); }
+
+  /* Sidebar */
+  .sidebar-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .sidebar-card:last-child { margin-bottom: 0; }
+  .sidebar-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+
+  .checklist { display: flex; flex-direction: column; gap: 10px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .check-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .check-done { background: var(--green-soft); color: #047857; }
+  .check-pending { background: var(--border-light); color: var(--text-light); }
+
+  .ong-contact { display: flex; flex-direction: column; gap: 8px; }
+  .ong-contact-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+  .btn-msg {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 11px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: 12px;
+  }
+  .btn-msg:hover { background: var(--teal-dark); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>João Silva</span>
+    <div class="nav-avatar">JS</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- COLUNA PRINCIPAL -->
+  <div>
+    <div class="page-header">
+      <h1>Acompanhamento pós-adoção 🐾</h1>
+      <p>Registre atualizações e compartilhe como o Bolinha está se adaptando.</p>
+    </div>
+
+    <!-- Pet -->
+    <div class="card">
+      <div class="pet-hero">
+        <span class="pet-emoji-big">🐕</span>
+        <div>
+          <div class="pet-hero-name">Bolinha</div>
+          <div class="pet-hero-meta">Cão · 2 anos · Médio · SRD · ONG Patinhas SP</div>
+          <span class="days-badge">✓ Adotado há 14 dias</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico de check-ins -->
+    <div class="card">
+      <div class="card-title">📅 Histórico de atualizações</div>
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-dot">🏠</div>
+          <div class="timeline-content">
+            <div class="timeline-date">28 Mai 2026 · Dia 1</div>
+            <div class="timeline-title">Chegada em casa</div>
+            <div class="timeline-text">O Bolinha chegou bem! Ficou um pouco tímido nas primeiras horas mas já está explorando a casa. Comeu e bebeu água normalmente.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot">💉</div>
+          <div class="timeline-content">
+            <div class="timeline-date">02 Jun 2026 · Dia 5</div>
+            <div class="timeline-title">Visita ao veterinário</div>
+            <div class="timeline-text">Consulta de rotina realizada. Peso: 14kg. Tudo certo! Médica recomendou coleira antipulgas preventiva.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot">😄</div>
+          <div class="timeline-content">
+            <div class="timeline-date">10 Jun 2026 · Dia 13</div>
+            <div class="timeline-title">Primeira semana completa</div>
+            <div class="timeline-text">Já está se sentindo em casa! Adora brincar no quintal e já reconhece o nome. Dormiu na caminha pela primeira vez sem reclamar.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot pending">📋</div>
+          <div class="timeline-content">
+            <div class="timeline-date">28 Jun 2026 · Dia 30</div>
+            <div class="timeline-title">Check-in de 1 mês</div>
+            <div class="timeline-pending">Aguardando sua atualização...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Nova atualização -->
+    <div class="card">
+      <div class="card-title">✍️ Registrar nova atualização</div>
+      <form>
+        <div class="form-grid">
+          <div class="field">
+            <label for="peso">Peso atual (kg)</label>
+            <input type="text" id="peso" placeholder="Ex: 14.5" />
+          </div>
+          <div class="field">
+            <label for="humor">Como ele está?</label>
+            <select id="humor">
+              <option>😄 Muito bem</option>
+              <option>🙂 Bem</option>
+              <option>😐 Regular</option>
+              <option>😟 Precisa de atenção</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label for="descricao">Conte como está sendo a adaptação</label>
+            <textarea id="descricao" placeholder="Como o Bolinha está se comportando? Alguma novidade?"></textarea>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div class="upload-area">
+            <p>📸 Adicionar fotos</p>
+            <span>PNG, JPG até 5MB</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Salvar atualização</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-card">
+      <div class="sidebar-title">Lista de cuidados</div>
+      <div class="checklist">
+        <div class="check-item">
+          <div class="check-icon check-done">✓</div>
+          <span>Visita veterinária inicial</span>
+        </div>
+        <div class="check-item">
+          <div class="check-icon check-done">✓</div>
+          <span>Coleira com identificação</span>
+        </div>
+        <div class="check-item">
+          <div class="check-icon check-done">✓</div>
+          <span>Check-in de 1 semana</span>
+        </div>
+        <div class="check-item">
+          <div class="check-icon check-pending">○</div>
+          <span>Check-in de 1 mês</span>
+        </div>
+        <div class="check-item">
+          <div class="check-icon check-pending">○</div>
+          <span>Reforço de vacinas</span>
+        </div>
+        <div class="check-item">
+          <div class="check-icon check-pending">○</div>
+          <span>Check-in de 6 meses</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">Contato da ONG</div>
+      <div class="ong-contact">
+        <div class="ong-contact-item">🏠 ONG Patinhas SP</div>
+        <div class="ong-contact-item">📱 (11) 99999-0000</div>
+        <div class="ong-contact-item">✉️ contato@patinhassp.org.br</div>
+      </div>
+      <button class="btn-msg">Enviar mensagem</button>
+    </div>
+  </aside>
+
+</div>
+
+</body>
+</html>
