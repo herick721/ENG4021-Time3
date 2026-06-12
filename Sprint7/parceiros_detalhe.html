@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetConect — Detalhes do Parceiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --teal-soft: #ecfdf5;
+  --orange: #f59e0b;
+  --orange-dark: #d97706;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius-lg: 24px;
+  --radius-md: 14px;
+  --transition: all 0.25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); }
+
+/* ─── NAVBAR RIGIDAMENTE IDENTICA AO INDEX ─── */
+.navbar {
+  background: var(--card);
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+}
+.logo .pet { color: var(--teal); }
+.logo .conect { color: var(--orange); }
+
+/* ─── PERFIL DO PARCEIRO ─── */
+.profile-header {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 40px;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  box-shadow: 0 4px 24px rgba(15, 118, 110, 0.04);
+}
+.profile-logo {
+  width: 100px;
+  height: 100px;
+  background: var(--teal-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  flex-shrink: 0;
+}
+.profile-info { flex: 1; }
+.profile-info h1 { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+.profile-info p { color: var(--text-muted); font-size: 14.5px; line-height: 1.6; }
+.profile-meta { display: flex; gap: 24px; color: var(--text); font-size: 13px; margin-top: 16px; font-weight: 600; }
+
+.btn-contact {
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: var(--transition);
+}
+.btn-contact:hover { background: #1ebd58; transform: translateY(-1px); }
+
+/* ─── GRID DE PRODUTOS ─── */
+.showcase-section { max-width: 1100px; margin: 0 auto 100px; padding: 0 24px; }
+.showcase-section h2 { font-weight: 800; margin-bottom: 24px; font-size: 20px; color: var(--text); }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 24px rgba(15, 118, 110, 0.04);
+}
+.product-card:hover { transform: translateY(-4px); border-color: var(--orange); }
+
+.product-image-placeholder {
+  height: 160px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+.product-details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+.product-title { font-weight: 700; font-size: 15px; margin-bottom: 8px; color: var(--text); }
+.product-price { color: var(--orange-dark); font-size: 18px; font-weight: 800; margin-top: auto; margin-bottom: 16px; }
+
+.btn-view-product {
+  text-align: center;
+  border: 2px solid var(--teal);
+  color: var(--teal);
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  transition: var(--transition);
+}
+.btn-view-product:hover { background: var(--teal); color: #fff; }
+
+@media (max-width: 768px) {
+  .profile-header { flex-direction: column; text-align: center; padding: 24px; }
+  .profile-meta { justify-content: center; flex-wrap: wrap; gap: 12px; }
+  .navbar { padding: 14px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span class="conect">C🐾nect</span>
+  </a>
+</nav>
+
+<header class="profile-header">
+  <div class="profile-logo">🏥</div>
+  <div class="profile-info">
+    <h1>Clínica VetVida</h1>
+    <p>Cuidando do seu pet com amor e excelência técnica. Oferecemos estrutura hospitalar completa, exames laboratoriais, vacinação e atendimento especializado com condições exclusivas para animais adotados.</p>
+    <div class="profile-meta">
+      <span>📍 Botafogo, Rio de Janeiro</span>
+      <span>📞 (21) 99999-8888</span>
+    </div>
+  </div>
+  <div>
+    <a href="#" class="btn-contact">💬 Chamar no WhatsApp</a>
+  </div>
+</header>
+
+<main class="showcase-section">
+  <h2>Produtos & Serviços em Destaque</h2>
+  <div class="products-grid">
+    
+    <div class="product-card">
+      <div class="product-image-placeholder">🩺</div>
+      <div class="product-details">
+        <div class="product-title">Consulta de Rotina Geral</div>
+        <div class="product-price">R$ 120,00</div>
+        <a href="produto_detalhe.html" class="btn-view-product">Ver Detalhes</a>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-image-placeholder">💉</div>
+      <div class="product-details">
+        <div class="product-title">Combo Vacina V10 + Raiva</div>
+        <div class="product-price">R$ 180,00</div>
+        <a href="produto_detalhe.html" class="btn-view-product">Ver Detalhes</a>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-image-placeholder">🧪</div>
+      <div class="product-details">
+        <div class="product-title">Check-up Hemograma Completo</div>
+        <div class="product-price">R$ 95,00</div>
+        <a href="produto_detalhe.html" class="btn-view-product">Ver Detalhes</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

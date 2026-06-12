@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetConect — Detalhes do Produto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --orange: #f59e0b;
+  --orange-dark: #d97706;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius-lg: 24px;
+  --radius-md: 14px;
+  --transition: all 0.25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); }
+
+/* ─── NAVBAR RIGIDAMENTE IDENTICA AO INDEX ─── */
+.navbar {
+  background: var(--card); padding: 18px 48px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 2px; text-decoration: none;
+}
+.logo .pet { color: var(--teal); }
+.logo .conect { color: var(--orange); }
+
+.back-link {
+  max-width: 1000px; margin: 40px auto 0; padding: 0 24px;
+  display: inline-block; color: var(--teal); text-decoration: none; font-weight: 700; font-size: 14px;
+}
+
+/* ─── CARD DE PRODUTO ─── */
+.product-container {
+  max-width: 1000px;
+  margin: 16px auto 80px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(15, 118, 110, 0.04);
+}
+.gallery-side {
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  min-height: 400px;
+}
+.info-side { padding: 48px; display: flex; flex-direction: column; }
+
+.vendor-badge {
+  align-self: flex-start;
+  background: var(--teal-light);
+  color: var(--teal-dark);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.info-side h1 { font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; color: var(--text); letter-spacing: -0.01em; }
+.price-tag { font-size: 30px; font-weight: 800; color: var(--orange-dark); margin-bottom: 24px; }
+
+.description-box {
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 14.5px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  margin-bottom: 32px;
+}
+
+.btn-buy-now {
+  background: var(--orange);
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 4px 14px rgba(245, 166, 35, 0.35);
+  transition: var(--transition);
+}
+.btn-buy-now:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+@media (max-width: 768px) {
+  .product-container { grid-template-columns: 1fr; margin: 16px 24px 80px; }
+  .info-side { padding: 32px; }
+  .navbar { padding: 14px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span class="conect">C🐾nect</span>
+  </a>
+</nav>
+
+<a href="parceiros_detalhe.html" class="back-link">← Voltar para a vitrine</a>
+
+<main class="product-container">
+  <div class="gallery-side">
+    💉
+  </div>
+  <div class="info-side">
+    <span class="vendor-badge">Parceiro: Clínica VetVida</span>
+    <h1>Combo Vacina V10 + Raiva</h1>
+    <div class="price-tag">R$ 180,00</div>
+    
+    <div class="description-box">
+      <p>Mantenha seu companheiro protegido contra as principais doenças infecciosas. O combo inclui a aplicação da vacina quádrupla/décupla (V10) e a vacina antirrábica, aplicadas por veterinários certificados na nossa unidade parceira.</p>
+    </div>
+
+    <a href="#" class="btn-buy-now">Adquirir Serviço via WhatsApp</a>
+  </div>
+</main>
+
+</body>
+</html>

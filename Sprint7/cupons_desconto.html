@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetConect — Cupons de Desconto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --orange: #f59e0b;
+  --orange-dark: #d97706;
+  --orange-soft: #fef3c7;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --transition: all 0.2s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); }
+
+.navbar {
+  background: var(--card); padding: 18px 48px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 2px; text-decoration: none;
+}
+.logo .pet { color: var(--teal); }
+.logo .conect { color: var(--orange); }
+
+.container { max-width: 1000px; margin: 40px auto 100px; padding: 0 24px; }
+
+.header { text-align: center; margin-bottom: 48px; }
+.header h1 { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 12px; letter-spacing: -0.02em; }
+.header p { color: var(--text-muted); font-size: 16px; max-width: 550px; margin: 0 auto; }
+
+/* ─── TICKET STYLE COUPONS ─── */
+.cupons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+.coupon-ticket {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  display: flex; overflow: hidden; position: relative; box-shadow: 0 4px 20px rgba(15, 118, 110, 0.02);
+}
+
+/* Picotes do ticket lateral */
+.coupon-ticket::before, .coupon-ticket::after {
+  content: ''; position: absolute; left: 110px; width: 14px; height: 14px; background: var(--bg); border-radius: 50%; z-index: 2; border: 1px solid var(--border);
+}
+.coupon-ticket::before { top: -8px; }
+.coupon-ticket::after { bottom: -8px; }
+
+.coupon-left {
+  width: 118px; background: var(--teal-light); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; font-size: 24px; font-weight: 800;
+  color: var(--teal-dark); border-right: 2px dashed var(--border); padding: 16px; text-align: center;
+}
+.coupon-left span { font-size: 12px; font-weight: 500; color: var(--teal); margin-top: 4px; }
+
+.coupon-right { padding: 24px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.coupon-vendor { font-size: 12px; font-weight: 700; color: var(--orange-dark); text-transform: uppercase; margin-bottom: 4px; }
+.coupon-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.coupon-rules { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+
+.btn-claim {
+  background: var(--teal); color: #fff; text-align: center; text-decoration: none;
+  padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; transition: var(--transition);
+}
+.btn-claim:hover { background: var(--teal-dark); }
+
+@media (max-width: 768px) {
+  .cupons-grid { grid-template-columns: 1fr; }
+  .navbar { padding: 14px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span class="conect">C🐾nect</span>
+  </a>
+</nav>
+
+<main class="container">
+  <div class="header">
+    <h1>Benefícios & Parcerias</h1>
+    <p>Adotou um animal pelo PetConect? Aproveite os cupons de descontos exclusivos oferecidos pelos nossos parceiros para as primeiras consultas e produtos!</p>
+  </div>
+
+  <div class="cupons-grid">
+    <!-- Cupom 1 -->
+    <div class="coupon-ticket">
+      <div class="coupon-left">
+        10%
+        <span>OFF</span>
+      </div>
+      <div class="coupon-right">
+        <div>
+          <div class="coupon-vendor">DogAmigo Estética</div>
+          <div class="coupon-title">Desconto no Primeiro Banho</div>
+          <div class="coupon-rules">Válido apenas para animais adotados nos últimos 30 dias na plataforma.</div>
+        </div>
+        <a href="#" class="btn-claim" onclick="alert('Código Copiado: ADOTEI10')">Resgatar Cupom</a>
+      </div>
+    </div>
+
+    <!-- Cupom 2 -->
+    <div class="coupon-ticket">
+      <div class="coupon-left">
+        🎁
+        <span>GRÁTIS</span>
+      </div>
+      <div class="coupon-right">
+        <div>
+          <div class="coupon-vendor">Clínica VetVida</div>
+          <div class="coupon-title">Avaliação Clínica Inicial</div>
+          <div class="coupon-rules">Ganhe a primeira consulta de avaliação de saúde inteiramente grátis.</div>
+        </div>
+        <a href="#" class="btn-claim" onclick="alert('Código Copiado: VETGRATIS')">Resgatar Cupom</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetConect — Empresas Parceiras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@900&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS PADRÃO PETCONECT ─── */
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --teal-soft: #ecfdf5;
+  --orange: #f59e0b;
+  --orange-dark: #d97706;
+  --orange-soft: #fef3c7;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --transition: all 0.25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* ─── NAVBAR RIGIDAMENTE IDENTICA AO INDEX ─── */
+.navbar {
+  background: var(--card);
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+}
+.logo .pet { color: var(--teal); }
+.logo .conect { color: var(--orange); }
+
+.header-right { display: flex; align-items: center; gap: 14px; font-size: 14px; }
+.header-right a { color: var(--teal); font-weight: 600; text-decoration: none; }
+.header-right a:hover { text-decoration: underline; }
+
+/* ─── HERO DIRECTORY ─── */
+.hero-directory {
+  background: linear-gradient(135deg, var(--teal-soft) 0%, var(--orange-soft) 100%);
+  padding: 60px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.hero-directory h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+.hero-directory p {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto 28px;
+}
+
+/* ─── FILTROS DE BUSCA ─── */
+.search-container {
+  max-width: 720px;
+  margin: -24px auto 0;
+  background: var(--card);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 24px rgba(15, 118, 110, 0.06);
+  border: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+}
+.search-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+.search-input:focus { border-color: var(--teal); }
+.filter-select {
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* ─── GRID DE PARCEIROS ─── */
+.directory-grid {
+  max-width: 1100px;
+  margin: 60px auto 100px;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+.partner-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 24px rgba(15, 118, 110, 0.04);
+  border: 1px solid var(--border);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: var(--transition);
+}
+.partner-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(15, 118, 110, 0.1);
+  border-color: var(--teal);
+}
+.partner-logo-wrapper {
+  width: 80px;
+  height: 80px;
+  background: var(--teal-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+.partner-category {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--teal-dark);
+  background: var(--teal-light);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.partner-card h3 {
+  color: var(--text);
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 18px;
+}
+.partner-card p {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+.btn-visit {
+  width: 100%;
+  background: var(--teal);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  transition: var(--transition);
+}
+.btn-visit:hover { background: var(--teal-dark); }
+
+@media (max-width: 700px) {
+  .search-container { flex-direction: column; margin-top: 20px; }
+  .navbar { padding: 14px 20px; }
+  .header-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span class="conect">C🐾nect</span>
+  </a>
+  <div class="header-right">
+    <a href="index.html">Voltar ao Início</a>
+  </div>
+</nav>
+
+<section class="hero-directory">
+  <h1>Nossos Parceiros Comerciais</h1>
+  <p>Encontre clínicas, pet shops e serviços recomendados para cuidar do bem-estar e da saúde do seu novo amigo.</p>
+  
+  <div class="search-container">
+    <input type="text" class="search-input" placeholder="Buscar por nome da clínica ou pet shop...">
+    <select class="filter-select">
+      <option value="">Todas as Categorias</option>
+      <option value="vet">Clínicas Veterinárias</option>
+      <option value="shop">Pet Shops</option>
+    </select>
+  </div>
+</section>
+
+<main class="directory-grid">
+  <div class="partner-card">
+    <div class="partner-logo-wrapper">🏥</div>
+    <span class="partner-category">Clínica Veterinária</span>
+    <h3>Clínica VetVida</h3>
+    <p>Atendimento 24h especializado, exames de imagem e consultas de rotina com descontos especiais para pets adotados.</p>
+    <a href="parceiros_detalhe.html" class="btn-visit">Visitar Vitrine</a>
+  </div>
+
+  <div class="partner-card">
+    <div class="partner-logo-wrapper">🧼</div>
+    <span class="partner-category">Pet Shop</span>
+    <h3>DogAmigo Estética</h3>
+    <p>O melhor banho e tosa da região, além de uma ampla variedade de rações premium, brinquedos e medicamentos.</p>
+    <a href="parceiros_detalhe.html" class="btn-visit">Visitar Vitrine</a>
+  </div>
+
+  <div class="partner-card">
+    <div class="partner-logo-wrapper">🍖</div>
+    <span class="partner-category">Alimentação</span>
+    <h3>NutriPatas Distribuidora</h3>
+    <p>Especialistas em nutrição natural e rações sob medida para cães e gatos de todas as idades e portes.</p>
+    <a href="parceiros_detalhe.html" class="btn-visit">Visitar Vitrine</a>
+  </div>
+</main>
+
+</body>
+</html>
