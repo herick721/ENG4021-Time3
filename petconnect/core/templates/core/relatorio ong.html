@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Relatório da ONG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --yellow-soft: #fef3c7;
+    --blue-soft: #dbeafe;
+    --red-soft: #fee2e2;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .navbar {
+    background: var(--card);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 24px;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 40px 80px;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .page-header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .page-header p { color: var(--text-muted); font-size: 14px; }
+
+  .period-select {
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .period-select:focus { border-color: var(--teal); }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px 20px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .stat-icon { font-size: 22px; }
+  .stat-delta {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .delta-up { background: var(--green-soft); color: #047857; }
+  .delta-down { background: var(--red-soft); color: #b91c1c; }
+  .stat-value { font-size: 28px; font-weight: 800; color: var(--teal); margin-bottom: 2px; }
+  .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+  /* Grid 2 colunas */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  /* Gráfico de barras manual */
+  .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bar-label { font-size: 12px; font-weight: 600; color: var(--text-muted); width: 28px; text-align: right; flex-shrink: 0; }
+  .bar-track {
+    flex: 1;
+    height: 10px;
+    background: var(--border-light);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 5px;
+    transition: width .6s;
+  }
+  .bar-value { font-size: 12px; font-weight: 700; color: var(--text); width: 24px; flex-shrink: 0; }
+
+  /* Donut chart manual */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .donut-svg { flex-shrink: 0; }
+  .donut-legend { display: flex; flex-direction: column; gap: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Taxa de aprovação */
+  .approval-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .approval-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .approval-label { font-size: 14px; font-weight: 600; }
+  .approval-bar-wrap { flex: 1; margin: 0 16px; }
+  .approval-track {
+    height: 8px;
+    background: var(--border-light);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .approval-fill { height: 100%; border-radius: 4px; }
+  .approval-pct { font-size: 13px; font-weight: 700; color: var(--teal); width: 36px; text-align: right; flex-shrink: 0; }
+
+  /* Top pets */
+  .top-pets { display: flex; flex-direction: column; gap: 12px; }
+  .top-pet-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    background: var(--bg);
+  }
+  .top-rank { font-size: 16px; font-weight: 800; color: var(--teal); width: 24px; flex-shrink: 0; }
+  .top-pet-emoji {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .top-pet-name { font-size: 14px; font-weight: 700; }
+  .top-pet-meta { font-size: 12px; color: var(--text-muted); }
+  .top-pet-views {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal);
+    background: var(--teal-light);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>ONG Patinhas SP</span>
+    <div class="nav-avatar">PF</div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h1>Relatório da ONG</h1>
+      <p>Visão geral do desempenho da ONG Patinhas SP</p>
+    </div>
+    <select class="period-select">
+      <option>Últimos 6 meses</option>
+      <option>Este ano</option>
+      <option>Últimos 30 dias</option>
+      <option>2025</option>
+    </select>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-icon">✅</span>
+        <span class="stat-delta delta-up">+12%</span>
+      </div>
+      <div class="stat-value">48</div>
+      <div class="stat-label">Adoções realizadas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-icon">📋</span>
+        <span class="stat-delta delta-up">+8%</span>
+      </div>
+      <div class="stat-value">87</div>
+      <div class="stat-label">Solicitações recebidas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-icon">⭐</span>
+        <span class="stat-delta delta-up">+0.2</span>
+      </div>
+      <div class="stat-value">4.9</div>
+      <div class="stat-label">Avaliação média</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-icon">👁️</span>
+        <span class="stat-delta delta-down">-3%</span>
+      </div>
+      <div class="stat-value">1.2k</div>
+      <div class="stat-label">Visualizações de pets</div>
+    </div>
+  </div>
+
+  <!-- GRÁFICOS -->
+  <div class="charts-grid">
+
+    <!-- Adoções por mês -->
+    <div class="card">
+      <div class="card-title">Adoções por mês</div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-label">Jan</span>
+          <div class="bar-track"><div class="bar-fill" style="width:50%"></div></div>
+          <span class="bar-value">6</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Fev</span>
+          <div class="bar-track"><div class="bar-fill" style="width:40%"></div></div>
+          <span class="bar-value">5</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Mar</span>
+          <div class="bar-track"><div class="bar-fill" style="width:67%"></div></div>
+          <span class="bar-value">8</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Abr</span>
+          <div class="bar-track"><div class="bar-fill" style="width:58%"></div></div>
+          <span class="bar-value">7</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Mai</span>
+          <div class="bar-track"><div class="bar-fill" style="width:83%"></div></div>
+          <span class="bar-value">10</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Jun</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+          <span class="bar-value">12</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Espécie mais adotada -->
+    <div class="card">
+      <div class="card-title">Adoções por espécie</div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#e2e8f0" stroke-width="18"/>
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#0d9488" stroke-width="18"
+            stroke-dasharray="170 113" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#f59e0b" stroke-width="18"
+            stroke-dasharray="85 198" stroke-dashoffset="-170" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="45" fill="none" stroke="#e2e8f0" stroke-width="18"
+            stroke-dasharray="28 255" stroke-dashoffset="-255" transform="rotate(-90 60 60)"/>
+          <text x="60" y="56" text-anchor="middle" font-size="14" font-weight="800" fill="#0f172a" font-family="Plus Jakarta Sans">48</text>
+          <text x="60" y="70" text-anchor="middle" font-size="10" fill="#64748b" font-family="Plus Jakarta Sans">total</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#0d9488;"></div>
+            <span><strong>60%</strong> Cães (29)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#f59e0b;"></div>
+            <span><strong>30%</strong> Gatos (14)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#e2e8f0;"></div>
+            <span><strong>10%</strong> Outros (5)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="charts-grid">
+
+    <!-- Taxa de aprovação -->
+    <div class="card">
+      <div class="card-title">Taxa de aprovação por etapa</div>
+      <div>
+        <div class="approval-row">
+          <span class="approval-label">Solicitações</span>
+          <div class="approval-bar-wrap">
+            <div class="approval-track"><div class="approval-fill" style="width:100%; background:var(--teal);"></div></div>
+          </div>
+          <span class="approval-pct">100%</span>
+        </div>
+        <div class="approval-row">
+          <span class="approval-label">Entrevistas</span>
+          <div class="approval-bar-wrap">
+            <div class="approval-track"><div class="approval-fill" style="width:72%; background:var(--teal);"></div></div>
+          </div>
+          <span class="approval-pct">72%</span>
+        </div>
+        <div class="approval-row">
+          <span class="approval-label">Aprovações</span>
+          <div class="approval-bar-wrap">
+            <div class="approval-track"><div class="approval-fill" style="width:55%; background:var(--orange);"></div></div>
+          </div>
+          <span class="approval-pct" style="color:var(--orange-dark);">55%</span>
+        </div>
+        <div class="approval-row">
+          <span class="approval-label">Assinaturas</span>
+          <div class="approval-bar-wrap">
+            <div class="approval-track"><div class="approval-fill" style="width:48%; background:var(--teal);"></div></div>
+          </div>
+          <span class="approval-pct">48%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pets mais visualizados -->
+    <div class="card">
+      <div class="card-title">Pets mais visualizados</div>
+      <div class="top-pets">
+        <div class="top-pet-row">
+          <span class="top-rank">1</span>
+          <div class="top-pet-emoji" style="background:#fce7e7;">🐕</div>
+          <div>
+            <div class="top-pet-name">Bolinha</div>
+            <div class="top-pet-meta">Cão · 2 anos</div>
+          </div>
+          <span class="top-pet-views">312 views</span>
+        </div>
+        <div class="top-pet-row">
+          <span class="top-rank">2</span>
+          <div class="top-pet-emoji" style="background:#fce7c8;">🐈</div>
+          <div>
+            <div class="top-pet-name">Mel</div>
+            <div class="top-pet-meta">Gata · 1 ano</div>
+          </div>
+          <span class="top-pet-views">245 views</span>
+        </div>
+        <div class="top-pet-row">
+          <span class="top-rank">3</span>
+          <div class="top-pet-emoji" style="background:#dbe6ff;">🦮</div>
+          <div>
+            <div class="top-pet-name">Thor</div>
+            <div class="top-pet-meta">Cão · 4 anos</div>
+          </div>
+          <span class="top-pet-views">198 views</span>
+        </div>
+        <div class="top-pet-row">
+          <span class="top-rank">4</span>
+          <div class="top-pet-emoji" style="background:#e9d5ff;">😺</div>
+          <div>
+            <div class="top-pet-name">Nina</div>
+            <div class="top-pet-meta">Gata · 3 anos</div>
+          </div>
+          <span class="top-pet-views">174 views</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
