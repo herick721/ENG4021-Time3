@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetConect — Shopping Pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --teal-soft: #ecfdf5;
+  --orange: #f59e0b;
+  --orange-dark: #d97706;
+  --orange-soft: #fef3c7;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --transition: all 0.25s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.5; }
+
+/* ─── NAVBAR PADRÃO PETCONECT ─── */
+.navbar {
+  background: var(--card); padding: 18px 48px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 900; display: flex; align-items: center; gap: 2px; text-decoration: none;
+}
+.logo .pet { color: var(--teal); }
+.logo .conect { color: var(--orange); }
+
+.header-right { display: flex; align-items: center; gap: 14px; font-size: 14px; }
+.header-right a { color: var(--teal); font-weight: 600; text-decoration: none; }
+
+/* ─── MAIN SHOPPING LAYOUT ─── */
+.shop-hero {
+  background: linear-gradient(135deg, var(--teal-soft) 0%, var(--orange-soft) 100%);
+  padding: 50px 24px; text-align: center; border-bottom: 1px solid var(--border);
+}
+.shop-hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.02em; }
+.shop-hero p { color: var(--text-muted); font-size: 16px; max-width: 600px; margin: 0 auto; }
+
+.shop-container {
+  max-width: 1100px; margin: 40px auto 100px; padding: 0 24px;
+  display: grid; grid-template-columns: 240px 1fr; gap: 32px;
+}
+
+/* Sidebar Filtros */
+.filters-sidebar {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 24px; height: fit-content; box-shadow: 0 4px 24px rgba(15, 118, 110, 0.03);
+}
+.filter-group { margin-bottom: 24px; }
+.filter-group h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.filter-option { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; color: var(--text-muted); cursor: pointer; }
+.filter-option input { accent-color: var(--teal); }
+
+/* Grid de Produtos */
+.products-wrapper { display: flex; flex-direction: column; gap: 20px; }
+.search-bar {
+  width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-md);
+  font-family: inherit; font-size: 14px; outline: none; background: var(--card);
+}
+.search-bar:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-light); }
+
+.products-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px;
+}
+.product-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md);
+  overflow: hidden; transition: var(--transition); display: flex; flex-direction: column;
+  box-shadow: 0 4px 24px rgba(15, 118, 110, 0.02);
+}
+.product-card:hover { transform: translateY(-4px); border-color: var(--orange); }
+
+.product-img { height: 160px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+.product-body { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
+.product-vendor { font-size: 11px; font-weight: 700; color: var(--teal-dark); margin-bottom: 4px; }
+.product-title { font-weight: 700; font-size: 14.5px; margin-bottom: 8px; color: var(--text); }
+.product-price { color: var(--orange-dark); font-size: 18px; font-weight: 800; margin-top: auto; margin-bottom: 12px; }
+
+.btn-details {
+  text-align: center; border: 2px solid var(--teal); color: var(--teal); text-decoration: none;
+  padding: 8px; border-radius: 8px; font-weight: 700; font-size: 13px; transition: var(--transition);
+}
+.btn-details:hover { background: var(--teal); color: #white; }
+
+@media (max-width: 768px) {
+  .shop-container { grid-template-columns: 1fr; }
+  .filters-sidebar { display: none; }
+  .navbar { padding: 14px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span class="conect">C🐾nect</span>
+  </a>
+  <div class="header-right"><a href="parceiros_listagem.html">Ver Parceiros</a></div>
+</nav>
+
+<header class="shop-hero">
+  <h1>Produtos & Serviços Patrocinados</h1>
+  <p>Tudo o que o seu novo companheiro precisa, oferecido pelas melhores empresas parceiras do PetConect.</p>
+</header>
+
+<div class="shop-container">
+  <aside class="filters-sidebar">
+    <div class="filter-group">
+      <h3>Categoria</h3>
+      <label class="filter-option"><input type="checkbox" checked> Todos</label>
+      <label class="filter-option"><input type="checkbox"> Saúde/Consultas</label>
+      <label class="filter-option"><input type="checkbox"> Banho e Tosa</label>
+      <label class="filter-option"><input type="checkbox"> Alimentação</label>
+    </div>
+    <div class="filter-group">
+      <h3>Preço</h3>
+      <label class="filter-option"><input type="radio" name="price"> Até R$ 50</label>
+      <label class="filter-option"><input type="radio" name="price"> R$ 50 a R$ 150</label>
+      <label class="filter-option"><input type="radio" name="price"> Mais de R$ 150</label>
+    </div>
+  </aside>
+
+  <main class="products-wrapper">
+    <input type="text" class="search-bar" placeholder="O que você está procurando hoje? Ex: Ração, Vacina, Consulta...">
+    
+    <div class="products-grid">
+      <!-- Card 1 -->
+      <div class="product-card">
+        <div class="product-img">🩺</div>
+        <div class="product-body">
+          <span class="product-vendor">VetVida Hospital</span>
+          <div class="product-title">Consulta de Rotina Geral</div>
+          <div class="product-price">R$ 120,00</div>
+          <a href="produto_detalhe.html" class="btn-details">Ver Detalhes</a>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="product-card">
+        <div class="product-img">🧼</div>
+        <div class="product-body">
+          <span class="product-vendor">DogAmigo Centro Estético</span>
+          <div class="product-title">Banho e Tosa Completo (Porte M)</div>
+          <div class="product-price">R$ 75,00</div>
+          <a href="produto_detalhe.html" class="btn-details">Ver Detalhes</a>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="product-card">
+        <div class="product-img">📦</div>
+        <div class="product-body">
+          <span class="product-vendor">NutriPatas</span>
+          <div class="product-title">Ração Premium Filhotes 10kg</div>
+          <div class="product-price">R$ 155,00</div>
+          <a href="produto_detalhe.html" class="btn-details">Ver Detalhes</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
