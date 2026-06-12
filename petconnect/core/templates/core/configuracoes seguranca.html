@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Segurança</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --yellow-soft: #fef3c7;
+    --red: #ef4444;
+    --red-soft: #fee2e2;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .settings-nav {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 90px;
+  }
+  .settings-nav-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+    padding: 0 8px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all .2s;
+    margin-bottom: 2px;
+  }
+  .nav-link:hover { background: var(--bg); color: var(--text); }
+  .nav-link.active { background: var(--teal-soft); color: var(--teal); }
+  .nav-link.danger { color: var(--red); }
+  .nav-link.danger:hover { background: var(--red-soft); }
+
+  .main-col { display: flex; flex-direction: column; gap: 20px; }
+
+  .page-header { margin-bottom: 4px; }
+  .page-header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .page-header p { color: var(--text-muted); font-size: 14px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .field:last-of-type { margin-bottom: 0; }
+  .field label { font-size: 13px; font-weight: 600; }
+  .input-wrap { position: relative; }
+  .input-wrap .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    pointer-events: none;
+  }
+  .input-wrap input {
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .input-wrap input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+
+  .btn-save {
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: 20px;
+  }
+  .btn-save:hover { background: var(--teal-dark); }
+
+  /* Toggle 2FA */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .toggle-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .toggle-info p { font-size: 13px; color: var(--text-muted); }
+  .toggle {
+    width: 44px;
+    height: 24px;
+    background: var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: background .2s;
+    flex-shrink: 0;
+    border: none;
+  }
+  .toggle::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .toggle.on { background: var(--teal); }
+  .toggle.on::after { transform: translateX(20px); }
+
+  /* Sessões */
+  .session-list { display: flex; flex-direction: column; gap: 12px; }
+  .session-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    background: var(--bg);
+  }
+  .session-item.current { border-color: var(--teal-light); background: var(--teal-soft); }
+  .session-left { display: flex; align-items: center; gap: 12px; }
+  .session-icon { font-size: 24px; }
+  .session-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .session-meta { font-size: 12px; color: var(--text-muted); }
+  .session-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--green-soft);
+    color: #047857;
+  }
+  .btn-revoke {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--red);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-revoke:hover { background: var(--red-soft); border-color: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>João Silva</span>
+    <div class="nav-avatar">JS</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <aside>
+    <div class="settings-nav">
+      <div class="settings-nav-title">Configurações</div>
+      <a href="configuracoes.html" class="nav-link">🔔 Notificações</a>
+      <a href="configuracoes.html" class="nav-link">🔒 Privacidade</a>
+      <a href="configuracoes.html" class="nav-link">🎨 Aparência</a>
+      <a href="#" class="nav-link active">🔑 Segurança</a>
+      <a href="editar_usuario.html" class="nav-link">👤 Perfil</a>
+      <div style="height:1px; background:var(--border-light); margin:12px 0;"></div>
+      <a href="excluir_conta.html" class="nav-link danger">🗑️ Excluir conta</a>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <div class="page-header">
+      <h1>Segurança</h1>
+      <p>Gerencie sua senha e acesso à conta</p>
+    </div>
+
+    <!-- Alterar senha -->
+    <div class="card">
+      <div class="card-title">🔑 Alterar senha</div>
+      <form>
+        <div class="field">
+          <label for="senha_atual">Senha atual</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="senha_atual" placeholder="Sua senha atual" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="nova_senha">Nova senha</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="nova_senha" placeholder="Mínimo 8 caracteres" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="confirmar_senha">Confirmar nova senha</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="confirmar_senha" placeholder="Repita a nova senha" />
+          </div>
+        </div>
+        <button type="submit" class="btn-save">Salvar nova senha</button>
+      </form>
+    </div>
+
+    <!-- Autenticação em duas etapas -->
+    <div class="card">
+      <div class="card-title">🛡️ Autenticação em duas etapas</div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <h3>Autenticação por e-mail</h3>
+          <p>Receba um código por e-mail ao fazer login em novos dispositivos</p>
+        </div>
+        <button class="toggle on"></button>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <h3>Autenticação por SMS</h3>
+          <p>Receba um código por SMS ao fazer login em novos dispositivos</p>
+        </div>
+        <button class="toggle"></button>
+      </div>
+    </div>
+
+    <!-- Sessões ativas -->
+    <div class="card">
+      <div class="card-title">💻 Sessões ativas</div>
+      <div class="session-list">
+        <div class="session-item current">
+          <div class="session-left">
+            <span class="session-icon">💻</span>
+            <div>
+              <div class="session-name">Chrome — Windows 11</div>
+              <div class="session-meta">Rio de Janeiro, BR · Agora</div>
+            </div>
+          </div>
+          <span class="session-badge">Sessão atual</span>
+        </div>
+        <div class="session-item">
+          <div class="session-left">
+            <span class="session-icon">📱</span>
+            <div>
+              <div class="session-name">Safari — iPhone 15</div>
+              <div class="session-meta">Rio de Janeiro, BR · Há 2 dias</div>
+            </div>
+          </div>
+          <button class="btn-revoke">Encerrar</button>
+        </div>
+        <div class="session-item">
+          <div class="session-left">
+            <span class="session-icon">💻</span>
+            <div>
+              <div class="session-name">Firefox — macOS</div>
+              <div class="session-meta">São Paulo, BR · Há 5 dias</div>
+            </div>
+          </div>
+          <button class="btn-revoke">Encerrar</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
