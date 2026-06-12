@@ -1,0 +1,508 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Solicitação de Adoção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --beige: #fef3e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --yellow-soft: #fef3c7;
+    --blue-soft: #dbeafe;
+    --red-soft: #fee2e2;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--beige) 100%);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  header {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* Bloco de status — muda conforme o estado da solicitação */
+  .status-block {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .status-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 20px;
+  }
+  .icon-pendente { background: var(--yellow-soft); }
+  .icon-entrevista { background: var(--blue-soft); }
+  .icon-aprovada { background: var(--green-soft); }
+  .icon-recusada { background: var(--red-soft); }
+  .icon-concluida { background: var(--green-soft); }
+
+  .status-block h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .status-block h1 .accent { color: var(--teal); }
+  .status-block p { color: var(--text-muted); font-size: 15px; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 24px rgba(15, 118, 110, 0.06);
+    border: 1px solid rgba(15, 118, 110, 0.08);
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  /* Resumo do pet */
+  .pet-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .pet-emoji {
+    width: 64px;
+    height: 64px;
+    background: var(--orange-soft);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+  .pet-summary-info h2 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+  .pet-summary-info p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .pill-pendente { background: var(--yellow-soft); color: #d97706; }
+  .pill-entrevista { background: var(--blue-soft); color: #1d4ed8; }
+  .pill-aprovada { background: var(--green-soft); color: #047857; }
+  .pill-recusada { background: var(--red-soft); color: #b91c1c; }
+  .pill-concluida { background: var(--green-soft); color: #047857; }
+
+  /* Timeline de passos */
+  .step-list { display: flex; flex-direction: column; gap: 14px; }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-done { background: var(--teal); color: #fff; }
+  .step-current { background: var(--orange); color: #fff; }
+  .step-pending { background: #cbd5e1; color: #fff; }
+
+  .step-text strong {
+    font-size: 14px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .step-text span { font-size: 13px; color: var(--text-muted); }
+
+  /* ONG */
+  .ong-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .ong-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--orange-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .ong-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+  .ong-detail { font-size: 13px; color: var(--text-muted); }
+
+  /* Motivo recusa */
+  .recusa-box {
+    background: var(--red-soft);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 14px;
+    color: #b91c1c;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+  .recusa-box strong { display: block; margin-bottom: 4px; }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+    margin-bottom: 10px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  .btn-secondary {
+    width: 100%;
+    background: #fff;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+  .btn-orange {
+    width: 100%;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+    margin-bottom: 10px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-orange:hover { background: var(--orange-dark); }
+
+  .info-box {
+    background: var(--teal-soft);
+    border: 1px solid var(--teal-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--teal-dark);
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .info-box span:first-child { flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="{% url 'index' %}" class="logo">
+    <span class="pet">Pet</span>
+    <span>🐾</span>
+    <span class="nect">nect</span>
+  </a>
+  <div class="nav-user">
+    <span>{{ request.user.get_full_name|default:request.user.username }}</span>
+    <div class="nav-avatar">
+      {{ request.user.get_full_name|default:request.user.username|slice:":2"|upper }}
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Bloco de status dinâmico -->
+  <div class="status-block">
+    {% if solicitacao.status == 'pendente' %}
+      <div class="status-icon icon-pendente">📬</div>
+      <h1>Solicitação <span class="accent">enviada!</span></h1>
+      <p>Sua solicitação para adotar {{ pet.nome }} foi recebida pela ONG. Aguarde o contato.</p>
+    {% elif solicitacao.status == 'entrevista' %}
+      <div class="status-icon icon-entrevista">💬</div>
+      <h1>Em <span class="accent">entrevista</span></h1>
+      <p>A ONG está avaliando sua candidatura para adotar {{ pet.nome }}. Fique atento ao contato.</p>
+    {% elif solicitacao.status == 'aprovada' %}
+      <div class="status-icon icon-aprovada">✅</div>
+      <h1>Adoção <span class="accent">aprovada!</span></h1>
+      <p>Parabéns! Você e {{ pet.nome }} estão prestes a começar uma nova história juntos.</p>
+    {% elif solicitacao.status == 'recusada' %}
+      <div class="status-icon icon-recusada">❌</div>
+      <h1>Solicitação <span class="accent" style="color:#ef4444;">não aprovada</span></h1>
+      <p>Infelizmente sua solicitação para adotar {{ pet.nome }} não foi aprovada desta vez.</p>
+    {% elif solicitacao.status == 'concluida' %}
+      <div class="status-icon icon-concluida">🎉</div>
+      <h1>Adoção <span class="accent">concluída!</span></h1>
+      <p>{{ pet.nome }} já é oficialmente seu! Que comecem as aventuras juntos.</p>
+    {% endif %}
+  </div>
+
+  <!-- Resumo do pet -->
+  <div class="card">
+    <div class="pet-summary">
+      <div class="pet-emoji">{{ pet.imagem_emoji }}</div>
+      <div class="pet-summary-info">
+        <h2>{{ pet.nome }}</h2>
+        <p>{{ pet.get_especie_display }} · {{ pet.idade_texto }} · {{ pet.get_porte_display }} · {{ pet.raca }} · {{ pet.get_sexo_display }}</p>
+        <span class="status-pill pill-{{ solicitacao.status }}">
+          {{ solicitacao.get_status_display }}
+        </span>
+      </div>
+    </div>
+    {% if solicitacao.status == 'recusada' and solicitacao.motivo_recusa %}
+    <div class="recusa-box">
+      <strong>Motivo:</strong>{{ solicitacao.motivo_recusa }}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Próximos passos (timeline) -->
+  <div class="card">
+    <div class="card-title">Acompanhamento do processo</div>
+    <div class="step-list">
+
+      <!-- Passo 1: Solicitação -->
+      <div class="step-item">
+        <div class="step-num step-done">✓</div>
+        <div class="step-text">
+          <strong>Solicitação enviada</strong>
+          <span>Recebida pela ONG em {{ solicitacao.data_solicitacao|date:"d \d\e F \d\e Y" }}</span>
+        </div>
+      </div>
+
+      <!-- Passo 2: Entrevista -->
+      <div class="step-item">
+        {% if solicitacao.status == 'pendente' %}
+          <div class="step-num step-pending">2</div>
+        {% else %}
+          <div class="step-num step-done">✓</div>
+        {% endif %}
+        <div class="step-text">
+          <strong>Análise pela ONG</strong>
+          {% if solicitacao.status == 'pendente' %}
+            <span>Aguardando avaliação da ONG</span>
+          {% else %}
+            <span>Candidatura avaliada pela ONG</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Passo 3: Aprovação / Recusa -->
+      <div class="step-item">
+        {% if solicitacao.status in 'pendente,entrevista' %}
+          <div class="step-num step-pending">3</div>
+        {% elif solicitacao.status == 'recusada' %}
+          <div class="step-num" style="background:#ef4444;color:#fff;">✗</div>
+        {% else %}
+          <div class="step-num step-done">✓</div>
+        {% endif %}
+        <div class="step-text">
+          <strong>Decisão da ONG</strong>
+          {% if solicitacao.status == 'aprovada' or solicitacao.status == 'concluida' %}
+            <span>Aprovado para adoção! ✅</span>
+          {% elif solicitacao.status == 'recusada' %}
+            <span>Solicitação não aprovada</span>
+          {% else %}
+            <span>Aguardando decisão final</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Passo 4: Termo -->
+      <div class="step-item">
+        {% if solicitacao.status == 'aprovada' %}
+          <div class="step-num step-current">4</div>
+        {% elif solicitacao.status == 'concluida' %}
+          <div class="step-num step-done">✓</div>
+        {% else %}
+          <div class="step-num step-pending">4</div>
+        {% endif %}
+        <div class="step-text">
+          <strong>Assinar o termo de adoção</strong>
+          {% if solicitacao.status == 'aprovada' %}
+            <span>Seu termo está pronto para assinatura!</span>
+          {% elif solicitacao.status == 'concluida' %}
+            <span>Termo assinado com sucesso</span>
+          {% else %}
+            <span>Disponível após aprovação</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Passo 5: Buscar o pet -->
+      <div class="step-item">
+        {% if solicitacao.status == 'concluida' %}
+          <div class="step-num step-done">✓</div>
+        {% else %}
+          <div class="step-num step-pending">5</div>
+        {% endif %}
+        <div class="step-text">
+          <strong>Buscar {{ pet.nome }}</strong>
+          {% if solicitacao.status == 'concluida' %}
+            <span>Adoção concluída com sucesso 🎉</span>
+          {% else %}
+            <span>Combine a data e horário com a ONG</span>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Contato ONG -->
+  <div class="card">
+    <div class="card-title">Contato da ONG responsável</div>
+    <div class="ong-row">
+      <div class="ong-avatar">🏠</div>
+      <div>
+        <div class="ong-name">{{ pet.ong.nome_ong }}</div>
+        {% if pet.ong.usuario.cidade %}
+        <div class="ong-detail">📍 {{ pet.ong.usuario.cidade }}{% if pet.ong.usuario.estado %}, {{ pet.ong.usuario.estado }}{% endif %}</div>
+        {% endif %}
+        {% if pet.ong.usuario.telefone %}
+        <div class="ong-detail">📞 {{ pet.ong.usuario.telefone }}</div>
+        {% endif %}
+        <div class="ong-detail">✉️ {{ pet.ong.usuario.email }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ações conforme status -->
+  {% if solicitacao.status == 'aprovada' %}
+    <div class="info-box">
+      <span>🎉</span>
+      <span>Sua adoção foi aprovada! Agora é só assinar o termo digital para tornar tudo oficial.</span>
+    </div>
+    <a href="{% url 'termo_adocao' pet.id %}" class="btn-orange">✍️ Assinar termo de adoção</a>
+  {% endif %}
+
+  {% if solicitacao.status == 'concluida' %}
+    <a href="{% url 'historico_adocoes' %}" class="btn-primary">Ver histórico de adoções</a>
+  {% endif %}
+
+  <a href="{% url 'listagem' %}" class="btn-{% if solicitacao.status == 'aprovada' or solicitacao.status == 'concluida' %}secondary{% else %}primary{% endif %}">Ver outros pets</a>
+  <a href="{% url 'painel_adotante' %}" class="btn-secondary" style="margin-top:10px;">Ir para meu painel</a>
+
+</div>
+
+</body>
+</html>

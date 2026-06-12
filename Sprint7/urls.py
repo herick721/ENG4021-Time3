@@ -28,6 +28,7 @@ urlpatterns = [
     path('painel/historico/', views.historico_adocoes, name='historico_adocoes'),
     path('pet/<int:pet_id>/solicitar/', views.confirmacao_adocao, name='confirmacao_adocao'),
     path('pet/<int:pet_id>/termo/', views.termo_adocao, name='termo_adocao'),
+    path('pet/<int:pet_id>/assinar/', views.assinar_termo, name='assinar_termo'),  # NOVO
     path('ong/<int:ong_id>/avaliar/', views.avaliar_ong, name='avaliar_ong'),
     path('ong/<int:ong_id>/chat/', views.chat_ong, name='chat_ong'),
 

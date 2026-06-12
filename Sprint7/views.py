@@ -49,7 +49,6 @@ def recuperar_senha(request):
 # ═══════════════════════════════════════════════════════════
 
 def login_view(request):
-    # Se já está logado, redireciona para a home
     if request.user.is_authenticated:
         return redirect('index')
 
@@ -57,8 +56,6 @@ def login_view(request):
         email = request.POST.get('email', '')
         senha = request.POST.get('senha', '')
 
-        # O Django autentica por username, mas nosso login é por email
-        # Então buscamos o usuário pelo email e usamos o username dele
         try:
             usuario = Usuario.objects.get(email=email)
             user = authenticate(request, username=usuario.username, password=senha)
@@ -67,7 +64,6 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            # Redireciona para a página que o usuário tentou acessar (next) ou home
             proximo = request.GET.get('next', '/')
             return redirect(proximo)
         else:
@@ -89,7 +85,6 @@ def cadastro_view(request):
         senha = request.POST.get('password', '')
         confirma = request.POST.get('password-confirm', '')
 
-        # Validações básicas
         if not email or not senha:
             messages.error(request, 'Preencha todos os campos obrigatórios.')
             return render(request, 'core/cadastro.html')
@@ -102,19 +97,14 @@ def cadastro_view(request):
             messages.error(request, 'Já existe uma conta com esse e-mail.')
             return render(request, 'core/cadastro.html')
 
-        # Cria o usuário (username = parte antes do @ do email)
         username = email.split('@')[0]
-        # Garante username único
         base_username = username
         contador = 1
         while Usuario.objects.filter(username=username).exists():
             username = f'{base_username}{contador}'
             contador += 1
 
-        if tipo == 'ong':
-            tipo_usuario = 'ong'
-        else:
-            tipo_usuario = 'adotante'
+        tipo_usuario = 'ong' if tipo == 'ong' else 'adotante'
 
         usuario = Usuario.objects.create_user(
             username=username,
@@ -126,7 +116,6 @@ def cadastro_view(request):
             estado=estado,
         )
 
-        # Cria o perfil específico
         if tipo == 'ong':
             nome_ong = request.POST.get('ong-name', '')
             cnpj = request.POST.get('cnpj', '')
@@ -153,7 +142,6 @@ def cadastro_view(request):
                 tipo_moradia=moradia if moradia else None,
             )
 
-        # Faz login automático após cadastro
         login(request, usuario)
         messages.success(request, 'Conta criada com sucesso! Bem-vindo ao PetConnect 🐾')
         return redirect('index')
@@ -192,7 +180,6 @@ def onboarding(request):
 
 @login_required
 def painel_adotante(request):
-    # Verifica se o usuário é adotante
     if request.user.tipo != 'adotante':
         messages.error(request, 'Acesso restrito a adotantes.')
         return redirect('index')
@@ -200,7 +187,6 @@ def painel_adotante(request):
     try:
         adotante = request.user.adotante_profile
     except Adotante.DoesNotExist:
-        # Se o perfil não existe ainda, cria um básico
         adotante = Adotante.objects.create(usuario=request.user)
 
     pedidos = SolicitacaoAdocao.objects.filter(adotante=adotante)
@@ -261,15 +247,25 @@ def confirmacao_adocao(request, pet_id):
         return redirect('index')
 
     pet = get_object_or_404(Pet, id=pet_id)
-    adotante = request.user.adotante_profile
-    
-    # Check if already requested
+
+    try:
+        adotante = request.user.adotante_profile
+    except Adotante.DoesNotExist:
+        adotante = Adotante.objects.create(usuario=request.user)
+
     solicitacao, created = SolicitacaoAdocao.objects.get_or_create(
         adotante=adotante,
         pet=pet,
         defaults={'status': 'pendente'}
     )
-    
+
+    if created:
+        messages.success(request, f'Sua solicitação para adotar {pet.nome} foi enviada com sucesso! 🐾')
+        # Atualiza status do pet para em análise
+        if pet.status == 'disponivel':
+            pet.status = 'analise'
+            pet.save()
+
     return render(request, 'core/confirmacao_adocao.html', {'pet': pet, 'solicitacao': solicitacao})
 
 
@@ -279,7 +275,74 @@ def termo_adocao(request, pet_id):
         return redirect('index')
 
     pet = get_object_or_404(Pet, id=pet_id)
-    return render(request, 'core/termo_adocao.html', {'pet': pet})
+
+    try:
+        adotante = request.user.adotante_profile
+    except Adotante.DoesNotExist:
+        return redirect('confirmacao_adocao', pet_id=pet_id)
+
+    # Verifica se a solicitação existe e está aprovada
+    try:
+        solicitacao = SolicitacaoAdocao.objects.get(adotante=adotante, pet=pet)
+    except SolicitacaoAdocao.DoesNotExist:
+        messages.error(request, 'Você não tem uma solicitação ativa para este pet.')
+        return redirect('confirmacao_adocao', pet_id=pet_id)
+
+    if solicitacao.status not in ['aprovada', 'concluida']:
+        messages.error(request, 'O termo de adoção só está disponível após a aprovação pela ONG.')
+        return redirect('confirmacao_adocao', pet_id=pet_id)
+
+    return render(request, 'core/termo_adocao.html', {'pet': pet, 'solicitacao': solicitacao})
+
+
+@login_required
+def assinar_termo(request, pet_id):
+    """Processa a assinatura digital do termo e conclui a adoção."""
+    if request.user.tipo != 'adotante':
+        return redirect('index')
+
+    if request.method != 'POST':
+        return redirect('termo_adocao', pet_id=pet_id)
+
+    pet = get_object_or_404(Pet, id=pet_id)
+
+    try:
+        adotante = request.user.adotante_profile
+    except Adotante.DoesNotExist:
+        messages.error(request, 'Perfil de adotante não encontrado.')
+        return redirect('index')
+
+    try:
+        solicitacao = SolicitacaoAdocao.objects.get(adotante=adotante, pet=pet, status='aprovada')
+    except SolicitacaoAdocao.DoesNotExist:
+        messages.error(request, 'Solicitação não encontrada ou já concluída.')
+        return redirect('confirmacao_adocao', pet_id=pet_id)
+
+    # Valida que o adotante marcou as caixas e assinou
+    check1 = request.POST.get('check1')
+    check2 = request.POST.get('check2')
+    check3 = request.POST.get('check3')
+    assinado = request.POST.get('assinado', '0')
+
+    if not (check1 and check2 and check3 and assinado == '1'):
+        messages.error(request, 'Por favor, marque todas as confirmações e assine o documento.')
+        return redirect('termo_adocao', pet_id=pet_id)
+
+    # Conclui a adoção
+    solicitacao.status = 'concluida'
+    solicitacao.save()
+
+    # Atualiza o status do pet para adotado
+    pet.status = 'adotado'
+    pet.save()
+
+    messages.success(
+        request,
+        f'Parabéns! A adoção de {pet.nome} foi concluída com sucesso! '
+        f'Que comecem as aventuras juntos 🎉🐾'
+    )
+
+    return redirect('confirmacao_adocao', pet_id=pet_id)
 
 
 @login_required
@@ -313,13 +376,27 @@ def dashboard_ong(request):
         messages.error(request, 'Perfil de ONG não encontrado.')
         return redirect('index')
 
-    pets = Pet.objects.filter(ong=ong)
-    solicitacoes = SolicitacaoAdocao.objects.filter(pet__ong=ong).order_by('-data_solicitacao')[:5]
+    pets = Pet.objects.filter(ong=ong).order_by('-id')
+    solicitacoes = SolicitacaoAdocao.objects.filter(
+        pet__ong=ong
+    ).select_related('adotante__usuario', 'pet').order_by('-data_solicitacao')[:5]
+
+    # Estatísticas reais
+    total_pets = pets.count()
+    total_pendentes = SolicitacaoAdocao.objects.filter(pet__ong=ong, status='pendente').count()
+    total_entrevista = SolicitacaoAdocao.objects.filter(pet__ong=ong, status='entrevista').count()
+    total_adotados = pets.filter(status='adotado').count()
+    total_disponiveis = pets.filter(status='disponivel').count()
 
     context = {
         'ong': ong,
         'pets': pets,
         'solicitacoes': solicitacoes,
+        'total_pets': total_pets,
+        'total_pendentes': total_pendentes,
+        'total_entrevista': total_entrevista,
+        'total_adotados': total_adotados,
+        'total_disponiveis': total_disponiveis,
     }
     return render(request, 'core/dashboard_ong.html', context)
 
@@ -335,8 +412,10 @@ def solicitacoes_adocao(request):
     except Ong.DoesNotExist:
         return redirect('index')
 
-    solicitacoes = SolicitacaoAdocao.objects.filter(pet__ong=ong).order_by('-data_solicitacao')
-    
+    solicitacoes = SolicitacaoAdocao.objects.filter(
+        pet__ong=ong
+    ).select_related('adotante__usuario', 'pet').order_by('-data_solicitacao')
+
     novas = solicitacoes.filter(status='pendente').count()
     entrevista = solicitacoes.filter(status='entrevista').count()
     aprovadas = solicitacoes.filter(status='aprovada').count()
@@ -366,8 +445,8 @@ def atualizar_solicitacao(request, sol_id, status):
     if status in dict(SolicitacaoAdocao.STATUS_CHOICES).keys():
         solicitacao.status = status
         solicitacao.save()
-        messages.success(request, f'Status da solicitação atualizado para {solicitacao.get_status_display()}.')
-    
+        messages.success(request, f'Status atualizado para {solicitacao.get_status_display()}.')
+
     return redirect('solicitacoes_adocao')
 
 

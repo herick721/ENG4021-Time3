@@ -72,6 +72,7 @@ pip install -r requirements.txt
 **4. Aplique as migrações do banco de dados**
 Configure o banco de dados inicial do Django:
 ```bash
+python manage.py makemigrations core
 python manage.py migrate
 ```
 
