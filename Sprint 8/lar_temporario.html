@@ -1,0 +1,652 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Lar Temporário</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+    --red-soft: #fee2e2;
+    --purple-soft: #ede9fe;
+    --pink-card: #fce7e7;
+    --peach-card: #fce7c8;
+    --blue-card: #dbe6ff;
+    --purple-card: #e9d5ff;
+    --green-card: #c7f0d8;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAVBAR */
+  .navbar {
+    background: var(--card);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 24px;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-size: 14px;
+  }
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+  .nav-logout {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .nav-logout:hover { color: var(--text); }
+
+  /* MENSAGENS */
+  .messages {
+    list-style: none;
+    max-width: 1100px;
+    margin: 16px auto 0;
+    padding: 0 40px;
+  }
+  .message {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .message.success { background: var(--green-soft); color: #047857; }
+  .message.error   { background: var(--red-soft); color: #b91c1c; }
+
+  /* CONTAINER */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 40px 80px;
+  }
+
+  /* HERO INTERNO */
+  .hero-inner {
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--orange-soft) 100%);
+    border-radius: 20px;
+    padding: 40px 48px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .hero-inner-text h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .hero-inner-text p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+  .hero-inner-emoji {
+    font-size: 72px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  /* COMO FUNCIONA */
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .how-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px 20px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    text-align: center;
+  }
+  .how-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 14px;
+  }
+  .how-icon.teal { background: var(--teal-light); }
+  .how-icon.orange { background: var(--orange-soft); }
+  .how-icon.purple { background: var(--purple-soft); }
+  .how-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .how-card p  { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* GRID LAYOUT */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* FORMULÁRIO DE CADASTRO */
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 28px 32px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .card:last-child { margin-bottom: 0; }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .field label .req { color: #ef4444; }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: none;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-light);
+  }
+  .field input::placeholder { color: var(--text-light); }
+  .field textarea { resize: vertical; min-height: 90px; }
+
+  .check-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .2s;
+  }
+  .check-row input[type="checkbox"] { accent-color: var(--teal); width: 16px; height: 16px; }
+  .check-row:has(input:checked) {
+    border-color: var(--teal);
+    background: var(--teal-soft);
+    color: var(--teal-dark);
+  }
+  .check-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: 4px;
+  }
+  .btn-submit:hover { background: var(--teal-dark); }
+
+  /* SIDEBAR */
+  .sidebar-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 20px;
+  }
+  .sidebar-card:last-child { margin-bottom: 0; }
+  .sidebar-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+
+  /* PETS EM LAR TEMP */
+  .pets-list { display: flex; flex-direction: column; gap: 12px; }
+  .pet-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border-light);
+  }
+  .pet-thumb {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .bg-pink   { background: var(--pink-card); }
+  .bg-peach  { background: var(--peach-card); }
+  .bg-blue   { background: var(--blue-card); }
+  .bg-purple { background: var(--purple-card); }
+  .bg-green  { background: var(--green-card); }
+
+  .pet-info { flex: 1; }
+  .pet-name { font-size: 13px; font-weight: 700; margin-bottom: 1px; }
+  .pet-meta { font-size: 12px; color: var(--text-muted); }
+
+  .tag-lartemp {
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--orange-soft);
+    color: var(--orange-dark);
+    white-space: nowrap;
+  }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--teal-soft);
+    border: 1px solid var(--teal-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--teal-dark);
+    display: flex;
+    gap: 10px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .info-box span:first-child { flex-shrink: 0; font-size: 16px; }
+
+  /* DICAS */
+  .tip-list { display: flex; flex-direction: column; gap: 10px; }
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .tip-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--orange-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* EMPTY */
+  .empty-mini {
+    text-align: center;
+    padding: 20px 10px;
+    color: var(--text-muted);
+  }
+  .empty-mini .icon { font-size: 28px; margin-bottom: 8px; }
+  .empty-mini p { font-size: 13px; }
+
+  @media (max-width: 900px) {
+    .navbar { padding: 14px 20px; }
+    .container { padding: 24px 20px 80px; }
+    .main-grid { grid-template-columns: 1fr; }
+    .how-grid { grid-template-columns: 1fr; }
+    .hero-inner { flex-direction: column; padding: 28px 24px; text-align: center; }
+    .hero-inner-emoji { font-size: 52px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="{% url 'index' %}" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-user">
+      <span>{{ ong.nome_ong }}</span>
+      <div class="nav-avatar">{{ ong.nome_ong|slice:":2"|upper }}</div>
+    </div>
+    <a href="{% url 'logout' %}" class="nav-logout">Sair</a>
+  </div>
+</nav>
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li class="message {{ message.tags }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero-inner">
+    <div class="hero-inner-text">
+      <h1>Lar Temporário 🏠</h1>
+      <p>Encontre famílias que possam acolher temporariamente os pets da {{ ong.nome_ong }} enquanto aguardam adoção definitiva. Um lar provisório faz toda a diferença na recuperação e socialização do animal.</p>
+    </div>
+    <div class="hero-inner-emoji">🐾</div>
+  </div>
+
+  <!-- COMO FUNCIONA -->
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-icon teal">📢</div>
+      <h3>1. Divulgue a necessidade</h3>
+      <p>Cadastre os pets que precisam de lar temporário com todas as informações relevantes.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-icon orange">🤝</div>
+      <h3>2. Família entra em contato</h3>
+      <p>Interessados entram em contato com a ONG diretamente para combinar o acolhimento.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-icon purple">❤️</div>
+      <h3>3. Acompanhamento contínuo</h3>
+      <p>A ONG mantém o vínculo e apoia a família temporária até a adoção definitiva.</p>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- FORMULÁRIO PRINCIPAL -->
+    <div>
+
+      <div class="info-box">
+        <span>ℹ️</span>
+        <span>Preencha o formulário abaixo para divulgar um pet em busca de lar temporário. As informações serão exibidas na listagem pública do PetConect.</span>
+      </div>
+
+      <form method="POST" action="{% url 'lar_temporario' %}">
+        {% csrf_token %}
+
+        <!-- DADOS DO PET -->
+        <div class="card">
+          <div class="card-title">🐾 Informações do pet</div>
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="pet_nome">Nome do pet <span class="req">*</span></label>
+              <input type="text" id="pet_nome" name="pet_nome"
+                     placeholder="Ex: Bolinha" required />
+            </div>
+
+            <div class="field">
+              <label for="pet_especie">Espécie <span class="req">*</span></label>
+              <select id="pet_especie" name="pet_especie" required>
+                <option value="">Selecione</option>
+                <option value="cao">🐕 Cão</option>
+                <option value="gato">🐈 Gato</option>
+                <option value="outro">🐾 Outro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="pet_idade">Idade aproximada</label>
+              <input type="text" id="pet_idade" name="pet_idade"
+                     placeholder="Ex: 1 ano, 6 meses" />
+            </div>
+
+            <div class="field">
+              <label for="pet_porte">Porte</label>
+              <select id="pet_porte" name="pet_porte">
+                <option value="">Selecione</option>
+                <option value="pequeno">Pequeno</option>
+                <option value="medio">Médio</option>
+                <option value="grande">Grande</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="pet_descricao">Descrição e necessidades especiais</label>
+              <textarea id="pet_descricao" name="pet_descricao"
+                        placeholder="Conte sobre o pet, seu comportamento, se precisa de medicação, cuidados especiais, se convive bem com crianças e outros pets..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- REQUISITOS DO LAR -->
+        <div class="card">
+          <div class="card-title">🏠 Requisitos para o lar temporário</div>
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="duracao">Período estimado</label>
+              <select id="duracao" name="duracao">
+                <option value="">Selecione</option>
+                <option value="1_semana">Até 1 semana</option>
+                <option value="2_semanas">Até 2 semanas</option>
+                <option value="1_mes">Até 1 mês</option>
+                <option value="3_meses">Até 3 meses</option>
+                <option value="indefinido">Indefinido (até adoção)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="contato_responsavel">Telefone para contato <span class="req">*</span></label>
+              <input type="tel" id="contato_responsavel" name="contato_responsavel"
+                     placeholder="(00) 00000-0000"
+                     value="{{ ong.usuario.telefone }}" required />
+            </div>
+
+            <div class="field full">
+              <label>Compatibilidades necessárias</label>
+              <div class="check-grid-2">
+                <label class="check-row">
+                  <input type="checkbox" name="req_criancas" />
+                  👶 Aceita crianças na casa
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" name="req_outros_pets" />
+                  🐾 Aceita outros pets
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" name="req_quintal" />
+                  🌿 Precisa de quintal
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" name="req_home_office" />
+                  💻 Pessoa em casa durante o dia
+                </label>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="obs_lar">Observações adicionais</label>
+              <textarea id="obs_lar" name="obs_lar"
+                        placeholder="Alguma informação importante para o lar temporário? Ex: o pet não pode ficar sozinho por mais de 4 horas, precisa de rede nas janelas..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          📢 Publicar pedido de lar temporário
+        </button>
+
+      </form>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside>
+
+      <!-- Pets da ONG em lar temp -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">Pets em lar temporário</div>
+
+        {% with pets_lar=ong.pet_set.all %}
+        {% with total_lar=pets_lar|length %}
+
+        {% if total_lar > 0 %}
+        <div class="pets-list">
+          {% for pet in pets_lar %}
+            {% if pet.status == 'lar_temporario' %}
+            <div class="pet-row">
+              <div class="pet-thumb bg-peach">{{ pet.imagem_emoji }}</div>
+              <div class="pet-info">
+                <div class="pet-name">{{ pet.nome }}</div>
+                <div class="pet-meta">{{ pet.get_especie_display }} · {{ pet.get_porte_display }}</div>
+              </div>
+              <span class="tag-lartemp">Lar temp.</span>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-mini">
+          <div class="icon">🏠</div>
+          <p>Nenhum pet em lar temporário no momento.</p>
+        </div>
+        {% endif %}
+
+        {% endwith %}
+        {% endwith %}
+      </div>
+
+      <!-- Dicas para a ONG -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">Dicas para divulgar bem</div>
+        <div class="tip-list">
+          <div class="tip-item">
+            <div class="tip-icon">📸</div>
+            <span>Fotos reais e recentes do animal aumentam muito o interesse de famílias acolhedoras.</span>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">📋</div>
+            <span>Descreva a rotina e o comportamento do pet com detalhes — isso evita incompatibilidades.</span>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">📞</div>
+            <span>Mantenha o telefone de contato sempre atualizado para não perder famílias interessadas.</span>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">🤝</div>
+            <span>Combinar visitas antes do acolhimento ajuda tanto o pet quanto a família a se adaptarem.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Link para dashboard -->
+      <div class="sidebar-card" style="text-align:center;">
+        <a href="{% url 'dashboard_ong' %}"
+           style="display:inline-block;background:var(--teal);color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;transition:background .2s;"
+           onmouseover="this.style.background='var(--teal-dark)'"
+           onmouseout="this.style.background='var(--teal)'">
+          ← Voltar ao Dashboard
+        </a>
+      </div>
+
+    </aside>
+
+  </div>
+</div>
+
+</body>
+</html>
