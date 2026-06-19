@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Solicitações de Adoção</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/solicitacoes_adocao.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="{% url 'index' %}" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-user">
+      <span>{{ ong.nome_ong }}</span>
+      <div class="nav-avatar">{{ ong.nome_ong|slice:":2"|upper }}</div>
+    </div>
+    <a href="{% url 'logout' %}" class="nav-logout">Sair</a>
+  </div>
+</nav>
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li class="message {{ message.tags }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="container-sol">
+
+  <div class="page-header">
+    <div>
+      <h1>
+        Solicitações de Adoção
+        {% if novas != "00" %}
+        <span class="new-badge">{{ novas }} nova{{ novas|pluralize }}</span>
+        {% endif %}
+      </h1>
+      <p>Gerencie os candidatos à adoção dos pets de {{ ong.nome_ong }}</p>
+    </div>
+    <a href="{% url 'dashboard_ong' %}" class="btn-back">← Voltar ao Dashboard</a>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon yellow">📬</div>
+      <div>
+        <div class="stat-value">{{ novas }}</div>
+        <div class="stat-label">Novas solicitações</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue">💬</div>
+      <div>
+        <div class="stat-value">{{ entrevista }}</div>
+        <div class="stat-label">Em entrevista</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">✅</div>
+      <div>
+        <div class="stat-value">{{ aprovadas }}</div>
+        <div class="stat-label">Aprovadas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filter-bar">
+    <a href="?status=" class="filter-chip {% if not request.GET.status %}active{% endif %}">
+      Todas
+      <span class="filter-count">{{ solicitacoes|length }}</span>
+    </a>
+    <a href="?status=pendente"   class="filter-chip {% if request.GET.status == 'pendente'   %}active{% endif %}">⏳ Pendentes</a>
+    <a href="?status=entrevista" class="filter-chip {% if request.GET.status == 'entrevista' %}active{% endif %}">💬 Em entrevista</a>
+    <a href="?status=aprovada"   class="filter-chip {% if request.GET.status == 'aprovada'   %}active{% endif %}">✅ Aprovadas</a>
+    <a href="?status=recusada"   class="filter-chip {% if request.GET.status == 'recusada'   %}active{% endif %}">❌ Recusadas</a>
+    <a href="?status=concluida"  class="filter-chip {% if request.GET.status == 'concluida'  %}active{% endif %}">🎉 Concluídas</a>
+  </div>
+
+  <!-- TABELA -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h2>Candidatos</h2>
+      <span>{{ solicitacoes|length }} registro{{ solicitacoes|length|pluralize }}</span>
+    </div>
+
+    {% if solicitacoes %}
+    <table>
+      <thead>
+        <tr>
+          <th>Candidato</th>
+          <th>Pet</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sol in solicitacoes %}
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="avatar-sm">
+                {{ sol.adotante.usuario.get_full_name|default:sol.adotante.usuario.username|slice:":2"|upper }}
+              </div>
+              <div>
+                <div class="user-name">
+                  {{ sol.adotante.usuario.get_full_name|default:sol.adotante.usuario.username }}
+                </div>
+                <div class="user-email">{{ sol.adotante.usuario.email }}</div>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <span class="pet-tag">
+              {{ sol.pet.imagem_emoji }} {{ sol.pet.nome }}
+            </span>
+          </td>
+
+          <td>{{ sol.data_solicitacao|date:"d M Y" }}</td>
+
+          <td>
+            <span class="status-badge status-{{ sol.status }}">
+              {{ sol.get_status_display }}
+            </span>
+          </td>
+
+          <td>
+            <div class="actions-cell">
+              {% if sol.status == 'pendente' %}
+                <a href="{% url 'atualizar_solicitacao' sol.id 'entrevista' %}"
+                   class="btn-action btn-entrevista"
+                   onclick="return confirm('Mover para entrevista?')">
+                  💬 Entrevista
+                </a>
+                <a href="{% url 'atualizar_solicitacao' sol.id 'aprovada' %}"
+                   class="btn-action btn-aprovar"
+                   onclick="return confirm('Aprovar adoção de {{ sol.pet.nome }}?')">
+                  ✅ Aprovar
+                </a>
+                <a href="{% url 'atualizar_solicitacao' sol.id 'recusada' %}"
+                   class="btn-action btn-recusar"
+                   onclick="return confirm('Recusar esta solicitação?')">
+                  ❌ Recusar
+                </a>
+
+              {% elif sol.status == 'entrevista' %}
+                <a href="{% url 'atualizar_solicitacao' sol.id 'aprovada' %}"
+                   class="btn-action btn-aprovar"
+                   onclick="return confirm('Aprovar adoção de {{ sol.pet.nome }}?')">
+                  ✅ Aprovar
+                </a>
+                <a href="{% url 'atualizar_solicitacao' sol.id 'recusada' %}"
+                   class="btn-action btn-recusar"
+                   onclick="return confirm('Recusar esta solicitação?')">
+                  ❌ Recusar
+                </a>
+
+              {% elif sol.status == 'aprovada' %}
+                <span class="acao-info">Aguardando assinatura do termo</span>
+
+              {% elif sol.status == 'concluida' %}
+                <span class="acao-concluida">🎉 Adoção concluída</span>
+
+              {% elif sol.status == 'recusada' %}
+                <a href="{% url 'atualizar_solicitacao' sol.id 'pendente' %}"
+                   class="btn-action"
+                   onclick="return confirm('Reabrir esta solicitação?')">
+                  ↩ Reabrir
+                </a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <h3>Nenhuma solicitação encontrada</h3>
+      <p>
+        {% if request.GET.status %}
+          Não há solicitações com o filtro selecionado.
+        {% else %}
+          Quando alguém solicitar a adoção de um dos seus pets, aparecerá aqui.
+        {% endif %}
+      </p>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+</body>
+</html>

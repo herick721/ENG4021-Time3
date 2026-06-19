@@ -1,0 +1,222 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Cadastrar Pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/cadastro_pet.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="{% url 'index' %}" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-user">
+      <span>{{ ong.nome_ong }}</span>
+      <div class="nav-avatar">{{ ong.nome_ong|slice:":2"|upper }}</div>
+    </div>
+    <a href="{% url 'logout' %}" class="nav-logout">Sair</a>
+  </div>
+</nav>
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li class="message {{ message.tags }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="container-cadastro">
+
+  <div class="intro">
+    <h1>Cadastrar novo pet 🐾</h1>
+    <p>Preencha as informações do animal para disponibilizá-lo para adoção.</p>
+  </div>
+
+  <!-- Preview dinâmico -->
+  <div class="preview-bar">
+    <div class="preview-emoji" id="previewEmoji">🐾</div>
+    <div class="preview-text">
+      <h4 id="previewNome">Nome do pet</h4>
+      <p id="previewMeta">Espécie · Idade · Porte</p>
+    </div>
+  </div>
+
+  <form method="POST" action="{% url 'cadastro_pet' %}">
+    {% csrf_token %}
+
+    <!-- INFORMAÇÕES BÁSICAS -->
+    <div class="card">
+      <div class="card-title">📋 Informações básicas</div>
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="nome">Nome do pet <span class="req">*</span></label>
+          <input type="text" id="nome" name="nome"
+                 placeholder="Ex: Bolinha"
+                 value="{{ request.POST.nome }}"
+                 oninput="updatePreview()" required />
+        </div>
+
+        <div class="field">
+          <label for="especie">Espécie <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="especie" name="especie"
+                    onchange="updatePreview(); updateEmojis();" required>
+              <option value="">Selecione</option>
+              <option value="cao"   {% if request.POST.especie == 'cao'   %}selected{% endif %}>🐕 Cão</option>
+              <option value="gato"  {% if request.POST.especie == 'gato'  %}selected{% endif %}>🐈 Gato</option>
+              <option value="outro" {% if request.POST.especie == 'outro' %}selected{% endif %}>🐾 Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="raca">Raça</label>
+          <input type="text" id="raca" name="raca"
+                 placeholder="Ex: SRD, Labrador, Persa..."
+                 value="{{ request.POST.raca }}" />
+        </div>
+
+        <div class="field">
+          <label for="sexo">Sexo <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="sexo" name="sexo" required>
+              <option value="">Selecione</option>
+              <option value="macho" {% if request.POST.sexo == 'macho' %}selected{% endif %}>Macho</option>
+              <option value="femea" {% if request.POST.sexo == 'femea' %}selected{% endif %}>Fêmea</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="idade">Idade <span class="req">*</span></label>
+          <input type="text" id="idade" name="idade"
+                 placeholder="Ex: 2 anos, 6 meses"
+                 value="{{ request.POST.idade }}"
+                 oninput="updatePreview()" required />
+        </div>
+
+        <div class="field">
+          <label for="porte">Porte <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="porte" name="porte"
+                    onchange="updatePreview();" required>
+              <option value="">Selecione</option>
+              <option value="pequeno" {% if request.POST.porte == 'pequeno' %}selected{% endif %}>Pequeno</option>
+              <option value="medio"   {% if request.POST.porte == 'medio'   %}selected{% endif %}>Médio</option>
+              <option value="grande"  {% if request.POST.porte == 'grande'  %}selected{% endif %}>Grande</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="descricao">Descrição <span class="req">*</span></label>
+          <textarea id="descricao" name="descricao"
+                    placeholder="Conte a história e personalidade do pet: como foi resgatado, seus hábitos, com quem se dá bem...">{{ request.POST.descricao }}</textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EMOJI / REPRESENTAÇÃO VISUAL -->
+    <div class="card">
+      <div class="card-title">🖼️ Representação visual</div>
+      <p class="emoji-hint">Escolha o emoji que melhor representa o pet. Ele aparecerá nos cards de listagem.</p>
+
+      <div class="emoji-picker" id="emojis-cao" style="display:none;">
+        <button type="button" class="emoji-btn" data-emoji="🐕"    onclick="selectEmoji(this)">🐕</button>
+        <button type="button" class="emoji-btn" data-emoji="🐶"    onclick="selectEmoji(this)">🐶</button>
+        <button type="button" class="emoji-btn" data-emoji="🦮"    onclick="selectEmoji(this)">🦮</button>
+        <button type="button" class="emoji-btn" data-emoji="🐕‍🦺" onclick="selectEmoji(this)">🐕‍🦺</button>
+        <button type="button" class="emoji-btn" data-emoji="🐩"    onclick="selectEmoji(this)">🐩</button>
+      </div>
+
+      <div class="emoji-picker" id="emojis-gato" style="display:none;">
+        <button type="button" class="emoji-btn" data-emoji="🐈"   onclick="selectEmoji(this)">🐈</button>
+        <button type="button" class="emoji-btn" data-emoji="🐱"   onclick="selectEmoji(this)">🐱</button>
+        <button type="button" class="emoji-btn" data-emoji="😺"   onclick="selectEmoji(this)">😺</button>
+        <button type="button" class="emoji-btn" data-emoji="🐈‍⬛" onclick="selectEmoji(this)">🐈‍⬛</button>
+      </div>
+
+      <div class="emoji-picker" id="emojis-outro" style="display:none;">
+        <button type="button" class="emoji-btn" data-emoji="🐾" onclick="selectEmoji(this)">🐾</button>
+        <button type="button" class="emoji-btn" data-emoji="🐇" onclick="selectEmoji(this)">🐇</button>
+        <button type="button" class="emoji-btn" data-emoji="🐹" onclick="selectEmoji(this)">🐹</button>
+        <button type="button" class="emoji-btn" data-emoji="🦜" onclick="selectEmoji(this)">🦜</button>
+        <button type="button" class="emoji-btn" data-emoji="🐠" onclick="selectEmoji(this)">🐠</button>
+        <button type="button" class="emoji-btn" data-emoji="🦔" onclick="selectEmoji(this)">🦔</button>
+      </div>
+
+      <p id="emoji-hint-select" class="emoji-hint">Selecione a espécie acima para ver as opções.</p>
+
+      <input type="hidden" name="imagem_emoji" id="emojiInput"
+             value="{{ request.POST.imagem_emoji|default:'🐾' }}" />
+    </div>
+
+    <!-- SAÚDE -->
+    <div class="card">
+      <div class="card-title">💉 Saúde e cuidados</div>
+      <div class="check-grid">
+        <label class="check-item">
+          <input type="checkbox" name="vacinado"
+                 {% if request.POST.vacinado %}checked{% endif %} />
+          💉 Vacinado
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="castrado"
+                 {% if request.POST.castrado %}checked{% endif %} />
+          ✂️ Castrado
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="vermifugado"
+                 {% if request.POST.vermifugado %}checked{% endif %} />
+          💊 Vermifugado
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="microchip"
+                 {% if request.POST.microchip %}checked{% endif %} />
+          📡 Microchip
+        </label>
+      </div>
+    </div>
+
+    <!-- COMPATIBILIDADES -->
+    <div class="card">
+      <div class="card-title">🤝 Compatibilidades</div>
+      <div class="check-grid">
+        <label class="check-item">
+          <input type="checkbox" name="amigo_criancas"
+                 {% if request.POST.amigo_criancas %}checked{% endif %} />
+          👶 Amigo de crianças
+        </label>
+        <label class="check-item">
+          <input type="checkbox" name="amigo_outros_pets"
+                 {% if request.POST.amigo_outros_pets %}checked{% endif %} />
+          🐾 Amigo de outros pets
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <a href="{% url 'dashboard_ong' %}" class="btn-secondary">Cancelar</a>
+      <button type="submit" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Publicar pet
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<script src="{% static 'js/cadastro_pet.js' %}"></script>
+</body>
+</html>

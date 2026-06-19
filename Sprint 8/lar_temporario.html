@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Petconnect — Lar Temporário</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/lar_temporario.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="{% url 'index' %}" class="logo">
+    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-user">
+      <span>{{ ong.nome_ong }}</span>
+      <div class="nav-avatar">{{ ong.nome_ong|slice:":2"|upper }}</div>
+    </div>
+    <a href="{% url 'logout' %}" class="nav-logout">Sair</a>
+  </div>
+</nav>
+
+{% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li class="message {{ message.tags }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<div class="container-lar">
+
+  <!-- HERO -->
+  <div class="hero-inner">
+    <div class="hero-inner-text">
+      <h1>Lar Temporário 🏠</h1>
+      <p>
+        Encontre famílias que possam acolher temporariamente os pets de {{ ong.nome_ong }}
+        enquanto aguardam adoção definitiva. Um lar provisório faz toda a diferença
+        na recuperação e socialização do animal.
+      </p>
+    </div>
+    <div class="hero-inner-emoji">🐾</div>
+  </div>
+
+  <!-- COMO FUNCIONA -->
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-icon teal">📢</div>
+      <h3>1. Divulgue a necessidade</h3>
+      <p>Cadastre os pets que precisam de lar temporário com todas as informações relevantes.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-icon orange">🤝</div>
+      <h3>2. Família entra em contato</h3>
+      <p>Interessados entram em contato com a ONG diretamente para combinar o acolhimento.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-icon purple">❤️</div>
+      <h3>3. Acompanhamento contínuo</h3>
+      <p>A ONG mantém o vínculo e apoia a família temporária até a adoção definitiva.</p>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- FORMULÁRIO -->
+    <div>
+
+      <div class="info-box">
+        <span class="info-icon">ℹ️</span>
+        <span>Preencha o formulário abaixo para divulgar um pet em busca de lar temporário. As informações serão exibidas na listagem pública do PetConect.</span>
+      </div>
+
+      <form method="POST" action="{% url 'lar_temporario' %}">
+        {% csrf_token %}
+
+        <!-- DADOS DO PET -->
+        <div class="card">
+          <div class="card-title">🐾 Informações do pet</div>
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="pet_nome">Nome do pet <span class="req">*</span></label>
+              <input type="text" id="pet_nome" name="pet_nome"
+                     placeholder="Ex: Bolinha" required />
+            </div>
+
+            <div class="field">
+              <label for="pet_especie">Espécie <span class="req">*</span></label>
+              <div class="select-wrap">
+                <select id="pet_especie" name="pet_especie" required>
+                  <option value="">Selecione</option>
+                  <option value="cao">🐕 Cão</option>
+                  <option value="gato">🐈 Gato</option>
+                  <option value="outro">🐾 Outro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="pet_idade">Idade aproximada</label>
+              <input type="text" id="pet_idade" name="pet_idade"
+                     placeholder="Ex: 1 ano, 6 meses" />
+            </div>
+
+            <div class="field">
+              <label for="pet_porte">Porte</label>
+              <div class="select-wrap">
+                <select id="pet_porte" name="pet_porte">
+                  <option value="">Selecione</option>
+                  <option value="pequeno">Pequeno</option>
+                  <option value="medio">Médio</option>
+                  <option value="grande">Grande</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="pet_descricao">Descrição e necessidades especiais</label>
+              <textarea id="pet_descricao" name="pet_descricao"
+                        placeholder="Conte sobre o pet, seu comportamento, se precisa de medicação, cuidados especiais, se convive bem com crianças e outros pets..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- REQUISITOS DO LAR -->
+        <div class="card">
+          <div class="card-title">🏠 Requisitos para o lar temporário</div>
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="duracao">Período estimado</label>
+              <div class="select-wrap">
+                <select id="duracao" name="duracao">
+                  <option value="">Selecione</option>
+                  <option value="1_semana">Até 1 semana</option>
+                  <option value="2_semanas">Até 2 semanas</option>
+                  <option value="1_mes">Até 1 mês</option>
+                  <option value="3_meses">Até 3 meses</option>
+                  <option value="indefinido">Indefinido (até adoção)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="contato_responsavel">Telefone para contato <span class="req">*</span></label>
+              <input type="tel" id="contato_responsavel" name="contato_responsavel"
+                     placeholder="(00) 00000-0000"
+                     value="{{ ong.usuario.telefone }}" required />
+            </div>
+
+            <div class="field full">
+              <label>Compatibilidades necessárias</label>
+              <div class="check-grid-2">
+                <label class="check-row">
+                  <input type="checkbox" name="req_criancas" />
+                  👶 Aceita crianças na casa
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" name="req_outros_pets" />
+                  🐾 Aceita outros pets
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" name="req_quintal" />
+                  🌿 Precisa de quintal
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" name="req_home_office" />
+                  💻 Pessoa em casa durante o dia
+                </label>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="obs_lar">Observações adicionais</label>
+              <textarea id="obs_lar" name="obs_lar"
+                        placeholder="Alguma informação importante para o lar temporário? Ex: o pet não pode ficar sozinho por mais de 4 horas..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit-full">
+          📢 Publicar pedido de lar temporário
+        </button>
+
+      </form>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside>
+
+      <div class="sidebar-card">
+        <div class="sidebar-title">Pets em lar temporário</div>
+
+        {% with pets_lar=ong.pet_set.all %}
+        {% if pets_lar %}
+        <div class="pets-list-side">
+          {% for pet in pets_lar %}
+            {% if pet.status == 'lar_temporario' %}
+            <div class="pet-row-side">
+              <div class="pet-thumb-side bg-peach">{{ pet.imagem_emoji }}</div>
+              <div class="pet-info-side">
+                <div class="pet-name-side">{{ pet.nome }}</div>
+                <div class="pet-meta-side">{{ pet.get_especie_display }} · {{ pet.get_porte_display }}</div>
+              </div>
+              <span class="tag-lar">Lar temp.</span>
+            </div>
+            {% empty %}
+            <div class="empty-mini">
+              <div class="icon">🏠</div>
+              <p>Nenhum pet em lar temporário.</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-mini">
+          <div class="icon">🏠</div>
+          <p>Nenhum pet em lar temporário no momento.</p>
+        </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sidebar-title">Dicas para divulgar bem</div>
+        <div class="tip-list">
+          <div class="tip-item">
+            <div class="tip-icon">📸</div>
+            <span>Fotos reais e recentes do animal aumentam muito o interesse de famílias acolhedoras.</span>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">📋</div>
+            <span>Descreva a rotina e comportamento com detalhes — evita incompatibilidades.</span>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">📞</div>
+            <span>Mantenha o telefone atualizado para não perder famílias interessadas.</span>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">🤝</div>
+            <span>Combinar visitas antes do acolhimento ajuda o pet e a família a se adaptarem.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="text-align:center;">
+        <a href="{% url 'dashboard_ong' %}" class="btn-dash">← Voltar ao Dashboard</a>
+      </div>
+
+    </aside>
+
+  </div>
+</div>
+
+</body>
+</html>
