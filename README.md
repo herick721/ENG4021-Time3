@@ -18,7 +18,7 @@ O **PetConnect** é um hub completo para donos de pets, adotantes, resgatadores 
 - 💉 **Guia de vacinas** — calendário completo com lembretes por espécie e idade
 - 📍 **Mapa de clínicas** — integração com Google Maps para clínicas e abrigos próximos
 - 🛟 **Grupos de resgate** — diretório de ONGs e voluntários por cidade
-- 🛒 **Guia de compras** — produtos de afiliados verificados com condições exclusivas
+- 🛒 **Guia de compras** — produtos de afiliados verificados com condições exclusivas (Em Breve)
 - 💝 **Doação** — redirecionamento para canais oficiais de ONGs parceiras
 - 👤 **Perfil do usuário** — histórico de adoções, favoritos e linha do tempo do processo
 
