@@ -1,0 +1,49 @@
+{% extends "core/base.html" %}
+{% block title %}PetConect — Excluir Pet{% endblock %}
+
+{% block extra_css %}<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #0d9488; --teal-dark: #0f766e; --teal-light: #ccfbf1;
+    --orange: #f59e0b; --orange-dark: #d97706;
+    --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --text-muted: #64748b;
+    --border: #e2e8f0; --border-light: #f1f5f9; --error: #ef4444;
+  }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 500px; margin: 80px auto; padding: 0 24px; }
+  .card { background: #fff; border-radius: 20px; padding: 40px; border: 1px solid var(--border-light); box-shadow: 0 4px 24px rgba(0,0,0,.06); text-align: center; }
+  .card h1 { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+  .card .emoji { font-size: 56px; margin-bottom: 16px; }
+  .card .pet-name { font-size: 20px; font-weight: 700; color: var(--error); margin-bottom: 4px; }
+  .card .pet-info { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+  .card .warning-text { background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 14px; font-size: 13px; color: #991b1b; margin-bottom: 28px; text-align: left; line-height: 1.6; }
+  .form-actions { display: flex; gap: 12px; justify-content: center; }
+  .btn-cancel { padding: 12px 28px; border-radius: 10px; border: 1.5px solid var(--border); background: #fff; font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+  .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
+  .btn-danger { padding: 12px 28px; border-radius: 10px; border: none; background: var(--error); font-family: inherit; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; transition: background .2s; }
+  .btn-danger:hover { background: #dc2626; }
+</style>{% endblock %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="card">
+    <div class="emoji">⚠️</div>
+    <h1>Excluir pet</h1>
+    <div class="pet-name">{{ pet.nome }}</div>
+    <div class="pet-info">{{ pet.get_especie_display }} · {{ pet.idade_texto }} · {{ pet.get_porte_display }}</div>
+    <div class="warning-text">
+      <strong>Atenção:</strong> esta ação é permanente e não pode ser desfeita. Todas as solicitações de adoção associadas a {{ pet.nome }} também serão removidas.
+    </div>
+    <div class="form-actions">
+      <a href="{% url 'dashboard_ong' %}" class="btn-cancel">Cancelar</a>
+      <form method="POST" action="" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Sim, excluir {{ pet.nome }}</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

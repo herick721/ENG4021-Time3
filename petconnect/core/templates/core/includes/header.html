@@ -1,0 +1,23 @@
+<nav class="nav" id="navbar">
+  <a href="{% url 'index' %}" class="nav-logo"><span class="pet">Pet</span><span class="conect">C🐾nect</span></a>
+  <ul class="nav-links">
+    <li><a href="{% url 'listagem' %}">Adotar</a></li>
+    <li><a href="{% url 'lar_temporario' %}">Lar temporário</a></li>
+  </ul>
+  <div class="nav-cta">
+    {% if user.is_authenticated %}
+      {% if user.tipo == 'ong' %}
+        <a href="{% url 'dashboard_ong' %}" class="btn-ghost">Dashboard</a>
+      {% else %}
+        <a href="{% url 'painel_adotante' %}" class="btn-ghost">Meu Painel</a>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="btn-primary">Sair</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn-ghost">Entrar</a>
+      <a href="{% url 'cadastro' %}" class="btn-primary">Cadastrar ✦</a>
+    {% endif %}
+  </div>
+  <button class="menu-toggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>

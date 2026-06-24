@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — ONG Patinhas SP</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — ONG Patinhas SP{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -289,25 +285,9 @@
   }
   .btn-share:hover { border-color: var(--teal); color: var(--teal); }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <a href="index.html" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
-  </a>
-  <nav>
-    <ul>
-      <li><a href="listagem.html">Adotar</a></li>
-      <li><a href="lar_temporario.html">Lar temporário</a></li>
-      <li><a href="#">Como funciona</a></li>
-    </ul>
-  </nav>
-  <div class="auth-buttons">
-    <button class="btn btn-outline">Entrar</button>
-    <button class="btn btn-primary">Cadastrar</button>
-  </div>
-</header>
+{% block content %}
 
 <!-- HERO -->
 <div class="ong-hero">
@@ -451,6 +431,6 @@
   </aside>
 
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

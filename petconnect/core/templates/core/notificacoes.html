@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Notificações</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Notificações{% endblock %}
+
+{% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -205,12 +200,11 @@
     margin-top: 8px;
   }
   .notif-action:hover { border-color: var(--teal); color: var(--teal); }
-</style>
-</head>
-<body>
+</style>{% endblock %}
 
+{% block header %}
 <header>
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
   </a>
   <div class="nav-user">
@@ -218,7 +212,9 @@
     <div class="nav-avatar">JS</div>
   </div>
 </header>
+{% endblock %}
 
+{% block content %}
 <div class="container">
   <div class="page-header">
     <div>
@@ -247,7 +243,7 @@
           <div class="notif-title">Solicitação aprovada!</div>
           <div class="notif-desc">A ONG Patinhas SP aprovou sua solicitação para adotar o Bolinha. Próximo passo: assinar o termo de adoção.</div>
           <div class="notif-time">Há 32 minutos</div>
-          <a href="confirmacao_adocao.html" class="notif-action">Ver detalhes →</a>
+          <a href="{% url 'confirmacao_adocao' pet_id=0 %}" class="notif-action">Ver detalhes →</a>
         </div>
       </div>
 
@@ -258,7 +254,7 @@
           <div class="notif-title">Nova mensagem da ONG Patinhas SP</div>
           <div class="notif-desc">Olá! Podemos agendar a visita para conhecer o Bolinha. Qual dia seria melhor para você?</div>
           <div class="notif-time">Há 1 hora</div>
-          <a href="chat_ong.html" class="notif-action">Responder →</a>
+          <a href="{% url 'chat_ong' ong_id=0 %}" class="notif-action">Responder →</a>
         </div>
       </div>
 
@@ -286,7 +282,7 @@
           <div class="notif-title">Pet favorito adotado</div>
           <div class="notif-desc">A Nina, que estava nos seus favoritos, foi adotada por outra família. Que ela seja muito feliz! 🐱</div>
           <div class="notif-time">Ontem às 18:40</div>
-          <a href="listagem.html" class="notif-action">Ver outros pets</a>
+          <a href="{% url 'listagem' %}" class="notif-action">Ver outros pets</a>
         </div>
       </div>
 
@@ -313,7 +309,7 @@
           <div class="notif-title">Bem-vindo ao Petconnect!</div>
           <div class="notif-desc">Sua conta foi criada com sucesso. Comece explorando os pets disponíveis para adoção.</div>
           <div class="notif-time">20 Mai 2026</div>
-          <a href="listagem.html" class="notif-action">Explorar pets</a>
+          <a href="{% url 'listagem' %}" class="notif-action">Explorar pets</a>
         </div>
       </div>
 
@@ -321,6 +317,6 @@
   </div>
 
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

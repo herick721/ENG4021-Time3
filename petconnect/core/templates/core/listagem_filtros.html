@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Adotar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Adotar{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -273,26 +269,9 @@
     .pets-grid { grid-template-columns: 1fr; }
   }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <a href="#" class="logo">
-    <span class="pet">Pet</span><span class="paw">🐾</span><span class="nect">nect</span>
-  </a>
-  <nav>
-    <ul>
-      <li><a href="#" class="active">Adotar</a></li>
-      <li><a href="#">Lar temporário</a></li>
-      <li><a href="#">Como funciona</a></li>
-      <li><a href="#">Para ONGs</a></li>
-    </ul>
-  </nav>
-  <div class="auth-buttons">
-    <a href="login.html" class="btn btn-outline">Entrar</a>
-    <a href="#" class="btn btn-primary">Cadastrar</a>
-  </div>
-</header>
+{% block content %}
 
 <section class="hero">
   <h1>Encontre seu <span class="highlight">companheiro</span> ideal</h1>
@@ -402,11 +381,14 @@
 </main>
 
 <div class="bottom-nav">
-  <a href="listagem.html" class="active">📋 Listagem</a>
-  <a href="detalhe.html">🐾 Detalhe</a>
-  <a href="painel_adotante.html">👤 Painel</a>
+  <a href="{% url 'listagem' %}" class="active">📋 Listagem</a>
+  <a href="{% url 'detalhe' 1 %}">🐾 Detalhe</a>
+  <a href="{% url 'painel_adotante' %}">👤 Painel</a>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
 // =====================================================
 // DADOS DOS PETS
@@ -417,7 +399,7 @@ const PETS = [
     meta: "Cão · 2 anos · Médio · SRD", ong: "ONG Amigos Fiéis",
     emoji: "🐕", bg: "bg-pink", urgente: true,
     vacinado: true, castrado: true, criancas: false, pets: false,
-    href: "detalhe.html"
+    href: "{% url 'detalhe' 1 %}"
   },
   {
     id: 2, nome: "Mel", especie: "gato", porte: "pequeno", status: "disponivel",
@@ -709,5 +691,6 @@ document.getElementById("searchInput").addEventListener("keydown", function(e) {
 // =====================================================
 applyFilters();
 </script>
-</body>
-</html>
+{% endblock %}
+
+{% block footer %}{% endblock %}

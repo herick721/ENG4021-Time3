@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Dashboard ONG</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Dashboard ONG{% endblock %}
+
+{% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -246,7 +241,7 @@
   }
   .btn-sm:hover { border-color: var(--teal); color: var(--teal); }
 
-  /* Solicitações recentes */
+  /* Solicitacoes recentes */
   .request-row {
     display: flex;
     align-items: center;
@@ -339,28 +334,29 @@
     transition: all .2s;
   }
   .quick-link:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
-</style>
-</head>
-<body>
+</style>{% endblock %}
 
+{% block header %}
 <nav class="navbar">
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
   </a>
   <div class="nav-user">
-    <span>ONG Patinhas Felizes</span>
+    <span>{{ ong.nome_ong }}</span>
     <div class="nav-avatar">PF</div>
   </div>
 </nav>
+{% endblock %}
 
+{% block content %}
 <div class="container">
 
   <div class="page-header">
     <div>
       <h1>Dashboard</h1>
-      <p>Bem-vinda, ONG Patinhas Felizes 🐾</p>
+      <p>Bem-vinda, {{ ong.nome_ong }} 🐾</p>
     </div>
-    <a href="cadastro_pet.html" class="btn-add">
+    <a href="{% url 'cadastro_pet' %}" class="btn-add">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Cadastrar pet
     </a>
@@ -370,23 +366,23 @@
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-icon">🐾</div>
-      <div class="stat-value">12</div>
+      <div class="stat-value">{{ total_pets }}</div>
       <div class="stat-label">Pets cadastrados</div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">📋</div>
-      <div class="stat-value">05</div>
-      <div class="stat-label">Solicitações novas</div>
+      <div class="stat-value">{{ solicitacoes.count }}</div>
+      <div class="stat-label">Solicitacoes novas</div>
     </div>
     <div class="stat-card">
       <div class="stat-icon">✅</div>
-      <div class="stat-value">48</div>
-      <div class="stat-label">Adoções realizadas</div>
+      <div class="stat-value">{{ total_adocoes }}</div>
+      <div class="stat-label">Adocoes realizadas</div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon">💬</div>
-      <div class="stat-value">03</div>
-      <div class="stat-label">Em entrevista</div>
+      <div class="stat-icon">🏠</div>
+      <div class="stat-value">{{ ong.nome_ong|slice:":1" }}</div>
+      <div class="stat-label">ONG ativa</div>
     </div>
   </div>
 
@@ -399,117 +395,49 @@
       <div class="card">
         <div class="card-header">
           <h2>Pets cadastrados</h2>
-          <a href="#">Ver todos</a>
+          <a href="{% url 'listagem' %}">Ver todos</a>
         </div>
         <div class="pets-list">
-
+          {% for pet in pets %}
           <div class="pet-row">
-            <div class="pet-thumb bg-pink">🐕</div>
+            <div class="pet-thumb {{ pet.cor_fundo }}">{{ pet.imagem_emoji }}</div>
             <div class="pet-row-info">
-              <div class="pet-row-name">Bolinha</div>
-              <div class="pet-row-meta">Cão · 2 anos · Médio</div>
+              <div class="pet-row-name">{{ pet.nome }}</div>
+              <div class="pet-row-meta">{{ pet.get_especie_display }} · {{ pet.idade_texto }} · {{ pet.get_porte_display }}</div>
             </div>
-            <span class="status-badge status-disponivel">Disponível</span>
+            <span class="status-badge status-{{ pet.status }}">{{ pet.get_status_display }}</span>
             <div class="pet-row-actions">
-              <button class="btn-sm">Editar</button>
-              <button class="btn-sm">Remover</button>
+              <a href="{% url 'editar_pet' pet.id %}" class="btn-sm">Editar</a>
+              <a href="{% url 'excluir_pet' pet.id %}" class="btn-sm">Remover</a>
             </div>
           </div>
-
-          <div class="pet-row">
-            <div class="pet-thumb bg-peach">🐈</div>
-            <div class="pet-row-info">
-              <div class="pet-row-name">Mel</div>
-              <div class="pet-row-meta">Gata · 1 ano · Pequena</div>
-            </div>
-            <span class="status-badge status-disponivel">Disponível</span>
-            <div class="pet-row-actions">
-              <button class="btn-sm">Editar</button>
-              <button class="btn-sm">Remover</button>
-            </div>
-          </div>
-
-          <div class="pet-row">
-            <div class="pet-thumb bg-blue">🦮</div>
-            <div class="pet-row-info">
-              <div class="pet-row-name">Thor</div>
-              <div class="pet-row-meta">Cão · 4 anos · Grande</div>
-            </div>
-            <span class="status-badge status-analise">Em análise</span>
-            <div class="pet-row-actions">
-              <button class="btn-sm">Editar</button>
-              <button class="btn-sm">Remover</button>
-            </div>
-          </div>
-
-          <div class="pet-row">
-            <div class="pet-thumb bg-purple">😺</div>
-            <div class="pet-row-info">
-              <div class="pet-row-name">Nina</div>
-              <div class="pet-row-meta">Gata · 3 anos · Pequena</div>
-            </div>
-            <span class="status-badge status-adotado">Adotada</span>
-            <div class="pet-row-actions">
-              <button class="btn-sm">Editar</button>
-              <button class="btn-sm">Remover</button>
-            </div>
-          </div>
-
-          <div class="pet-row">
-            <div class="pet-thumb bg-green">🐕‍🦺</div>
-            <div class="pet-row-info">
-              <div class="pet-row-name">Rex</div>
-              <div class="pet-row-meta">Cão · 5 anos · Grande</div>
-            </div>
-            <span class="status-badge status-disponivel">Disponível</span>
-            <div class="pet-row-actions">
-              <button class="btn-sm">Editar</button>
-              <button class="btn-sm">Remover</button>
-            </div>
-          </div>
-
+          {% empty %}
+          <p style="text-align:center;color:var(--text-muted);padding:24px;">Nenhum pet cadastrado ainda.</p>
+          {% endfor %}
         </div>
       </div>
 
-      <!-- Solicitações recentes -->
+      <!-- Solicitacoes recentes -->
       <div class="card">
         <div class="card-header">
-          <h2>Solicitações recentes</h2>
-          <a href="solicitacoes.html">Ver todas</a>
+          <h2>Solicitacoes recentes</h2>
+          <a href="{% url 'solicitacoes_adocao' %}">Ver todas</a>
         </div>
 
+        {% for s in solicitacoes %}
         <div class="request-row">
           <div class="request-user">
-            <div class="avatar-sm">JS</div>
+            <div class="avatar-sm">{{ s.adotante.usuario.first_name|slice:":1" }}{{ s.adotante.usuario.last_name|slice:":1" }}</div>
             <div>
-              <div class="request-name">João Silva</div>
-              <div class="request-pet-name">Quer adotar: Bolinha · 14 Mai 2026</div>
+              <div class="request-name">{{ s.adotante.usuario.get_full_name|default:s.adotante.usuario.username }}</div>
+              <div class="request-pet-name">Quer adotar: {{ s.pet.nome }} · {{ s.data_solicitacao|date:"d M Y" }}</div>
             </div>
           </div>
-          <span class="status-badge status-pendente">Pendente</span>
+          <span class="status-badge status-{{ s.status }}">{{ s.get_status_display }}</span>
         </div>
-
-        <div class="request-row">
-          <div class="request-user">
-            <div class="avatar-sm" style="background:#fae8ff;color:#a21caf;">MA</div>
-            <div>
-              <div class="request-name">Maria Oliveira</div>
-              <div class="request-pet-name">Quer adotar: Buddy · 12 Mai 2026</div>
-            </div>
-          </div>
-          <span class="status-badge status-entrevista">Em Entrevista</span>
-        </div>
-
-        <div class="request-row">
-          <div class="request-user">
-            <div class="avatar-sm" style="background:#fef3c7;color:#d97706;">CS</div>
-            <div>
-              <div class="request-name">Carlos Santos</div>
-              <div class="request-pet-name">Quer adotar: Rex · 10 Mai 2026</div>
-            </div>
-          </div>
-          <span class="status-badge status-pendente">Pendente</span>
-        </div>
+        {% empty %}
+        <p style="text-align:center;color:var(--text-muted);padding:24px;">Nenhuma solicitação ainda.</p>
+        {% endfor %}
 
       </div>
     </div>
@@ -519,37 +447,33 @@
       <div class="sidebar-card">
         <div class="ong-profile">
           <div class="ong-avatar-big">🏠</div>
-          <div class="ong-name">ONG Patinhas Felizes</div>
-          <div class="ong-detail">📍 Pinheiros, SP · Desde 2018</div>
+          <div class="ong-name">{{ ong.nome_ong }}</div>
+          <div class="ong-detail">📍 {{ ong.usuario.cidade|default:'--' }}, {{ ong.usuario.estado|default:'--' }}</div>
           <div class="ong-stats">
             <div class="ong-stat">
-              <strong>48</strong>
-              <span>Adoções</span>
+              <strong>{{ total_adocoes }}</strong>
+              <span>Adocoes</span>
             </div>
             <div class="ong-stat">
-              <strong>12</strong>
+              <strong>{{ total_pets }}</strong>
               <span>Pets</span>
-            </div>
-            <div class="ong-stat">
-              <strong>4.9</strong>
-              <span>Nota ⭐</span>
             </div>
           </div>
         </div>
       </div>
 
       <div class="sidebar-card">
-        <div class="sidebar-title">Ações rápidas</div>
+        <div class="sidebar-title">Acoes rapidas</div>
         <div class="quick-links">
-          <a href="cadastro_pet.html" class="quick-link">🐾 Cadastrar novo pet</a>
-          <a href="solicitacoes.html" class="quick-link">📋 Ver solicitações</a>
-          <a href="editar_usuario.html" class="quick-link">✏️ Editar perfil da ONG</a>
+          <a href="{% url 'cadastro_pet' %}" class="quick-link">🐾 Cadastrar novo pet</a>
+          <a href="{% url 'solicitacoes_adocao' %}" class="quick-link">📋 Ver solicitacoes</a>
+          <a href="{% url 'editar_usuario' %}" class="quick-link">✏️ Editar perfil da ONG</a>
         </div>
       </div>
     </aside>
 
   </div>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

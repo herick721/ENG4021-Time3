@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Fale Conosco</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Fale Conosco{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -262,26 +258,9 @@
   .hours-row span:first-child { color: var(--text-muted); }
   .hours-row span:last-child { font-weight: 600; }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <div class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
-  </div>
-  <nav>
-    <ul>
-      <li><a href="listagem.html">Adotar</a></li>
-      <li><a href="lar_temporario.html">Lar temporário</a></li>
-      <li><a href="como_funciona.html">Como funciona</a></li>
-      <li><a href="#" class="active">Fale conosco</a></li>
-    </ul>
-  </nav>
-  <div class="auth-buttons">
-    <button class="btn btn-outline">Entrar</button>
-    <button class="btn btn-primary">Cadastrar</button>
-  </div>
-</header>
+{% block content %}
 
 <!-- HERO -->
 <div class="hero">
@@ -464,6 +443,6 @@
   </aside>
 
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

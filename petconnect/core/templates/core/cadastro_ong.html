@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Cadastro de ONG</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}PetConect — Cadastro de ONG{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -61,7 +57,6 @@
   .header-right a { color: var(--teal); font-weight: 600; text-decoration: none; }
   .header-right a:hover { text-decoration: underline; }
 
-  /* STEPS */
   .steps-bar {
     background: #fff;
     border-bottom: 1px solid var(--border-light);
@@ -177,7 +172,6 @@
   }
   .field textarea { resize: vertical; min-height: 90px; }
 
-  /* Upload */
   .upload-area {
     border: 2px dashed var(--border);
     border-radius: 14px;
@@ -192,7 +186,6 @@
   .upload-area p { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; }
   .upload-area span { font-size: 12px; color: var(--text-light); }
 
-  /* Info box */
   .info-box {
     background: var(--teal-soft);
     border: 1px solid var(--teal-light);
@@ -243,18 +236,20 @@
   }
   .btn-submit:hover { background: var(--teal-dark); }
 </style>
-</head>
-<body>
+{% endblock %}
 
+{% block header %}
 <header>
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
   </a>
   <div class="header-right">
-    Já tem conta? <a href="login.html">Entrar</a>
+    Já tem conta? <a href="{% url 'login' %}">Entrar</a>
   </div>
 </header>
+{% endblock %}
 
+{% block content %}
 <div class="steps-bar">
   <div class="steps">
     <div class="step-item active">
@@ -282,8 +277,8 @@
     <p>Preencha os dados da sua organização para começar a cadastrar pets.</p>
   </div>
 
-  <form>
-    <!-- DADOS DA ONG -->
+  <form method="POST" action="">
+    {% csrf_token %}
     <div class="card">
       <div class="card-title">🏢 Dados da organização</div>
       <div class="info-box">
@@ -293,64 +288,62 @@
       <div class="form-grid">
         <div class="field full">
           <label for="nome_ong">Nome da ONG <span class="required">*</span></label>
-          <input type="text" id="nome_ong" placeholder="Ex: ONG Patinhas Felizes" />
+          <input type="text" id="nome_ong" name="nome_ong" placeholder="Ex: ONG Patinhas Felizes" />
         </div>
         <div class="field">
           <label for="cnpj">CNPJ <span class="required">*</span></label>
-          <input type="text" id="cnpj" placeholder="00.000.000/0001-00" />
+          <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0001-00" />
         </div>
         <div class="field">
           <label for="fundacao">Ano de fundação</label>
-          <input type="text" id="fundacao" placeholder="Ex: 2015" />
+          <input type="text" id="fundacao" name="fundacao" placeholder="Ex: 2015" />
         </div>
         <div class="field">
           <label for="telefone">Telefone <span class="required">*</span></label>
-          <input type="tel" id="telefone" placeholder="(00) 00000-0000" />
+          <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" />
         </div>
         <div class="field">
           <label for="email_ong">E-mail <span class="required">*</span></label>
-          <input type="email" id="email_ong" placeholder="contato@suaong.org.br" />
+          <input type="email" id="email_ong" name="email_ong" placeholder="contato@suaong.org.br" />
         </div>
         <div class="field full">
           <label for="descricao">Descrição da ONG <span class="required">*</span></label>
-          <textarea id="descricao" placeholder="Conte a história e missão da sua organização..."></textarea>
+          <textarea id="descricao" name="descricao" placeholder="Conte a história e missão da sua organização..."></textarea>
         </div>
       </div>
     </div>
 
-    <!-- ENDEREÇO -->
     <div class="card">
       <div class="card-title">📍 Endereço</div>
       <div class="form-grid">
         <div class="field">
           <label for="cep">CEP <span class="required">*</span></label>
-          <input type="text" id="cep" placeholder="00000-000" />
+          <input type="text" id="cep" name="cep" placeholder="00000-000" />
         </div>
         <div class="field">
           <label for="cidade">Cidade <span class="required">*</span></label>
-          <input type="text" id="cidade" placeholder="Ex: São Paulo" />
+          <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo" />
         </div>
         <div class="field">
           <label for="estado">Estado <span class="required">*</span></label>
-          <select id="estado">
+          <select id="estado" name="estado">
             <option value="">Selecione</option>
-            <option>SP</option><option>RJ</option><option>MG</option>
-            <option>RS</option><option>PR</option><option>SC</option>
-            <option>BA</option><option>CE</option><option>Outros</option>
+            <option value="SP">SP</option><option value="RJ">RJ</option><option value="MG">MG</option>
+            <option value="RS">RS</option><option value="PR">PR</option><option value="SC">SC</option>
+            <option value="BA">BA</option><option value="CE">CE</option><option value="Outros">Outros</option>
           </select>
         </div>
         <div class="field">
           <label for="bairro">Bairro</label>
-          <input type="text" id="bairro" placeholder="Ex: Pinheiros" />
+          <input type="text" id="bairro" name="bairro" placeholder="Ex: Pinheiros" />
         </div>
         <div class="field full">
           <label for="endereco">Endereço completo</label>
-          <input type="text" id="endereco" placeholder="Rua, número, complemento" />
+          <input type="text" id="endereco" name="endereco" placeholder="Rua, número, complemento" />
         </div>
       </div>
     </div>
 
-    <!-- LOGO -->
     <div class="card">
       <div class="card-title">🖼️ Logo da ONG</div>
       <div class="upload-area">
@@ -361,11 +354,11 @@
     </div>
 
     <div class="form-actions">
-      <a href="cadastro.html" class="btn-cancel">Cancelar</a>
+      <a href="{% url 'cadastro' %}" class="btn-cancel">Cancelar</a>
       <button type="submit" class="btn-submit">Próximo passo →</button>
     </div>
   </form>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}
