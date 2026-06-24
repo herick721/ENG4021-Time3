@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Meu Painel</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Meu Painel{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -273,35 +269,9 @@
   .bottom-nav a.active { background: var(--teal); color: #fff; }
   .bottom-nav a:hover:not(.active) { background: var(--border-light); }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <a href="listagem.html" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
-  </a>
-  <nav>
-    <ul>
-      <li><a href="{% url 'listagem' %}">Adotar</a></li>
-      <li><a href="#">Lar temporário</a></li>
-      <li><a href="#">Como funciona</a></li>
-      <li><a href="{% url 'painel_adotante' %}" class="active">Meu painel</a></li>
-    </ul>
-  </nav>
-  <div class="header-right">
-    <button class="notif-btn" title="Notificações">
-      <div class="notif-dot"></div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
-    </button>
-    <div class="user-pill">
-      <div class="user-avatar">{{ adotante.usuario.username|make_list|first|upper }}</div>
-      {{ adotante.usuario.get_full_name|default:adotante.usuario.username }}
-    </div>
-  </div>
-</header>
+{% block content %}
 
 <div class="page-wrap">
 
@@ -465,7 +435,9 @@
   <a href="#">🐾 Detalhe</a>
   <a href="{% url 'painel_adotante' %}" class="active">👤 Painel</a>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
   function showPanel(name, el) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -474,5 +446,6 @@
     el.classList.add('active');
   }
 </script>
-</body>
-</html>
+{% endblock %}
+
+{% block footer %}{% endblock %}

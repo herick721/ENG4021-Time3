@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Adoção Confirmada</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+{% extends "core/base.html" %}
+{% block title %}Petconnect — Adoção Confirmada{% endblock %}
+
+{% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -245,34 +239,35 @@
     text-decoration: none;
   }
   .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
-</style>
-</head>
-<body>
+</style>{% endblock %}
 
+{% block header %}
 <header>
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span>
     <span>🐾</span>
     <span class="nect">nect</span>
   </a>
 </header>
+{% endblock %}
 
+{% block content %}
 <div class="container">
 
   <div class="success-block">
     <div class="success-icon">✅</div>
-    <h1>Adoção <span class="accent">aprovada!</span></h1>
-    <p>Parabéns! Você e o Bolinha estão prestes a começar uma nova história juntos.</p>
+    <h1>Solicitação <span class="accent">enviada!</span></h1>
+    <p>Sua solicitação para adotar <strong>{{ pet.nome }}</strong> foi registrada. A ONG responsável analisará seu pedido.</p>
   </div>
 
   <!-- Resumo do pet -->
   <div class="card">
     <div class="pet-summary">
-      <div class="pet-emoji">🐕</div>
+      <div class="pet-emoji">{{ pet.imagem_emoji }}</div>
       <div class="pet-summary-info">
-        <h2>Bolinha</h2>
-        <p>Cão · 2 anos · Médio · SRD · Macho</p>
-        <span class="status-pill">Adoção aprovada</span>
+        <h2>{{ pet.nome }}</h2>
+        <p>{{ pet.get_especie_display }} · {{ pet.idade_texto }} · {{ pet.get_porte_display }} · {{ pet.raca }} · {{ pet.get_sexo_display }}</p>
+        <span class="status-pill">{{ solicitacao.get_status_display }}</span>
       </div>
     </div>
   </div>
@@ -282,30 +277,30 @@
     <div class="card-title">Próximos passos</div>
     <div class="step-list">
       <div class="step-item">
-        <div class="step-num">✓</div>
+        <div class="step-num">{% if solicitacao.status == 'pendente' %}1{% else %}✓{% endif %}</div>
         <div class="step-text">
           <strong>Solicitação enviada</strong>
-          <span>Recebida pela ONG em 14 Mai 2026</span>
+          <span>Recebida pela ONG em {{ solicitacao.data_solicitacao|date:"d M Y" }}</span>
         </div>
       </div>
       <div class="step-item">
-        <div class="step-num">✓</div>
+        <div class="step-num">{% if solicitacao.status in 'entrevista,aprovada,concluida' %}✓{% elif solicitacao.status == 'pendente' %}2{% else %}2{% endif %}</div>
         <div class="step-text">
-          <strong>Entrevista realizada</strong>
-          <span>Aprovado na entrevista com a ONG</span>
+          <strong>Entrevista</strong>
+          <span>Aguarde o contato da ONG para entrevista</span>
         </div>
       </div>
       <div class="step-item">
-        <div class="step-num">3</div>
+        <div class="step-num">{% if solicitacao.status in 'aprovada,concluida' %}✓{% elif solicitacao.status == 'entrevista' %}3{% else %}3{% endif %}</div>
         <div class="step-text">
-          <strong>Assinar o termo de adoção</strong>
-          <span>A ONG enviará o documento por e-mail em até 24h</span>
+          <strong>Aprovação</strong>
+          <span>A ONG avaliará sua solicitação</span>
         </div>
       </div>
       <div class="step-item">
-        <div class="step-num pending">4</div>
+        <div class="step-num pending">{% if solicitacao.status == 'concluida' %}✓{% else %}4{% endif %}</div>
         <div class="step-text">
-          <strong>Buscar o Bolinha</strong>
+          <strong>Buscar {{ pet.nome }}</strong>
           <span>Combine a data e horário com a ONG</span>
         </div>
       </div>
@@ -318,17 +313,17 @@
     <div class="ong-row">
       <div class="ong-avatar">🏠</div>
       <div>
-        <div class="ong-name">ONG Patinhas SP</div>
-        <div class="ong-detail">📍 Pinheiros, SP · (11) 99999-0000</div>
-        <div class="ong-detail">✉️ contato@patinhassp.org.br</div>
+        <div class="ong-name">{{ pet.ong.nome_ong }}</div>
+        <div class="ong-detail">📍 {{ pet.ong.usuario.cidade|default:'--' }}, {{ pet.ong.usuario.estado|default:'--' }}</div>
+        <div class="ong-detail">✉️ {{ pet.ong.usuario.email }}</div>
       </div>
     </div>
   </div>
 
-  <a href="listagem.html" class="btn-primary">Ver outros pets</a>
-  <a href="index.html" class="btn-secondary">Voltar ao início</a>
+  <a href="{% url 'listagem' %}" class="btn-primary">Ver outros pets</a>
+  <a href="{% url 'index' %}" class="btn-secondary">Voltar ao início</a>
 
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

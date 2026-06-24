@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Histórico de Adoções</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Histórico de Adoções{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -289,25 +285,9 @@
   }
   .btn-ver:hover { border-color: var(--teal); color: var(--teal); }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <div class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
-  </div>
-  <nav>
-    <ul>
-      <li><a href="listagem.html">Adotar</a></li>
-      <li><a href="#">Lar temporário</a></li>
-      <li><a href="#">Como funciona</a></li>
-    </ul>
-  </nav>
-  <div class="auth-buttons">
-    <button class="btn btn-outline">Entrar</button>
-    <button class="btn btn-primary">Cadastrar</button>
-  </div>
-</header>
+{% block content %}
 
 <div class="container">
 
@@ -329,9 +309,9 @@
       </div>
       <nav class="sidebar-nav">
         <a href="#" class="sidebar-link">👤 Meu perfil</a>
-        <a href="favoritos.html" class="sidebar-link">❤️ Favoritos</a>
+        <a href="{% url 'favoritos' %}" class="sidebar-link">❤️ Favoritos</a>
         <a href="#" class="sidebar-link active">📋 Histórico</a>
-        <a href="editar_usuario.html" class="sidebar-link">✏️ Editar perfil</a>
+        <a href="{% url 'editar_usuario' %}" class="sidebar-link">✏️ Editar perfil</a>
       </nav>
     </div>
   </aside>
@@ -374,7 +354,7 @@
         <div class="history-right">
           <span class="status-badge status-adotado">✓ Adotado</span>
           <span class="history-date">10 Jan 2026</span>
-          <a href="detalhe.html" class="btn-ver">Ver pet</a>
+          <a href="#" class="btn-ver">Ver pet</a>
         </div>
       </div>
 
@@ -398,7 +378,7 @@
         <div class="history-right">
           <span class="status-badge status-entrevista">Em entrevista</span>
           <span class="history-date">14 Mai 2026</span>
-          <a href="detalhe.html" class="btn-ver">Ver pet</a>
+          <a href="#" class="btn-ver">Ver pet</a>
         </div>
       </div>
 
@@ -453,6 +433,6 @@
     </div>
   </div>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

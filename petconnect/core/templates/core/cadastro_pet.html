@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Cadastrar Pet</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}PetConect — Cadastrar Pet{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -160,7 +156,6 @@
   }
   .field textarea { resize: vertical; min-height: 100px; }
 
-  /* Upload area */
   .upload-area {
     border: 2px dashed var(--border);
     border-radius: 14px;
@@ -185,7 +180,6 @@
     color: var(--text-light);
   }
 
-  /* Checkboxes */
   .check-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -250,11 +244,11 @@
   }
   .btn-submit:hover { background: var(--teal-dark); }
 </style>
-</head>
-<body>
+{% endblock %}
 
+{% block header %}
 <header>
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span>
     <span>🐾</span>
     <span class="nect">nect</span>
@@ -264,117 +258,122 @@
     <div class="nav-avatar">PF</div>
   </div>
 </header>
+{% endblock %}
 
+{% block content %}
 <div class="container">
   <div class="intro">
+    {% if pet %}
+    <h1>Editar {{ pet.nome }} ✏️</h1>
+    <p>Atualize as informações do animal.</p>
+    {% else %}
     <h1>Cadastrar novo pet 🐾</h1>
     <p>Preencha as informações do animal para colocá-lo disponível para adoção.</p>
+    {% endif %}
   </div>
 
-  <form>
-    <!-- INFORMAÇÕES BÁSICAS -->
+  <form method="POST" action="">
+    {% csrf_token %}
     <div class="card">
       <div class="card-title">📋 Informações básicas</div>
       <div class="form-grid">
         <div class="field">
           <label for="nome">Nome do pet <span class="required">*</span></label>
-          <input type="text" id="nome" placeholder="Ex: Bolinha" />
+          <input type="text" id="nome" name="nome" placeholder="Ex: Bolinha" value="{{ pet.nome|default:'' }}" />
         </div>
         <div class="field">
           <label for="especie">Espécie <span class="required">*</span></label>
-          <select id="especie">
+          <select id="especie" name="especie">
             <option value="">Selecione</option>
-            <option>Cão</option>
-            <option>Gato</option>
-            <option>Outro</option>
+            <option value="cao" {% if pet.especie == 'cao' %}selected{% endif %}>Cão</option>
+            <option value="gato" {% if pet.especie == 'gato' %}selected{% endif %}>Gato</option>
+            <option value="outro" {% if pet.especie == 'outro' %}selected{% endif %}>Outro</option>
           </select>
         </div>
         <div class="field">
           <label for="raca">Raça</label>
-          <input type="text" id="raca" placeholder="Ex: SRD, Labrador..." />
+          <input type="text" id="raca" name="raca" placeholder="Ex: SRD, Labrador..." value="{{ pet.raca|default:'' }}" />
         </div>
         <div class="field">
           <label for="sexo">Sexo <span class="required">*</span></label>
-          <select id="sexo">
+          <select id="sexo" name="sexo">
             <option value="">Selecione</option>
-            <option>Macho</option>
-            <option>Fêmea</option>
+            <option value="macho" {% if pet.sexo == 'macho' %}selected{% endif %}>Macho</option>
+            <option value="femea" {% if pet.sexo == 'femea' %}selected{% endif %}>Fêmea</option>
           </select>
         </div>
         <div class="field">
           <label for="idade">Idade <span class="required">*</span></label>
-          <input type="text" id="idade" placeholder="Ex: 2 anos, 6 meses" />
+          <input type="text" id="idade" name="idade" placeholder="Ex: 2 anos, 6 meses" value="{{ pet.idade_texto|default:'' }}" />
         </div>
         <div class="field">
           <label for="porte">Porte <span class="required">*</span></label>
-          <select id="porte">
+          <select id="porte" name="porte">
             <option value="">Selecione</option>
-            <option>Pequeno</option>
-            <option>Médio</option>
-            <option>Grande</option>
+            <option value="pequeno" {% if pet.porte == 'pequeno' %}selected{% endif %}>Pequeno</option>
+            <option value="medio" {% if pet.porte == 'medio' %}selected{% endif %}>Médio</option>
+            <option value="grande" {% if pet.porte == 'grande' %}selected{% endif %}>Grande</option>
           </select>
         </div>
         <div class="field full">
           <label for="descricao">Descrição <span class="required">*</span></label>
-          <textarea id="descricao" placeholder="Conte a história e personalidade do pet..."></textarea>
+          <textarea id="descricao" name="descricao" placeholder="Conte a história e personalidade do pet...">{{ pet.descricao|default:'' }}</textarea>
         </div>
+        {% if pet %}
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="disponivel" {% if pet.status == 'disponivel' %}selected{% endif %}>Disponível</option>
+            <option value="analise" {% if pet.status == 'analise' %}selected{% endif %}>Em análise</option>
+            <option value="lar_temporario" {% if pet.status == 'lar_temporario' %}selected{% endif %}>Lar temporário</option>
+            <option value="adotado" {% if pet.status == 'adotado' %}selected{% endif %}>Adotado</option>
+          </select>
+        </div>
+        {% endif %}
       </div>
     </div>
 
-    <!-- FOTOS -->
-    <div class="card">
-      <div class="card-title">📸 Fotos do pet</div>
-      <div class="upload-area">
-        <div class="upload-icon">📷</div>
-        <p>Clique para enviar fotos ou arraste aqui</p>
-        <span>PNG, JPG até 5MB · Mínimo 1 foto</span>
-      </div>
-    </div>
-
-    <!-- SAÚDE -->
     <div class="card">
       <div class="card-title">💉 Saúde</div>
       <div class="check-grid">
         <label class="check-item">
-          <input type="checkbox" /> 💉 Vacinado
+          <input type="checkbox" name="vacinado" {% if pet.vacinado %}checked{% endif %} /> 💉 Vacinado
         </label>
         <label class="check-item">
-          <input type="checkbox" /> ✂️ Castrado
+          <input type="checkbox" name="castrado" {% if pet.castrado %}checked{% endif %} /> ✂️ Castrado
         </label>
         <label class="check-item">
-          <input type="checkbox" /> 💊 Vermifugado
+          <input type="checkbox" name="vermifugado" {% if pet.vermifugado %}checked{% endif %} /> 💊 Vermifugado
         </label>
         <label class="check-item">
-          <input type="checkbox" /> 🔬 Microchip
+          <input type="checkbox" name="microchip" {% if pet.microchip %}checked{% endif %} /> 🔬 Microchip
         </label>
       </div>
     </div>
 
-    <!-- COMPATIBILIDADES -->
     <div class="card">
       <div class="card-title">🤝 Compatibilidades</div>
       <div class="check-grid">
         <label class="check-item">
-          <input type="checkbox" /> 👶 Crianças
+          <input type="checkbox" name="amigo_criancas" {% if pet.amigo_criancas %}checked{% endif %} /> 👶 Crianças
         </label>
         <label class="check-item">
-          <input type="checkbox" /> 🐕 Outros cães
+          <input type="checkbox" name="amigo_outros_pets" {% if pet.amigo_outros_pets %}checked{% endif %} /> 🐕 Outros cães
         </label>
+        {% if pet %}
         <label class="check-item">
-          <input type="checkbox" /> 🐱 Gatos
+          <input type="checkbox" name="urgente" {% if pet.urgente %}checked{% endif %} /> 🔥 Urgente
         </label>
-        <label class="check-item">
-          <input type="checkbox" /> 🏠 Apartamento
-        </label>
+        {% endif %}
       </div>
     </div>
 
     <div class="form-actions">
-      <a href="solicitacoes.html" class="btn-cancel">Cancelar</a>
-      <button type="submit" class="btn-submit">Publicar pet</button>
+      <a href="{% url 'dashboard_ong' %}" class="btn-cancel">Cancelar</a>
+      <button type="submit" class="btn-submit">{% if pet %}Salvar alterações{% else %}Publicar pet{% endif %}</button>
     </div>
   </form>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

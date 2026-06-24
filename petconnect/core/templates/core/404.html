@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Página não encontrada</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Página não encontrada{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -180,14 +176,9 @@
   }
   .suggestion-link:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-soft); }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <a href="index.html" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
-  </a>
-</header>
+{% block content %}
 
 <main class="main">
   <div class="content">
@@ -197,11 +188,11 @@
     <p>Parece que a página que você está procurando não existe ou foi movida. Mas não se preocupe, tem muitos pets esperando por você!</p>
 
     <div class="actions">
-      <a href="index.html" class="btn-primary">
+      <a href="{% url 'index' %}" class="btn-primary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Voltar ao início
       </a>
-      <a href="listagem.html" class="btn-secondary">
+      <a href="{% url 'listagem' %}" class="btn-secondary">
         Ver pets para adoção
       </a>
     </div>
@@ -209,14 +200,14 @@
     <div class="suggestions">
       <h3>Talvez você esteja procurando</h3>
       <div class="suggestion-links">
-        <a href="listagem.html" class="suggestion-link">🐕 Pets disponíveis para adoção</a>
-        <a href="cadastro.html" class="suggestion-link">✏️ Criar uma conta</a>
-        <a href="login.html" class="suggestion-link">🔑 Entrar na minha conta</a>
-        <a href="lar_temporario.html" class="suggestion-link">🏠 Lar temporário</a>
+        <a href="{% url 'listagem' %}" class="suggestion-link">🐕 Pets disponíveis para adoção</a>
+        <a href="{% url 'cadastro' %}" class="suggestion-link">✏️ Criar uma conta</a>
+        <a href="{% url 'login' %}" class="suggestion-link">🔑 Entrar na minha conta</a>
+        <a href="{% url 'lar_temporario' %}" class="suggestion-link">🏠 Lar temporário</a>
       </div>
     </div>
   </div>
 </main>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

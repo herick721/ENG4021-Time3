@@ -27,6 +27,7 @@ urlpatterns = [
     path('painel/perfil/', views.perfil_adotante, name='perfil_adotante'),
     path('painel/historico/', views.historico_adocoes, name='historico_adocoes'),
     path('pet/<int:pet_id>/solicitar/', views.confirmacao_adocao, name='confirmacao_adocao'),
+    path('pet/<int:pet_id>/favoritar/', views.toggle_favorito, name='toggle_favorito'),
     path('pet/<int:pet_id>/termo/', views.termo_adocao, name='termo_adocao'),
     path('ong/<int:ong_id>/avaliar/', views.avaliar_ong, name='avaliar_ong'),
     path('ong/<int:ong_id>/chat/', views.chat_ong, name='chat_ong'),
@@ -34,8 +35,10 @@ urlpatterns = [
     # ── ONG ───────────────────────────────────────────────
     path('ong/dashboard/', views.dashboard_ong, name='dashboard_ong'),
     path('ong/solicitacoes/', views.solicitacoes_adocao, name='solicitacoes_adocao'),
-    path('ong/solicitacao/<int:sol_id>/status/<str:status>/', views.atualizar_solicitacao, name='atualizar_solicitacao'),
+    path('ong/solicitacao/<int:sol_id>/atualizar/', views.atualizar_solicitacao, name='atualizar_solicitacao'),
     path('ong/cadastrar-pet/', views.cadastro_pet, name='cadastro_pet'),
+    path('pet/<int:pet_id>/editar/', views.editar_pet, name='editar_pet'),
+    path('pet/<int:pet_id>/excluir/', views.excluir_pet, name='excluir_pet'),
     path('ong/lar-temporario/', views.lar_temporario, name='lar_temporario'),
     path('ong/cadastro-ong/', views.cadastro_ong, name='cadastro_ong'),
 ]

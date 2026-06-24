@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Bolinha</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Bolinha{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -510,38 +506,19 @@
     .health-grid { grid-template-columns: 1fr; }
   }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <div class="logo">
-    <span class="pet">Pet</span>
-    <span>🐾</span>
-    <span class="nect">nect</span>
-  </div>
-  <nav>
-    <ul>
-      <li><a href="listagem.html" class="active">Adotar</a></li>
-      <li><a href="#">Lar temporário</a></li>
-      <li><a href="#">Como funciona</a></li>
-      <li><a href="#">Para ONGs</a></li>
-    </ul>
-  </nav>
-  <div class="auth-buttons">
-    <button class="btn btn-outline">Entrar</button>
-    <a href="{% url 'cadastro' %}" class="btn btn-primary" style="text-decoration:none">Cadastrar</a>
-  </div>
-</header>
+{% block content %}
 
 <div class="breadcrumbs-wrap">
   <div class="breadcrumbs">
-    <a href="listagem.html" class="back-link">
+    <a href="{% url 'listagem' %}" class="back-link">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       Voltar
     </a>
-    <a href="#">Home</a>
+    <a href="{% url 'index' %}">Home</a>
     <span class="breadcrumb-sep">›</span>
-    <a href="listagem.html">Adotar</a>
+    <a href="{% url 'listagem' %}">Adotar</a>
     <span class="breadcrumb-sep">›</span>
     <span class="current">Bolinha</span>
   </div>
@@ -636,15 +613,18 @@
           <div class="ong-rating"><span class="star">★</span> <strong>4.9</strong> · 120 adoções</div>
         </div>
       </div>
-      <button class="action-btn primary">Solicitar adoção</button>
-      <button class="action-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        Salvar nos favoritos
-      </button>
-      <button class="action-btn">
+      <a href="{% url 'confirmacao_adocao' pet.id %}" class="action-btn primary">Solicitar adoção</a>
+      <form method="POST" action="{% url 'toggle_favorito' pet.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="action-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Salvar nos favoritos
+        </button>
+      </form>
+      <a href="{% url 'chat_ong' pet.ong.id %}" class="action-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         Perguntar à ONG
-      </button>
+      </a>
     </div>
 
     <div class="process-card">
@@ -672,9 +652,10 @@
 </main>
 
 <div class="bottom-nav">
-  <a href="listagem.html">📋 Página de Listagem</a>
-  <a href="detalhe.html" class="active">🐾 Página de Detalhe</a>
+  <a href="{% url 'listagem' %}">📋 Página de Listagem</a>
+  <a href="{% url 'detalhe' 1 %}" class="active">🐾 Página de Detalhe</a>
 </div>
 
-</body>
-</html>
+{% endblock %}
+
+{% block footer %}{% endblock %}

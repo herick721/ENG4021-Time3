@@ -1,14 +1,8 @@
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PetConect — Gestão de Solicitações</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+{% block title %}PetConect — Gestão de Solicitações{% endblock %}
+
+{% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -204,21 +198,22 @@
   .btn-view:hover {
     background: var(--teal-dark);
   }
-</style>
-</head>
-<body>
+</style>{% endblock %}
 
+{% block header %}
 <nav class="navbar">
   <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span><span class="paw">🐾</span><span class="nect">nect</span>
   </a>
-  
+
   <div class="nav-user">
     <span>{{ ong.nome_ong|default:"Minha ONG" }}</span>
     <div class="nav-avatar">{{ ong.nome_ong|make_list|first|upper|default:"O" }}</div>
   </div>
 </nav>
+{% endblock %}
 
+{% block content %}
 <div class="container">
   <div class="header">
     <h1>Solicitações de Adoção</h1>
@@ -280,11 +275,36 @@
           </td>
           <td>
             <div class="actions">
-              <button class="btn-action btn-view">Ver Perfil</button>
+              <a href="{% url 'perfil_adotante' %}" class="btn-action btn-view">Ver Perfil</a>
               {% if sol.status == 'pendente' %}
-              <button class="btn-action">Aprovar</button>
+              <form method="POST" action="{% url 'atualizar_solicitacao' sol.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="entrevista">
+                <button type="submit" class="btn-action">Convidar p/ Entrevista</button>
+              </form>
+              <form method="POST" action="{% url 'atualizar_solicitacao' sol.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="recusada">
+                <input type="text" name="motivo_recusa" placeholder="Motivo da recusa..." style="width:120px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">
+                <button type="submit" class="btn-action" style="background:#fee2e2;color:#b91c1c;">Recusar</button>
+              </form>
               {% elif sol.status == 'entrevista' %}
-              <button class="btn-action">Finalizar</button>
+              <form method="POST" action="{% url 'atualizar_solicitacao' sol.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="aprovada">
+                <button type="submit" class="btn-action">Aprovar</button>
+              </form>
+              <form method="POST" action="{% url 'atualizar_solicitacao' sol.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="recusada">
+                <button type="submit" class="btn-action" style="background:#fee2e2;color:#b91c1c;">Recusar</button>
+              </form>
+              {% elif sol.status == 'aprovada' %}
+              <form method="POST" action="{% url 'atualizar_solicitacao' sol.id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="concluida">
+                <button type="submit" class="btn-action">Finalizar adoção</button>
+              </form>
               {% endif %}
             </div>
           </td>
@@ -298,6 +318,6 @@
     </table>
   </div>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

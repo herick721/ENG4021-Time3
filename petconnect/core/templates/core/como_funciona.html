@@ -1,0 +1,506 @@
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Como Funciona{% endblock %}
+
+{% block extra_css %}
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --teal-light: #ccfbf1;
+    --teal-soft: #ecfdf5;
+    --orange: #f59e0b;
+    --orange-dark: #d97706;
+    --orange-soft: #fef3c7;
+    --beige: #fef3e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --green-soft: #d1fae5;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-light);
+    padding: 18px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .logo .pet { color: var(--teal); }
+  .logo .nect { color: var(--orange); }
+
+  nav ul { list-style: none; display: flex; gap: 40px; }
+  nav a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 8px 0;
+    position: relative;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.active { color: var(--teal); font-weight: 600; }
+  nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -22px;
+    height: 3px;
+    background: var(--teal);
+    border-radius: 2px 2px 0 0;
+  }
+
+  .auth-buttons { display: flex; gap: 10px; }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: all .2s;
+  }
+  .btn-outline { background: #fff; color: var(--teal); border: 1.5px solid var(--teal); }
+  .btn-outline:hover { background: var(--teal-light); }
+  .btn-primary { background: var(--teal); color: #fff; }
+  .btn-primary:hover { background: var(--teal-dark); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--teal-soft) 0%, var(--beige) 100%);
+    padding: 72px 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .hero-icon { font-size: 64px; display: block; margin-bottom: 20px; }
+  .hero h1 {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+  .hero h1 .accent { color: var(--teal); }
+  .hero p {
+    color: var(--text-muted);
+    font-size: 17px;
+    max-width: 580px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; }
+  .btn-hero {
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s;
+    text-decoration: none;
+  }
+  .btn-hero:hover { background: var(--teal-dark); }
+  .btn-hero-sec {
+    background: #fff;
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    padding: 13px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .btn-hero-sec:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* NÚMEROS */
+  .numbers-section {
+    background: var(--teal);
+    padding: 48px;
+  }
+  .numbers-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    text-align: center;
+  }
+  .number-item strong {
+    display: block;
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .number-item span { font-size: 14px; color: var(--teal-light); font-weight: 500; }
+
+  /* SEÇÕES */
+  .section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 64px 48px;
+  }
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  /* Como funciona */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .step-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px 20px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    text-align: center;
+    position: relative;
+  }
+  .step-number {
+    width: 36px;
+    height: 36px;
+    background: var(--teal);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .step-icon { font-size: 32px; margin-bottom: 12px; }
+  .step-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .step-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Para ONGs */
+  .ong-section {
+    background: var(--orange-soft);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+  }
+  .ong-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 64px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .ong-inner h2 { font-size: 28px; font-weight: 800; margin-bottom: 14px; letter-spacing: -0.02em; }
+  .ong-inner p { color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 24px; }
+  .ong-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .ong-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .ong-feature span:first-child { font-size: 18px; }
+  .ong-visual {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    border: 1px solid var(--border-light);
+  }
+  .ong-visual-icon { font-size: 64px; margin-bottom: 16px; display: block; }
+  .ong-visual h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+  .ong-visual p { font-size: 13px; color: var(--text-muted); }
+
+  /* Depoimentos */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .testimonial-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .testimonial-stars { font-size: 16px; margin-bottom: 12px; }
+  .testimonial-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .author-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    flex-shrink: 0;
+  }
+  .author-name { font-size: 13px; font-weight: 700; }
+  .author-detail { font-size: 12px; color: var(--text-muted); }
+
+  /* CTA final */
+  .cta-section {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    padding: 72px 48px;
+    text-align: center;
+  }
+  .cta-section h2 { font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 14px; letter-spacing: -0.02em; }
+  .cta-section p { color: var(--teal-light); font-size: 16px; margin-bottom: 32px; }
+  .cta-actions { display: flex; gap: 12px; justify-content: center; }
+  .btn-cta-white {
+    background: #fff;
+    color: var(--teal-dark);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .btn-cta-white:hover { background: var(--teal-light); }
+  .btn-cta-outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.4);
+    padding: 13px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .btn-cta-outline:hover { border-color: #fff; }
+
+  /* FOOTER */
+  footer {
+    background: #fff;
+    border-top: 1px solid var(--border-light);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-size: 20px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .footer-logo .pet { color: var(--teal); }
+  .footer-logo .nect { color: var(--orange); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color .2s; }
+  .footer-links a:hover { color: var(--teal); }
+  .footer-copy { font-size: 12px; color: var(--text-light); }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-icon">🐾</span>
+  <h1>Conectando pets a <span class="accent">famílias felizes</span></h1>
+  <p>O Petconnect é a plataforma que une adotantes responsáveis e ONGs comprometidas para tornar a adoção de animais mais simples, segura e humana.</p>
+  <div class="hero-actions">
+    <a href="{% url 'listagem' %}" class="btn-hero">Ver pets para adoção</a>
+    <a href="{% url 'cadastro_ong' %}" class="btn-hero-sec">Sou uma ONG</a>
+  </div>
+</div>
+
+<!-- NÚMEROS -->
+<div class="numbers-section">
+  <div class="numbers-grid">
+    <div class="number-item">
+      <strong>2.400+</strong>
+      <span>Adoções realizadas</span>
+    </div>
+    <div class="number-item">
+      <strong>180</strong>
+      <span>ONGs parceiras</span>
+    </div>
+    <div class="number-item">
+      <strong>8.500+</strong>
+      <span>Usuários cadastrados</span>
+    </div>
+    <div class="number-item">
+      <strong>4.9 ⭐</strong>
+      <span>Avaliação média</span>
+    </div>
+  </div>
+</div>
+
+<!-- COMO FUNCIONA -->
+<div class="section">
+  <div class="section-label">Passo a passo</div>
+  <div class="section-title">Como funciona a adoção</div>
+  <div class="section-sub">Do cadastro à retirada do pet, acompanhamos cada etapa do processo para garantir uma adoção segura e responsável.</div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <div class="step-icon">👤</div>
+      <h3>Crie sua conta</h3>
+      <p>Cadastre-se gratuitamente e preencha seu perfil de adotante.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <div class="step-icon">🔍</div>
+      <h3>Encontre seu pet</h3>
+      <p>Navegue pelos pets disponíveis e use filtros para encontrar o ideal.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <div class="step-icon">📋</div>
+      <h3>Solicite a adoção</h3>
+      <p>Envie sua solicitação e aguarde o contato da ONG responsável.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">4</div>
+      <div class="step-icon">🏠</div>
+      <h3>Leve para casa</h3>
+      <p>Após a entrevista e assinatura do termo, é só buscar seu novo companheiro!</p>
+    </div>
+  </div>
+</div>
+
+<!-- PARA ONGs -->
+<div class="ong-section">
+  <div class="ong-inner">
+    <div>
+      <div class="section-label">Para organizações</div>
+      <h2>Sua ONG merece uma plataforma completa</h2>
+      <p>Gerencie seus pets, solicitações e adoções em um só lugar. O Petconnect oferece tudo que uma ONG precisa para trabalhar com mais eficiência.</p>
+      <div class="ong-features">
+        <div class="ong-feature"><span>🐾</span><span>Cadastro ilimitado de pets</span></div>
+        <div class="ong-feature"><span>📋</span><span>Gestão de solicitações de adoção</span></div>
+        <div class="ong-feature"><span>💬</span><span>Chat direto com adotantes</span></div>
+        <div class="ong-feature"><span>📊</span><span>Relatórios e métricas detalhadas</span></div>
+        <div class="ong-feature"><span>✅</span><span>Termo de adoção digital</span></div>
+      </div>
+      <a href="{% url 'cadastro_ong' %}" class="btn-hero" style="display:inline-block;">Cadastrar minha ONG →</a>
+    </div>
+    <div class="ong-visual">
+      <span class="ong-visual-icon">🏠</span>
+      <h3>ONG Patinhas SP</h3>
+      <p>48 adoções · 4.9 ⭐ · Desde 2018</p>
+    </div>
+  </div>
+</div>
+
+<!-- DEPOIMENTOS -->
+<div class="section">
+  <div class="section-label">Histórias reais</div>
+  <div class="section-title">Quem já adotou pelo Petconnect</div>
+  <div class="section-sub">Milhares de famílias encontraram seu companheiro ideal através da nossa plataforma.</div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">O processo foi super simples e a ONG foi incrível. O Rex chegou em casa saudável e já está completamente adaptado. Recomendo demais!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">JS</div>
+        <div>
+          <div class="author-name">João Silva</div>
+          <div class="author-detail">Adotou o Rex · Rio de Janeiro</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">Encontrei a Mel em poucos minutos usando os filtros. A entrevista foi rápida e hoje ela é a rainha da casa. Plataforma excelente!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:#fae8ff;color:#a21caf;">MA</div>
+        <div>
+          <div class="author-name">Maria Oliveira</div>
+          <div class="author-detail">Adotou a Mel · Niterói</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <p class="testimonial-text">Como ONG, o Petconnect facilitou muito nosso trabalho. Conseguimos triplicar o número de adoções em 6 meses. Ferramenta indispensável!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background:#fef3c7;color:#d97706;">PF</div>
+        <div>
+          <div class="author-name">ONG Patinhas SP</div>
+          <div class="author-detail">Parceira desde 2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Pronto para encontrar seu companheiro? 🐾</h2>
+  <p>Junte-se a mais de 8.500 pessoas que já transformaram a vida de um animal.</p>
+  <div class="cta-actions">
+    <a href="{% url 'cadastro' %}" class="btn-cta-white">Criar conta grátis</a>
+    <a href="{% url 'listagem' %}" class="btn-cta-outline">Ver pets disponíveis</a>
+  </div>
+</div>
+{% endblock %}

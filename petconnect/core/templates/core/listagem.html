@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Adotar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Adotar{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -561,28 +557,9 @@
     .search-bar button { padding: 12px 20px; font-size: 14px; }
   }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <div class="logo">
-    <span class="pet">Pet</span>
-    <span class="paw">🐾</span>
-    <span class="nect">nect</span>
-  </div>
-  <nav>
-    <ul>
-      <li><a href="{% url 'listagem' %}" class="active">Adotar</a></li>
-      <li><a href="#">Lar temporário</a></li>
-      <li><a href="#">Como funciona</a></li>
-      <li><a href="#">Para ONGs</a></li>
-    </ul>
-  </nav>
-  <div class="auth-buttons">
-    <button class="btn btn-outline">Entrar</button>
-    <a href="{% url 'cadastro' %}" class="btn btn-primary" style="text-decoration:none">Cadastrar</a>
-  </div>
-</header>
+{% block content %}
 
 <section class="hero">
   <h1>Encontre seu <span class="highlight">companheiro</span> ideal</h1>
@@ -599,7 +576,7 @@
   <aside class="filters">
     <div class="filters-header">
       <h3>Filtros</h3>
-      <a href="#">Limpar tudo</a>
+      <a href="{% url 'listagem' %}">Limpar tudo</a>
     </div>
 
     <div class="filter-section">
@@ -755,9 +732,10 @@
 
 <!-- Bottom switcher (decorativo, como nos prints) -->
 <div class="bottom-nav">
-  <a href="listagem.html" class="active">📋 Página de Listagem</a>
-  <a href="detalhe.html">🐾 Página de Detalhe</a>
+  <a href="{% url 'listagem' %}" class="active">📋 Página de Listagem</a>
+  <a href="{% url 'detalhe' 1 %}">🐾 Página de Detalhe</a>
 </div>
 
-</body>
-</html>
+{% endblock %}
+
+{% block footer %}{% endblock %}

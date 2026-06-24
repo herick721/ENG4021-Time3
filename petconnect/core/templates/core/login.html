@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Entrar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}PetConect — Entrar{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -67,88 +63,88 @@
     gap: 14px;
     font-size: 14px;
   }
-  .header-right span { color: var(--text-muted); }
   .header-right a {
-    color: var(--teal);
-    font-weight: 600;
+    background: var(--teal);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 50px;
     text-decoration: none;
+    font-weight: 600;
+    transition: background .2s, transform .15s;
   }
-  .header-right a:hover { text-decoration: underline; }
+  .header-right a:hover {
+    background: var(--teal-dark);
+    transform: translateY(-1px);
+  }
 
   .container {
-    max-width: 460px;
+    max-width: 440px;
     margin: 0 auto;
-    padding: 60px 24px 80px;
+    padding: 48px 24px 60px;
   }
-
-  .intro {
-    text-align: center;
-    margin-bottom: 32px;
-  }
+  .intro { text-align: center; margin-bottom: 32px; }
   .intro h1 {
-    font-size: 34px;
+    font-size: 28px;
     font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    color: var(--text);
   }
-  .intro h1 .accent { color: var(--teal); }
-  .intro p {
-    color: var(--text-muted);
-    font-size: 15px;
+  .intro .accent {
+    background: linear-gradient(135deg, var(--teal), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
+  .intro p { color: var(--text-muted); font-size: 15px; }
 
   .card {
-    background: #fff;
+    background: var(--card);
     border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 4px 24px rgba(15, 118, 110, 0.06);
-    border: 1px solid rgba(15, 118, 110, 0.08);
+    padding: 32px 28px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
+    border: 1px solid var(--border-light);
   }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 18px;
-  }
+  .field { margin-bottom: 20px; }
   .field label {
+    display: block;
     font-size: 13px;
     font-weight: 600;
     color: var(--text);
+    margin-bottom: 6px;
   }
   .input-wrap {
     position: relative;
+    display: flex;
+    align-items: center;
   }
-  .input-wrap .input-icon {
+  .input-icon {
     position: absolute;
     left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
     color: var(--text-light);
     pointer-events: none;
   }
   .input-wrap input {
     width: 100%;
-    padding: 12px 14px 12px 42px;
+    padding: 12px 14px 12px 40px;
     border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-family: inherit;
+    border-radius: 12px;
     font-size: 14px;
-    color: var(--text);
-    background: #fff;
+    font-family: inherit;
     transition: border-color .2s, box-shadow .2s;
-    outline: none;
+    background: var(--card);
   }
   .input-wrap input:focus {
+    outline: none;
     border-color: var(--teal);
-    box-shadow: 0 0 0 3px var(--teal-light);
+    box-shadow: 0 0 0 3px rgba(13,148,136,.1);
   }
+  .input-wrap input::placeholder { color: var(--text-light); }
 
   .field-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 18px;
+    justify-content: space-between;
+    margin-bottom: 24px;
   }
   .remember-label {
     display: flex;
@@ -157,73 +153,72 @@
     font-size: 13px;
     color: var(--text-muted);
     cursor: pointer;
+    font-weight: 500;
   }
-  .remember-label input[type="checkbox"] {
-    accent-color: var(--teal);
-    width: 15px;
-    height: 15px;
-  }
+  .remember-label input { accent-color: var(--teal); width: 16px; height: 16px; }
   .forgot-link {
     font-size: 13px;
-    font-weight: 600;
     color: var(--teal);
     text-decoration: none;
+    font-weight: 600;
   }
   .forgot-link:hover { text-decoration: underline; }
 
   .btn-submit {
     width: 100%;
-    background: var(--teal);
-    color: #fff;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
     border: none;
-    padding: 14px;
-    border-radius: 10px;
-    font-weight: 700;
+    border-radius: 12px;
+    color: #fff;
     font-size: 15px;
-    cursor: pointer;
+    font-weight: 700;
     font-family: inherit;
-    transition: background .2s;
-    margin-bottom: 14px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .2s;
+    margin-bottom: 20px;
   }
-  .btn-submit:hover { background: var(--teal-dark); }
+  .btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(13,148,136,.3);
+  }
 
   .divider {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
+    gap: 16px;
+    margin-bottom: 20px;
   }
   .divider::before, .divider::after {
-    content: "";
+    content: '';
     flex: 1;
     height: 1px;
-    background: var(--border);
+    background: var(--border-light);
   }
   .divider span {
     font-size: 12px;
     color: var(--text-light);
     font-weight: 500;
-    white-space: nowrap;
   }
 
   .btn-google {
     width: 100%;
-    background: #fff;
-    color: var(--text);
+    padding: 12px;
     border: 1.5px solid var(--border);
-    padding: 13px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: border-color .2s, background .2s;
+    border-radius: 12px;
+    background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
   }
-  .btn-google:hover { border-color: var(--teal); background: var(--teal-soft); }
+  .btn-google:hover { border-color: var(--teal-light); background: var(--teal-soft); }
 
   .signup-link {
     text-align: center;
@@ -238,21 +233,23 @@
   }
   .signup-link a:hover { text-decoration: underline; }
 </style>
-</head>
-<body>
+{% endblock %}
 
+{% block header %}
 <header>
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span>
     <span>🐾</span>
     <span class="nect">nect</span>
   </a>
   <div class="header-right">
     <span>Não tem conta?</span>
-    <a href="cadastro.html">Cadastrar-se</a>
+    <a href="{% url 'cadastro' %}">Cadastrar-se</a>
   </div>
 </header>
+{% endblock %}
 
+{% block content %}
 <div class="container">
   <div class="intro">
     <h1>Bem-vindo de <span class="accent">volta</span> 🐾</h1>
@@ -260,12 +257,13 @@
   </div>
 
   <div class="card">
-    <form>
+    <form method="POST" action="">
+      {% csrf_token %}
       <div class="field">
         <label for="email">E-mail</label>
         <div class="input-wrap">
           <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <input type="email" id="email" placeholder="seu@email.com" />
+          <input type="email" id="email" name="email" placeholder="seu@email.com" />
         </div>
       </div>
 
@@ -273,7 +271,7 @@
         <label for="senha">Senha</label>
         <div class="input-wrap">
           <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <input type="password" id="senha" placeholder="Sua senha" />
+          <input type="password" id="senha" name="senha" placeholder="Sua senha" />
         </div>
       </div>
 
@@ -281,7 +279,7 @@
         <label class="remember-label">
           <input type="checkbox" /> Lembrar de mim
         </label>
-        <a href="#" class="forgot-link">Esqueci minha senha</a>
+        <a href="{% url 'recuperar_senha' %}" class="forgot-link">Esqueci minha senha</a>
       </div>
 
       <button type="submit" class="btn-submit">Entrar</button>
@@ -295,8 +293,8 @@
     </form>
   </div>
 
-  <p class="signup-link">Não tem uma conta? <a href="cadastro.html">Cadastre-se grátis</a></p>
+  <p class="signup-link">Não tem uma conta? <a href="{% url 'cadastro' %}">Cadastre-se grátis</a></p>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

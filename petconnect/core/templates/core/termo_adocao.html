@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Termo de Adoção</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Termo de Adoção{% endblock %}
+
+{% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -259,12 +254,11 @@
     color: var(--text-light);
     margin-bottom: 24px;
   }
-</style>
-</head>
-<body>
+</style>{% endblock %}
 
+{% block header %}
 <header>
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
   </a>
   <div class="nav-user">
@@ -272,7 +266,9 @@
     <div class="nav-avatar">JS</div>
   </div>
 </header>
+{% endblock %}
 
+{% block content %}
 <div class="container">
   <div class="page-header">
     <h1>Termo de Adoção 📄</h1>
@@ -381,6 +377,6 @@
   </div>
 
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

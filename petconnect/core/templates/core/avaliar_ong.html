@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Avaliar ONG</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+{% extends "core/base.html" %}
+{% block title %}Petconnect — Avaliar ONG{% endblock %}
+
+{% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -222,16 +216,17 @@
     transition: color .2s;
   }
   .btn-skip:hover { color: var(--text); }
-</style>
-</head>
-<body>
+</style>{% endblock %}
 
+{% block header %}
 <header>
-  <a href="index.html" class="logo">
+  <a href="{% url 'index' %}" class="logo">
     <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
   </a>
 </header>
+{% endblock %}
 
+{% block content %}
 <div class="container">
   <div class="intro">
     <span class="intro-icon">⭐</span>
@@ -327,6 +322,6 @@
     </form>
   </div>
 </div>
+{% endblock %}
 
-</body>
-</html>
+{% block footer %}{% endblock %}

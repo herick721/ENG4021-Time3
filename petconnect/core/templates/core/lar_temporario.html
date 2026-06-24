@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Lar Temporário</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+{% extends "core/base.html" %}
+
+{% block title %}Petconnect — Lar Temporário{% endblock %}
+
+{% block extra_css %}
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -342,26 +338,9 @@
   }
   .btn-submit:hover { background: var(--teal-dark); }
 </style>
-</head>
-<body>
+{% endblock %}
 
-<header>
-  <div class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
-  </div>
-  <nav>
-    <ul>
-      <li><a href="listagem.html">Adotar</a></li>
-      <li><a href="#" class="active">Lar temporário</a></li>
-      <li><a href="#">Como funciona</a></li>
-      <li><a href="#">Para ONGs</a></li>
-    </ul>
-  </nav>
-  <div class="auth-buttons">
-    <button class="btn btn-outline">Entrar</button>
-    <button class="btn btn-primary">Cadastrar</button>
-  </div>
-</header>
+{% block content %}
 
 <!-- HERO -->
 <div class="hero">
@@ -516,5 +495,6 @@
   </form>
 </div>
 
-</body>
-</html>
+{% endblock %}
+
+{% block footer %}{% endblock %}

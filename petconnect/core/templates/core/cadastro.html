@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Petconnect — Cadastro</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+{% extends "core/base.html" %}
+{% block title %}Petconnect — Cadastro{% endblock %}
+
+{% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -505,30 +499,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ---------- SUCCESS PANEL ---------- */
-  .success-panel { text-align: center; padding: 20px 0; }
-  .success-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--teal-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 20px;
-    font-size: 40px;
-  }
-  .success-panel h2 {
-    font-size: 24px;
-    font-weight: 800;
-    margin-bottom: 10px;
-  }
-  .success-panel p {
-    color: var(--text-muted);
-    margin-bottom: 24px;
-  }
-  .success-panel p strong { color: var(--text); }
-
   /* Conditional ONG fields - escondido por padrão */
   .ong-fields { display: none; }
   body[data-user-type="ong"] .ong-fields { display: contents; }
@@ -549,10 +519,9 @@
     .actions { flex-direction: column-reverse; }
     .btn { width: 100%; }
   }
-</style>
-</head>
-<body>
+</style>{% endblock %}
 
+{% block header %}
 <header>
   <a href="{% url 'listagem' %}" class="logo">
     <span class="pet">Pet</span>
@@ -564,7 +533,9 @@
     <a href="#">Entrar</a>
   </div>
 </header>
+{% endblock %}
 
+{% block content %}
 <main class="container">
 
   <div class="intro">
@@ -747,7 +718,7 @@
     <!-- ============ ETAPA 3 ============ -->
     <div class="step-panel" data-panel="3">
       <h2 class="step-title">Defina sua senha</h2>
-      <p class="step-subtitle">Use uma senha forte. Vamos enviar um e-mail de confirmação para você.</p>
+      <p class="step-subtitle">Use uma senha forte.</p>
 
       <div class="form-grid full">
         <div class="field">
@@ -806,22 +777,13 @@
       </div>
     </div>
 
-    <!-- ============ SUCESSO ============ -->
-    <div class="step-panel" data-panel="success">
-      <div class="success-panel">
-        <div class="success-icon">🎉</div>
-        <h2>Quase lá!</h2>
-        <p>Enviamos um e-mail de confirmação para <strong id="success-email">seu@email.com</strong>. Clique no link recebido para ativar sua conta.</p>
-        <button type="button" class="btn btn-primary" onclick="window.location.href='listagem.html'" style="max-width:280px;margin:0 auto;">
-          Voltar para a listagem
-        </button>
-      </div>
-    </div>
-
   </form>
 </main>
+{% endblock %}
 
-<script>
+{% block footer %}{% endblock %}
+
+{% block extra_js %}<script>
   // ---------- TIPO DE USUÁRIO ----------
   const userTypes = document.querySelectorAll('.user-type');
   userTypes.forEach(el => {
@@ -910,15 +872,4 @@
       strengthText.style.color = 'var(--success)';
     }
   });
-
-  // ---------- SUBMIT ----------
-  document.getElementById('signup-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const email = document.getElementById('email').value || 'seu@email.com';
-    document.getElementById('success-email').textContent = email;
-    goToStep('success');
-  });
-</script>
-
-</body>
-</html>
+</script>{% endblock %}
