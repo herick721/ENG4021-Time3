@@ -1,4 +1,4 @@
-# 🐾 PetConect
+# 🐾 PetConnect
 
 > Plataforma web de adoção e estadia temporária de animais de rua vulneráveis.
 
@@ -6,7 +6,7 @@
 
 ## Sobre o projeto
 
-O **PetConect** é um hub completo para donos de pets, adotantes, resgatadores e clínicas. Conecta animais de rua vulneráveis a famílias amorosas, centralizando adoção, guia de vacinas, mapa de clínicas, guia de compras com afiliados e dicas para donos de pet.
+O **PetConnect** é um hub completo para donos de pets, adotantes, resgatadores e clínicas. Conecta animais de rua vulneráveis a famílias amorosas, centralizando adoção, guia de vacinas, mapa de clínicas, guia de compras com afiliados e dicas para donos de pet.
 
 ---
 
