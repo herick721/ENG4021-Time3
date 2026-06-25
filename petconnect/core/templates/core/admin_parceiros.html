@@ -1,0 +1,75 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}PetConnect — Admin Parceiros{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_parceiros.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h1>
+        Gerenciar parceiros
+        <small>Área restrita à equipe PetConnect</small>
+      </h1>
+    </div>
+    <a href="{% url 'admin_parceiro_adicionar' %}" class="btn-primary">+ Novo parceiro</a>
+  </div>
+
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}" style="padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:14px;font-weight:500;{% if msg.tags == 'success' %}background:#d1fae5;color:#065f46{% else %}background:#fee2e2;color:#991b1b{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="admin-table">
+    {% if parceiros %}
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Nome</th>
+          <th>Tipo</th>
+          <th>Ativo</th>
+          <th>Criado em</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in parceiros %}
+        <tr>
+          <td><span class="parceiro-thumb">{{ p.imagem }}</span></td>
+          <td><strong>{{ p.nome }}</strong></td>
+          <td><span class="badge badge-{{ p.tipo }}">{{ p.get_tipo_display }}</span></td>
+          <td>
+            {% if p.ativo %}
+            <span class="badge badge-ativo">Ativo</span>
+            {% else %}
+            <span class="badge badge-inativo">Inativo</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--text-muted);font-size:13px;">{{ p.data_criacao|date:"d/m/Y" }}</td>
+          <td>
+            <div class="actions-cell">
+              <a href="{% url 'admin_parceiro_editar' p.id %}" class="btn-outline">Editar</a>
+              <a href="{% url 'admin_parceiro_excluir' p.id %}" class="btn-outline" style="border-color:#fee2e2;color:#ef4444;">Excluir</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-list">
+      <p style="font-size:16px;margin-bottom:8px;">Nenhum parceiro cadastrado.</p>
+      <p style="font-size:14px;">Clique em "+ Novo parceiro" para começar.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
