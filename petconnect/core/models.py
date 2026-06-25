@@ -20,6 +20,8 @@ class Ong(models.Model):
     cnpj = models.CharField(max_length=20, blank=True, null=True)
     responsavel = models.CharField(max_length=100)
     sobre = models.TextField(blank=True, null=True)
+    maps_url = models.URLField(blank=True, null=True,
+                               help_text="URL do Google Maps Embed (ex: https://maps.google.com/maps?q=...)")
 
     def __str__(self):
         return self.nome_ong
@@ -91,6 +93,19 @@ class Pet(models.Model):
     def __str__(self):
         return f"{self.nome} ({self.get_especie_display()})"
 
+
+class PetImage(models.Model):
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='imagens')
+    imagem = models.ImageField(upload_to='pets/%Y/%m/')
+    ordem = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['ordem']
+
+    def __str__(self):
+        return f"{self.pet.nome} - img {self.ordem}"
+
+
 class SolicitacaoAdocao(models.Model):
     STATUS_CHOICES = (
         ('pendente', 'Pendente'),
@@ -118,3 +133,58 @@ class Favorito(models.Model):
 
     def __str__(self):
         return f"{self.adotante.usuario.username} favoritou {self.pet.nome}"
+
+
+class Banner(models.Model):
+    titulo = models.CharField(max_length=200)
+    imagem = models.ImageField(upload_to='banners/')
+    ativo = models.BooleanField(default=True)
+    ordem = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['ordem']
+
+    def __str__(self):
+        return self.titulo
+
+
+class Vacina(models.Model):
+    ESPECIE_CHOICES = (
+        ('cao', 'Cão'),
+        ('gato', 'Gato'),
+        ('ambos', 'Cão e Gato'),
+    )
+    nome = models.CharField(max_length=200)
+    idade_recomendada = models.CharField(max_length=100, help_text="Ex: 2 meses, 1 ano")
+    periodicidade = models.CharField(max_length=100, blank=True, null=True,
+                                     help_text="Ex: Anual, Única dose")
+    descricao = models.TextField(blank=True, null=True)
+    especie = models.CharField(max_length=10, choices=ESPECIE_CHOICES)
+    ativo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['especie', 'idade_recomendada']
+
+    def __str__(self):
+        return f"{self.nome} ({self.get_especie_display()})"
+
+
+class Parceiro(models.Model):
+    TIPO_CHOICES = (
+        ('produto', 'Produto'),
+        ('servico', 'Serviço'),
+    )
+    nome = models.CharField(max_length=200)
+    descricao_curta = models.CharField(max_length=300)
+    imagem = models.CharField(max_length=200, default='🤝',
+                              help_text="URL da imagem ou emoji")
+    link_externo = models.URLField()
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    ativo = models.BooleanField(default=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-data_criacao']
+
+    def __str__(self):
+        return self.nome
