@@ -1,0 +1,131 @@
+:root {
+  --teal: #1A9E8F;
+  --teal-dark: #0D7268;
+  --teal-light: #E6F7F5;
+  --orange: #F5A623;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+  --shadow-card: 0 2px 12px rgba(0,0,0,.07);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.vacinas-header {
+  padding: 100px 5% 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.vacinas-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.vacinas-header p {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--teal-light);
+  color: var(--teal-dark);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  letter-spacing: .3px;
+  margin-bottom: 12px;
+}
+
+.vacina-group {
+  padding: 0 5% 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.vacina-group h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vacina-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.vacina-card {
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  border-left: 4px solid var(--teal);
+  transition: transform .2s, box-shadow .2s;
+}
+
+.vacina-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+
+.vacina-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.vacina-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.vacina-meta span {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--teal-light);
+  color: var(--teal-dark);
+}
+
+.vacina-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+@media (max-width: 768px) {
+  .vacinas-header { padding: 90px 5% 24px; }
+  .vacina-header h1 { font-size: 26px; }
+  .vacina-grid { grid-template-columns: 1fr; }
+}

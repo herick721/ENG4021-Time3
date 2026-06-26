@@ -1,8 +1,10 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Petconnect — Adotar{% endblock %}
+{% block title %}PetConnect — Adotar{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pet_images.css' %}">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -241,6 +243,7 @@
     color: var(--teal-dark);
     font-weight: 600;
   }
+  a.chip { text-decoration: none; display: inline-block; }
 
   .range-slider { margin-top: 12px; padding: 0 4px; }
   .range-track {
@@ -563,12 +566,12 @@
 
 <section class="hero">
   <h1>Encontre seu <span class="highlight">companheiro</span> ideal</h1>
-  <p class="subtitle">+1.247 animais aguardando um lar amoroso em todo o Brasil</p>
-  <div class="search-bar">
+  <p class="subtitle">+{{ pets.count }} animais aguardando um lar amoroso em todo o Brasil</p>
+  <form class="search-bar" method="GET" action="{% url 'busca_avancada' %}">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    <input type="text" placeholder="Busque por nome, raça, localização..." />
-    <button>Buscar</button>
-  </div>
+    <input type="text" name="q" placeholder="Busque por nome, raça, localização..." />
+    <button type="submit">Buscar</button>
+  </form>
 </section>
 
 <main class="main-content">
@@ -582,20 +585,19 @@
     <div class="filter-section">
       <h4>Espécie</h4>
       <div class="chip-group">
-        <button class="chip active">Todos</button>
-        <button class="chip">Cão</button>
-        <button class="chip">Gato</button>
-        <button class="chip">Outro</button>
+        <a href="{% url 'listagem' %}" class="chip active">Todos</a>
+        <a href="{% url 'listagem_filtros' %}?especie=cao" class="chip">Cão</a>
+        <a href="{% url 'listagem_filtros' %}?especie=gato" class="chip">Gato</a>
       </div>
     </div>
 
     <div class="filter-section">
       <h4>Porte</h4>
       <div class="chip-group">
-        <button class="chip active">Todos</button>
-        <button class="chip">Pequeno</button>
-        <button class="chip">Médio</button>
-        <button class="chip">Grande</button>
+        <a href="{% url 'listagem' %}" class="chip active">Todos</a>
+        <a href="{% url 'listagem_filtros' %}?porte=pequeno" class="chip">Pequeno</a>
+        <a href="{% url 'listagem_filtros' %}?porte=medio" class="chip">Médio</a>
+        <a href="{% url 'listagem_filtros' %}?porte=grande" class="chip">Grande</a>
       </div>
     </div>
 
@@ -618,22 +620,22 @@
       <h4>Status</h4>
       <div class="checkbox-list">
         <label class="checkbox">
-          <input type="checkbox" checked />
+          <input type="checkbox" checked disabled />
           <span class="check-box"></span>
           Disponível
         </label>
         <label class="checkbox">
-          <input type="checkbox" checked />
+          <input type="checkbox" disabled />
           <span class="check-box"></span>
           Em análise
         </label>
         <label class="checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" disabled />
           <span class="check-box"></span>
           Lar temporário
         </label>
         <label class="checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" disabled />
           <span class="check-box"></span>
           Adotado
         </label>
@@ -670,7 +672,7 @@
   <!-- RESULTADOS -->
   <section>
     <div class="results-header">
-      <p class="count"><strong>9</strong> animais encontrados</p>
+      <p class="count"><strong>{{ pets.count }}</strong> animais encontrados</p>
       <div class="results-actions">
         <button class="sort-dropdown">
           Mais recentes
@@ -697,7 +699,11 @@
           <button class="heart-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
+          {% if pet.imagens.first %}
+          <img src="{{ pet.imagens.first.imagem.url }}" alt="{{ pet.nome }}" style="width:100%;height:100%;object-fit:cover;">
+          {% else %}
           {{ pet.imagem_emoji }}
+          {% endif %}
         </div>
         <div class="pet-info">
           <h3 class="pet-name">{{ pet.nome }}</h3>
@@ -733,7 +739,7 @@
 <!-- Bottom switcher (decorativo, como nos prints) -->
 <div class="bottom-nav">
   <a href="{% url 'listagem' %}" class="active">📋 Página de Listagem</a>
-  <a href="{% url 'detalhe' 1 %}">🐾 Página de Detalhe</a>
+  <a href="{% url 'listagem' %}">🐾 Voltar ao topo</a>
 </div>
 
 {% endblock %}

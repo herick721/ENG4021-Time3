@@ -1,9 +1,11 @@
 <nav class="nav" id="navbar">
-  <a href="{% url 'index' %}" class="nav-logo"><span class="pet">Pet</span><span class="conect">C🐾nect</span></a>
+  <a href="{% url 'index' %}" class="nav-logo">PetConnect</a>
   <ul class="nav-links">
     <li><a href="{% url 'listagem' %}">Adotar</a></li>
+    <li><a href="{% url 'como_funciona' %}">Como funciona</a></li>
     <li><a href="{% url 'lar_temporario' %}">Lar temporário</a></li>
     <li><a href="{% url 'parceiros' %}">Parceiros</a></li>
+    <li><a href="{% url 'vacinas' %}">Guia de Vacinação</a></li>
   </ul>
   <div class="nav-cta">
     {% if user.is_authenticated %}

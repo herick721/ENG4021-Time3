@@ -188,3 +188,39 @@ class Parceiro(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+class Notificacao(models.Model):
+    TIPO_CHOICES = (
+        ('info', 'Informação'),
+        ('success', 'Sucesso'),
+        ('warning', 'Aviso'),
+        ('danger', 'Erro'),
+    )
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='notificacoes')
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, default='info')
+    titulo = models.CharField(max_length=200)
+    mensagem = models.TextField()
+    lida = models.BooleanField(default=False)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-data_criacao']
+
+    def __str__(self):
+        return f'[{self.get_tipo_display()}] {self.titulo}'
+
+
+class Avaliacao(models.Model):
+    ong = models.ForeignKey(Ong, on_delete=models.CASCADE, related_name='avaliacoes')
+    adotante = models.ForeignKey(Adotante, on_delete=models.CASCADE, related_name='avaliacoes')
+    nota = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
+    comentario = models.TextField(blank=True, null=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('ong', 'adotante')
+        ordering = ['-data_criacao']
+
+    def __str__(self):
+        return f'{self.adotante} → {self.ong} ({self.nota}★)'

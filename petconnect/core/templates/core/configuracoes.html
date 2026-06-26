@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}Petconnect — Configurações{% endblock %}
+{% block title %}PetConnect — Configurações{% endblock %}
 
 {% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -271,7 +271,7 @@
 {% block header %}
 <header>
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+    PetConnect
   </a>
   <div class="nav-user">
     <span>João Silva</span>
@@ -287,13 +287,13 @@
   <aside>
     <div class="settings-nav">
       <div class="settings-nav-title">Configurações</div>
-      <a href="#" class="nav-link active">🔔 Notificações</a>
-      <a href="#" class="nav-link">🔒 Privacidade</a>
+      <a href="{% url 'notificacoes' %}" class="nav-link active">🔔 Notificações</a>
+      <a href="{% url 'configuracoes_seguranca' %}" class="nav-link">🔒 Privacidade</a>
       <a href="#" class="nav-link">🎨 Aparência</a>
-      <a href="#" class="nav-link">🔑 Segurança</a>
+      <a href="{% url 'configuracoes_seguranca' %}" class="nav-link">🔑 Segurança</a>
       <a href="{% url 'editar_usuario' %}" class="nav-link">👤 Perfil</a>
       <div style="height:1px; background:var(--border-light); margin:12px 0;"></div>
-      <a href="#" class="nav-link danger">🗑️ Excluir conta</a>
+      <a href="{% url 'excluir_conta' %}" class="nav-link danger">🗑️ Excluir conta</a>
     </div>
   </aside>
 

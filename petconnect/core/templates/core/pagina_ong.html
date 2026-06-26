@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}Petconnect — ONG Patinhas SP{% endblock %}
+{% block title %}PetConnect — {{ ong.nome_ong }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -295,16 +295,16 @@
     <div class="ong-avatar-big">🏠</div>
     <div class="ong-hero-info">
       <div class="ong-verified">✓ ONG verificada</div>
-      <div class="ong-hero-name">ONG Patinhas SP</div>
+      <div class="ong-hero-name">{{ ong.nome_ong }}</div>
       <div class="ong-hero-meta">
-        <span>📍 Pinheiros, São Paulo</span>
-        <span>📅 Desde 2018</span>
-        <span>⭐ 4.9 · 87 avaliações</span>
+        <span>📍 {{ ong.usuario.cidade }}, {{ ong.usuario.estado }}</span>
+        <span>📅 Desde {{ ong.usuario.date_joined|date:"Y" }}</span>
+        <span>⭐ {{ media_avaliacao|default:"—" }} · {{ total_avaliacoes|default:0 }} avaliações</span>
       </div>
       <div class="ong-hero-stats">
-        <div class="ong-stat"><strong>48</strong><span>Adoções</span></div>
-        <div class="ong-stat"><strong>12</strong><span>Pets</span></div>
-        <div class="ong-stat"><strong>4.9</strong><span>Nota</span></div>
+        <div class="ong-stat"><strong>{{ total_adocoes|default:0 }}</strong><span>Adoções</span></div>
+        <div class="ong-stat"><strong>{{ total_pets_ong }}</strong><span>Pets</span></div>
+        <div class="ong-stat"><strong>{{ media_avaliacao|floatformat:1|default:"—" }}</strong><span>Nota</span></div>
         <div class="ong-stat"><strong>6</strong><span>Anos</span></div>
       </div>
     </div>
@@ -319,8 +319,17 @@
     <div class="card">
       <div class="card-title">Sobre a ONG</div>
       <p style="font-size:14px; color:var(--text-muted); line-height:1.8;">
-        A ONG Patinhas SP atua desde 2018 no resgate, reabilitação e adoção responsável de cães e gatos em situação de rua na cidade de São Paulo. Contamos com uma equipe de voluntários apaixonados e parceiros veterinários que garantem o bem-estar de cada animal sob nossos cuidados.
+        {{ ong.descricao|default:"ONG dedicada ao resgate, reabilitação e adoção responsável de animais." }}
       </p>
+      {% if ong.maps_url %}
+      <div style="margin-top:20px;">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">📍 Localização</h3>
+        <div style="border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);">
+          <iframe src="{{ ong.maps_url }}" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <a href="{{ ong.maps_url }}" target="_blank" rel="noopener" class="btn-parceiro" style="display:inline-flex;margin-top:12px;">📍 Abrir no Google Maps</a>
+      </div>
+      {% endif %}
     </div>
 
     <!-- Pets disponíveis -->

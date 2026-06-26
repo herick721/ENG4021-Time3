@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}Petconnect — Histórico de Adoções{% endblock %}
+{% block title %}PetConnect — Histórico de Adoções{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -308,9 +308,9 @@
         </div>
       </div>
       <nav class="sidebar-nav">
-        <a href="#" class="sidebar-link">👤 Meu perfil</a>
+        <a href="{% url 'perfil_adotante' %}" class="sidebar-link">👤 Meu perfil</a>
         <a href="{% url 'favoritos' %}" class="sidebar-link">❤️ Favoritos</a>
-        <a href="#" class="sidebar-link active">📋 Histórico</a>
+        <a href="{% url 'historico_adocoes' %}" class="sidebar-link active">📋 Histórico</a>
         <a href="{% url 'editar_usuario' %}" class="sidebar-link">✏️ Editar perfil</a>
       </nav>
     </div>
@@ -354,7 +354,7 @@
         <div class="history-right">
           <span class="status-badge status-adotado">✓ Adotado</span>
           <span class="history-date">10 Jan 2026</span>
-          <a href="#" class="btn-ver">Ver pet</a>
+          <a href="{% url 'detalhe' 1 %}" class="btn-ver">Ver pet</a>
         </div>
       </div>
 
@@ -378,7 +378,7 @@
         <div class="history-right">
           <span class="status-badge status-entrevista">Em entrevista</span>
           <span class="history-date">14 Mai 2026</span>
-          <a href="#" class="btn-ver">Ver pet</a>
+          <a href="{% url 'detalhe' 1 %}" class="btn-ver">Ver pet</a>
         </div>
       </div>
 
@@ -402,7 +402,7 @@
         <div class="history-right">
           <span class="status-badge status-recusada">Recusada</span>
           <span class="history-date">02 Mar 2026</span>
-          <a href="#" class="btn-ver">Ver pet</a>
+          <a href="{% url 'detalhe' 1 %}" class="btn-ver">Ver pet</a>
         </div>
       </div>
 
@@ -426,7 +426,7 @@
         <div class="history-right">
           <span class="status-badge status-pendente">Pendente</span>
           <span class="history-date">20 Mai 2026</span>
-          <a href="#" class="btn-ver">Ver pet</a>
+          <a href="{% url 'detalhe' 1 %}" class="btn-ver">Ver pet</a>
         </div>
       </div>
 

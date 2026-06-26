@@ -1,0 +1,120 @@
+.pet-img-wrapper {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--teal-light, #E6F7F5);
+  position: relative;
+}
+
+.pet-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pet-img-wrapper .img-placeholder {
+  font-size: 56px;
+  opacity: 0.4;
+}
+
+.animal-card .card-img {
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.animal-card .card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.animal-card .card-img .img-placeholder {
+  font-size: 48px;
+}
+
+/* Listagem pet-image cards */
+.pet-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pet-image .img-placeholder {
+  font-size: 100px;
+  opacity: 0.5;
+}
+
+/* Detail gallery */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.gallery-grid .main-img {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 400px;
+  border-radius: var(--radius-md, 14px);
+  overflow: hidden;
+  background: var(--teal-light, #E6F7F5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-grid .main-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-grid .main-img .img-placeholder {
+  font-size: 80px;
+  opacity: 0.3;
+}
+
+.gallery-grid .thumb-img {
+  width: 100%;
+  height: 140px;
+  border-radius: var(--radius-md, 14px);
+  overflow: hidden;
+  background: var(--teal-light, #E6F7F5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+
+.gallery-grid .thumb-img:hover {
+  opacity: 0.85;
+}
+
+.gallery-grid .thumb-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-grid .thumb-img .img-placeholder {
+  font-size: 32px;
+  opacity: 0.3;
+}
+
+@media (max-width: 768px) {
+  .gallery-grid .main-img { height: 280px; }
+  .gallery-grid .thumb-img { height: 100px; }
+  .pet-img-wrapper { height: 180px; }
+}

@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}PetConect — Cadastro de ONG{% endblock %}
+{% block title %}PetConnect — Cadastro de ONG{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -241,7 +241,7 @@
 {% block header %}
 <header>
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+    PetConnect
   </a>
   <div class="header-right">
     Já tem conta? <a href="{% url 'login' %}">Entrar</a>
@@ -310,6 +310,11 @@
           <label for="descricao">Descrição da ONG <span class="required">*</span></label>
           <textarea id="descricao" name="descricao" placeholder="Conte a história e missão da sua organização..."></textarea>
         </div>
+        <div class="field full">
+          <label for="id_maps">Google Maps Embed URL</label>
+          <input type="url" id="id_maps" name="maps_url" class="form-control" value="{{ ong.maps_url|default:'' }}" placeholder="https://maps.google.com/maps?q=...">
+          <div class="form-help">Cole a URL de incorporação do Google Maps. Vá no Google Maps, busque seu endereço, clique em "Compartilhar" → "Incorporar mapa" e copie o `src` da URL.</div>
+        </div>
       </div>
     </div>
 
@@ -328,9 +333,13 @@
           <label for="estado">Estado <span class="required">*</span></label>
           <select id="estado" name="estado">
             <option value="">Selecione</option>
-            <option value="SP">SP</option><option value="RJ">RJ</option><option value="MG">MG</option>
-            <option value="RS">RS</option><option value="PR">PR</option><option value="SC">SC</option>
-            <option value="BA">BA</option><option value="CE">CE</option><option value="Outros">Outros</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+            <option>SP</option><option>SE</option><option>TO</option>
           </select>
         </div>
         <div class="field">
