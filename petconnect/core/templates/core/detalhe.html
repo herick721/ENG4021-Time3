@@ -1,8 +1,10 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Petconnect — Bolinha{% endblock %}
+{% block title %}PetConnect — {{ pet.nome }}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pet_images.css' %}">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -520,16 +522,30 @@
     <span class="breadcrumb-sep">›</span>
     <a href="{% url 'listagem' %}">Adotar</a>
     <span class="breadcrumb-sep">›</span>
-    <span class="current">Bolinha</span>
+    <span class="current">{{ pet.nome }}</span>
   </div>
 </div>
 
 <main class="container">
   <!-- COLUNA PRINCIPAL -->
   <div>
-    <div class="pet-gallery {{ pet.cor_fundo }}">{{ pet.imagem_emoji }}</div>
-    <div class="thumbnails">
-      <div class="thumb active {{ pet.cor_fundo }}">{{ pet.imagem_emoji }}</div>
+    <div class="gallery-grid">
+      {% with imagens=pet.imagens.all %}
+        {% if imagens %}
+          <div class="main-img">
+            <img src="{{ imagens.0.imagem.url }}" alt="{{ pet.nome }}">
+          </div>
+          {% for img in imagens|slice:"1:" %}
+          <div class="thumb-img">
+            <img src="{{ img.imagem.url }}" alt="{{ pet.nome }}">
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="main-img">
+            <span class="img-placeholder">{{ pet.imagem_emoji }}</span>
+          </div>
+        {% endif %}
+      {% endwith %}
     </div>
 
     <div class="pet-header">
@@ -613,7 +629,10 @@
           <div class="ong-rating"><span class="star">★</span> <strong>4.9</strong> · 120 adoções</div>
         </div>
       </div>
-      <a href="{% url 'confirmacao_adocao' pet.id %}" class="action-btn primary">Solicitar adoção</a>
+      <form method="POST" action="{% url 'confirmacao_adocao' pet.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="action-btn primary">Solicitar adoção</button>
+      </form>
       <form method="POST" action="{% url 'toggle_favorito' pet.id %}" style="display:inline;">
         {% csrf_token %}
         <button type="submit" class="action-btn">
@@ -653,7 +672,7 @@
 
 <div class="bottom-nav">
   <a href="{% url 'listagem' %}">📋 Página de Listagem</a>
-  <a href="{% url 'detalhe' 1 %}" class="active">🐾 Página de Detalhe</a>
+  <a href="{% url 'detalhe' pet.id %}" class="active">🐾 Página de Detalhe</a>
 </div>
 
 {% endblock %}

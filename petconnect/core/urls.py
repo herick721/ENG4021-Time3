@@ -41,4 +41,36 @@ urlpatterns = [
     path('pet/<int:pet_id>/excluir/', views.excluir_pet, name='excluir_pet'),
     path('ong/lar-temporario/', views.lar_temporario, name='lar_temporario'),
     path('ong/cadastro-ong/', views.cadastro_ong, name='cadastro_ong'),
+
+    # ── Informação / Estáticas ─────────────────────────────
+    path('como-funciona/', views.como_funciona, name='como_funciona'),
+    path('contato/', views.contato, name='contato'),
+    path('pos-adocao/', views.pos_adocao, name='pos_adocao'),
+
+    # ── Configurações ─────────────────────────────────────
+    path('configuracoes/seguranca/', views.configuracoes_seguranca, name='configuracoes_seguranca'),
+    path('configuracoes/excluir-conta/', views.excluir_conta, name='excluir_conta'),
+
+    # ── ONG — Relatório ───────────────────────────────────
+    path('ong/relatorio/', views.relatorio_ong, name='relatorio_ong'),
+
+    # ── Parceiros ─────────────────────────────────────────
+    path('parceiros/', views.parceiros, name='parceiros'),
+    path('parceiros/admin/', views.admin_parceiros, name='admin_parceiros'),
+    path('parceiros/admin/adicionar/', views.admin_parceiro_adicionar, name='admin_parceiro_adicionar'),
+    path('parceiros/admin/editar/<int:parceiro_id>/', views.admin_parceiro_editar, name='admin_parceiro_editar'),
+    path('parceiros/admin/excluir/<int:parceiro_id>/', views.admin_parceiro_excluir, name='admin_parceiro_excluir'),
+
+    # ── Banners (Carrossel) ───────────────────────────────
+    path('banners/admin/', views.admin_banners, name='admin_banners'),
+    path('banners/admin/adicionar/', views.admin_banner_adicionar, name='admin_banner_adicionar'),
+    path('banners/admin/editar/<int:banner_id>/', views.admin_banner_editar, name='admin_banner_editar'),
+    path('banners/admin/excluir/<int:banner_id>/', views.admin_banner_excluir, name='admin_banner_excluir'),
+
+    # ── Guia de Vacinação ─────────────────────────────────
+    path('vacinas/', views.vacinas, name='vacinas'),
+    path('vacinas/admin/', views.admin_vacinas, name='admin_vacinas'),
+    path('vacinas/admin/adicionar/', views.admin_vacina_adicionar, name='admin_vacina_adicionar'),
+    path('vacinas/admin/editar/<int:vacina_id>/', views.admin_vacina_editar, name='admin_vacina_editar'),
+    path('vacinas/admin/excluir/<int:vacina_id>/', views.admin_vacina_excluir, name='admin_vacina_excluir'),
 ]

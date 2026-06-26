@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario, Ong, Adotante, Pet, SolicitacaoAdocao, Favorito, Parceiro
+from .models import Usuario, Ong, Adotante, Pet, PetImage, SolicitacaoAdocao, Favorito, Parceiro, Banner, Vacina, Notificacao, Avaliacao
 
 
 @admin.register(Usuario)
@@ -56,3 +56,37 @@ class ParceiroAdmin(admin.ModelAdmin):
     list_display = ('nome', 'tipo', 'ativo', 'data_criacao')
     list_filter = ('tipo', 'ativo')
     search_fields = ('nome', 'descricao_curta')
+
+
+@admin.register(PetImage)
+class PetImageAdmin(admin.ModelAdmin):
+    list_display = ('pet', 'ordem')
+    list_filter = ('pet',)
+
+
+@admin.register(Banner)
+class BannerAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'ativo', 'ordem')
+    list_filter = ('ativo',)
+
+
+@admin.register(Vacina)
+class VacinaAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'especie', 'idade_recomendada', 'ativo')
+    list_filter = ('especie', 'ativo')
+    search_fields = ('nome',)
+
+
+@admin.register(Notificacao)
+class NotificacaoAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'usuario', 'tipo', 'lida', 'data_criacao')
+    list_filter = ('tipo', 'lida', 'data_criacao')
+    search_fields = ('titulo', 'usuario__email')
+    raw_id_fields = ('usuario',)
+
+
+@admin.register(Avaliacao)
+class AvaliacaoAdmin(admin.ModelAdmin):
+    list_display = ('ong', 'adotante', 'nota', 'data_criacao')
+    list_filter = ('nota', 'data_criacao')
+    raw_id_fields = ('ong', 'adotante')

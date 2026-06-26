@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}Petconnect — Notificações{% endblock %}
+{% block title %}PetConnect — Notificações{% endblock %}
 
 {% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -205,7 +205,7 @@
 {% block header %}
 <header>
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+    PetConnect
   </a>
   <div class="nav-user">
     <span>João Silva</span>
@@ -306,7 +306,7 @@
       <div class="notif-item">
         <div class="notif-icon icon-green">🎉</div>
         <div class="notif-body">
-          <div class="notif-title">Bem-vindo ao Petconnect!</div>
+          <div class="notif-title">Bem-vindo ao PetConnect!</div>
           <div class="notif-desc">Sua conta foi criada com sucesso. Comece explorando os pets disponíveis para adoção.</div>
           <div class="notif-time">20 Mai 2026</div>
           <a href="{% url 'listagem' %}" class="notif-action">Explorar pets</a>

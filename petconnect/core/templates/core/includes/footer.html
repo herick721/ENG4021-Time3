@@ -1,37 +1,37 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <a href="{% url 'index' %}" class="footer-logo"><span class="pet">Pet</span><span class="conect">C🐾nect</span></a>
+      <a href="{% url 'index' %}" class="footer-logo"><span class="pet">Pet</span><span class="nect">C🐾nnect</span></a>
       <p>Conectando animais vulneráveis a famílias amorosas. Plataforma web de adoção e hub completo para donos de pets.</p>
       <div class="footer-social">
-        <a href="#" class="social-btn">📸</a>
-        <a href="#" class="social-btn">💙</a>
-        <a href="#" class="social-btn">🐦</a>
-        <a href="#" class="social-btn">▶️</a>
+      <a href="#" class="social-btn" title="Em breve">📸</a>
+        <a href="#" class="social-btn" title="Em breve">💙</a>
+        <a href="#" class="social-btn" title="Em breve">🐦</a>
+        <a href="#" class="social-btn" title="Em breve">▶️</a>
       </div>
     </div>
     <div class="footer-col">
       <h4>Plataforma</h4>
       <ul>
         <li><a href="{% url 'listagem' %}">Adotar</a></li>
-        <li><a href="{% url 'listagem' %}">Lar temporário</a></li>
-        <li><a href="{% url 'cadastro' %}">Cadastrar animal</a></li>
-        <li><a href="{% url 'cadastro' %}">Cadastrar ONG</a></li>
+        <li><a href="{% url 'lar_temporario' %}">Lar temporário</a></li>
+        <li><a href="{% url 'cadastro_pet' %}">Cadastrar animal</a></li>
+        <li><a href="{% url 'cadastro_ong' %}">Cadastrar ONG</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Comunidade</h4>
       <ul>
         <li><a href="{% url 'listagem' %}">Pets disponíveis</a></li>
-        <li><a href="{% url 'listagem' %}">ONGs parceiras</a></li>
+        <li><a href="{% url 'cadastro_ong' %}">ONGs parceiras</a></li>
         <li><a href="{% url 'cadastro' %}">Criar conta</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Empresa</h4>
       <ul>
-        <li><a href="{% url 'index' %}">Sobre nós</a></li>
-        <li><a href="{% url 'listagem' %}">Como funciona</a></li>
+        <li><a href="{% url 'como_funciona' %}">Sobre nós</a></li>
+        <li><a href="{% url 'como_funciona' %}">Como funciona</a></li>
         <li><a href="{% url 'cadastro' %}">Cadastre-se</a></li>
       </ul>
     </div>
@@ -39,9 +39,9 @@
   <div class="footer-bottom">
     <p>© 2026 PetConnect</p>
     <div class="footer-legal">
-      <a href="#">Termos</a>
-      <a href="#">Privacidade</a>
-      <a href="#">Cookies</a>
+      <span class="footer-legal-disabled">Termos</span>
+      <span class="footer-legal-disabled">Privacidade</span>
+      <span class="footer-legal-disabled">Cookies</span>
     </div>
   </div>
 </footer>

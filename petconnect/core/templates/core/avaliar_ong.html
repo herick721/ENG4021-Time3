@@ -1,5 +1,5 @@
 {% extends "core/base.html" %}
-{% block title %}Petconnect — Avaliar ONG{% endblock %}
+{% block title %}PetConnect — Avaliar ONG{% endblock %}
 
 {% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -221,7 +221,7 @@
 {% block header %}
 <header>
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+    PetConnect
   </a>
 </header>
 {% endblock %}
@@ -243,7 +243,8 @@
       </div>
     </div>
 
-    <form>
+    <form method="POST" action="">
+      {% csrf_token %}
       <!-- Nota geral -->
       <div class="rating-section">
         <span class="rating-label">Nota geral para a ONG Patinhas SP</span>
@@ -254,6 +255,7 @@
           <span class="star filled">⭐</span>
           <span class="star empty">⭐</span>
         </div>
+        <input type="hidden" name="nota" id="nota-input" value="4">
       </div>
 
       <!-- Critérios -->
@@ -314,7 +316,7 @@
       <!-- Comentário -->
       <div class="field">
         <label for="comentario">Deixe um comentário (opcional)</label>
-        <textarea id="comentario" placeholder="Conte como foi sua experiência com a ONG..."></textarea>
+        <textarea id="comentario" name="comentario" placeholder="Conte como foi sua experiência com a ONG..."></textarea>
       </div>
 
       <button type="submit" class="btn-submit">Enviar avaliação</button>

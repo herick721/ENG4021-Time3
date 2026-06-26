@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}Petconnect — Excluir Conta{% endblock %}
+{% block title %}PetConnect — Excluir Conta{% endblock %}
 
 {% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -258,7 +258,7 @@
 {% block header %}
 <header>
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+    PetConnect
   </a>
   <div class="nav-user">
     <span>João Silva</span>
@@ -273,13 +273,13 @@
   <aside>
     <div class="settings-nav">
       <div class="settings-nav-title">Configurações</div>
-      <a href="{% url 'editar_usuario' %}" class="nav-link">🔔 Notificações</a>
-      <a href="{% url 'editar_usuario' %}" class="nav-link">🔒 Privacidade</a>
-      <a href="{% url 'editar_usuario' %}" class="nav-link">🎨 Aparência</a>
-      <a href="{% url 'editar_usuario' %}" class="nav-link">🔑 Segurança</a>
+      <a href="{% url 'notificacoes' %}" class="nav-link">🔔 Notificações</a>
+      <a href="{% url 'configuracoes_seguranca' %}" class="nav-link">🔒 Privacidade</a>
+      <a href="#" class="nav-link">🎨 Aparência</a>
+      <a href="{% url 'configuracoes_seguranca' %}" class="nav-link">🔑 Segurança</a>
       <a href="{% url 'editar_usuario' %}" class="nav-link">👤 Perfil</a>
       <div style="height:1px; background:var(--border-light); margin:12px 0;"></div>
-      <a href="#" class="nav-link active danger">🗑️ Excluir conta</a>
+      <a href="{% url 'excluir_conta' %}" class="nav-link active danger">🗑️ Excluir conta</a>
     </div>
   </aside>
 
@@ -333,27 +333,29 @@
     <!-- Confirmação -->
     <div class="card">
       <div class="card-title">✍️ Confirmar exclusão</div>
+      <form method="POST" action="">
+        {% csrf_token %}
+        <div class="field">
+          <label for="senha">Confirme sua senha</label>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha atual" />
+        </div>
 
-      <div class="field">
-        <label for="senha">Confirme sua senha</label>
-        <input type="password" id="senha" placeholder="Digite sua senha atual" />
-      </div>
+        <div class="field">
+          <label for="confirmar">Digite "EXCLUIR" para confirmar</label>
+          <input type="text" id="confirmar" name="confirmacao" placeholder="EXCLUIR" />
+          <span class="field-hint">Digite exatamente como mostrado acima</span>
+        </div>
 
-      <div class="field">
-        <label for="confirmar">Digite "EXCLUIR" para confirmar</label>
-        <input type="text" id="confirmar" placeholder="EXCLUIR" />
-        <span class="field-hint">Digite exatamente como mostrado acima</span>
-      </div>
+        <label class="confirm-check">
+          <input type="checkbox" name="ciente" />
+          Entendo que esta ação é permanente e que todos os meus dados serão removidos sem possibilidade de recuperação.
+        </label>
 
-      <label class="confirm-check">
-        <input type="checkbox" />
-        Entendo que esta ação é permanente e que todos os meus dados serão removidos sem possibilidade de recuperação.
-      </label>
-
-      <div class="form-actions">
-        <a href="{% url 'editar_usuario' %}" class="btn-cancel">Cancelar</a>
-        <button type="button" class="btn-delete">Excluir minha conta permanentemente</button>
-      </div>
+        <div class="form-actions">
+          <a href="{% url 'editar_usuario' %}" class="btn-cancel">Cancelar</a>
+          <button type="submit" class="btn-delete">Excluir minha conta permanentemente</button>
+        </div>
+      </form>
     </div>
 
   </div>

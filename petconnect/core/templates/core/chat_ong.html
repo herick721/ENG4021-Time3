@@ -1,8 +1,27 @@
 {% extends "core/base.html" %}
-{% block title %}Petconnect — Chat com a ONG{% endblock %}
+{% block title %}PetConnect — Chat com a ONG{% endblock %}
 
 {% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Overlay "em breve" */
+  .chat-wrapper { position: relative; }
+  .chat-overlay {
+    position: absolute; inset: 0; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(248,250,252,.85); backdrop-filter: blur(2px);
+    border-radius: 24px; text-align: center; padding: 40px;
+  }
+  .chat-overlay h2 { font-size: 28px; color: var(--gray-700); margin-bottom: 12px; }
+  .chat-overlay p { font-size: 16px; color: var(--gray-500); max-width: 360px; line-height: 1.6; }
+  .chat-overlay .badge {
+    display: inline-block; background: var(--teal-light); color: var(--teal-dark);
+    padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  /* Escurece o conteúdo atrás */
+  .chat-layout { filter: blur(1px) grayscale(.5); pointer-events: none; user-select: none; }
 
   :root {
     --teal: #0d9488;
@@ -322,7 +341,7 @@
 {% block header %}
 <header>
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+    PetConnect
   </a>
   <div class="nav-user">
     <span>João Silva</span>
@@ -332,7 +351,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="chat-layout">
+<div class="chat-layout chat-wrapper">
+
+  <div class="chat-overlay">
+    <span class="badge">🚧 EM BREVE</span>
+    <h2>Chat com a ONG</h2>
+    <p>Estamos preparando um canal de comunicação direto entre adotantes e ONGs. Essa funcionalidade estará disponível em breve!</p>
+  </div>
 
   <!-- LISTA DE CONVERSAS -->
   <aside class="conversations">

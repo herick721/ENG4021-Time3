@@ -1,4 +1,5 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block content %}
 <!-- ═══════ HERO ═══════ -->
@@ -9,7 +10,7 @@
   <div class="hero-left">
     <div class="hero-badge">
       <span></span>
-      +1.200 animais aguardando um lar
+      +{{ stats.pets }} animais aguardando um lar
     </div>
     <h1>
       Encontre seu<br>
@@ -17,7 +18,7 @@
       <span class="accent-orange">de vida</span>
     </h1>
     <p>
-      O PetConect é o hub completo para donos de pets, adotantes e clínicas.
+      O PetConnect é o hub completo para donos de pets, adotantes e clínicas.
       Adote, cuide e conecte-se com a comunidade pet mais amorosa do Brasil.
     </p>
     <div class="hero-cta">
@@ -32,7 +33,7 @@
         <div class="hero-avatar">👩</div>
       </div>
       <div class="hero-trust-text">
-        <strong>+3.400 famílias</strong> já encontraram seu pet aqui
+        <strong>+{{ stats.adocoes }} famílias</strong> já encontraram seu pet aqui
       </div>
     </div>
   </div>
@@ -73,24 +74,48 @@
   </div>
 </section>
 
+{% if banners %}
+<div class="banner-carousel">
+  <div class="banner-slides" id="bannerSlides">
+    {% for b in banners %}
+    <div class="banner-slide">
+      <img src="{{ b.imagem.url }}" alt="{{ b.titulo }}">
+      <div class="banner-overlay">
+        <h2>{{ b.titulo }}</h2>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="banner-controls">
+    <button class="banner-btn" onclick="prevBanner()">‹</button>
+    <button class="banner-btn" onclick="nextBanner()">›</button>
+  </div>
+  <div class="banner-dots" id="bannerDots">
+    {% for b in banners %}
+    <button class="banner-dot {% if forloop.first %}active{% endif %}" onclick="goBanner({{ forloop.counter0 }})"></button>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 <!-- ═══════ STATS ═══════ -->
 <div class="stats">
   <div class="stats-inner">
     <div class="stat-item reveal">
-      <div class="stat-num" data-target="1247">0</div>
+      <div class="stat-num" data-target="{{ stats.pets }}">0</div>
       <div class="stat-label">Animais cadastrados</div>
     </div>
     <div class="stat-item reveal" style="transition-delay:.1s">
-      <div class="stat-num" data-target="842">0</div>
+      <div class="stat-num" data-target="{{ stats.adocoes }}">0</div>
       <div class="stat-label">Adoções realizadas</div>
     </div>
     <div class="stat-item reveal" style="transition-delay:.2s">
-      <div class="stat-num" data-target="315">0</div>
-      <div class="stat-label">Lares temporários</div>
+      <div class="stat-num" data-target="{{ stats.ongs }}">0</div>
+      <div class="stat-label">ONGs parceiras</div>
     </div>
     <div class="stat-item reveal" style="transition-delay:.3s">
-      <div class="stat-num" data-target="198">0</div>
-      <div class="stat-label">ONGs parceiras</div>
+      <div class="stat-num" data-target="{{ stats.parceiros }}">0</div>
+      <div class="stat-label">Parceiros</div>
     </div>
   </div>
 </div>
@@ -114,7 +139,11 @@
           {% if pet.urgente %}
           <span class="urgent-badge" style="position: absolute; top: 12px; left: 12px; background: var(--red); color: #fff; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 600;">🔥 Urgente</span>
           {% endif %}
-          {{ pet.imagem_emoji }}
+          {% if pet.imagens.first %}
+            <img src="{{ pet.imagens.first.imagem.url }}" alt="{{ pet.nome }}">
+          {% else %}
+            {{ pet.imagem_emoji }}
+          {% endif %}
         </div>
         <div class="card-body">
           <div class="card-name">{{ pet.nome }}</div>
@@ -183,7 +212,7 @@
     <div class="reveal">
       <div class="section-tag">Hub completo</div>
       <h2 class="section-h2">Tudo que você precisa<br>em um só lugar</h2>
-      <p class="section-sub">Do resgate à adoção, do guia de vacinas ao mapa de clínicas. O PetConect é o seu parceiro de jornada.</p>
+      <p class="section-sub">Do resgate à adoção, do guia de vacinas ao mapa de clínicas. O PetConnect é o seu parceiro de jornada.</p>
     </div>
     <div class="features-grid">
       <div class="feature-card reveal" style="transition-delay:.05s">
@@ -204,7 +233,7 @@
       <div class="feature-card reveal wide" style="transition-delay:.2s">
         <div class="feature-icon fi-green">🛒</div>
         <h3>Loja de Parceiros</h3>
-        <p>Produtos e serviços de petshops e clínicas verificadas com condições exclusivas para membros do PetConect. Compre com confiança e apoie negócios responsáveis.</p>
+        <p>Produtos e serviços de petshops e clínicas verificadas com condições exclusivas para membros do PetConnect. Compre com confiança e apoie negócios responsáveis.</p>
       </div>
     </div>
   </div>
@@ -224,6 +253,11 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/banners.css' %}">
+<link rel="stylesheet" href="{% static 'css/pet_images.css' %}">
 {% endblock %}
 
 {% block extra_js %}
@@ -274,5 +308,27 @@ document.querySelectorAll('.card-fav').forEach(function(btn) {
     setTimeout(function() { btn.style.transform = ''; }, 200);
   });
 });
+
+// Banner carousel
+var currentSlide = 0;
+var bannerSlides = document.querySelector('.banner-slides');
+var totalSlides = document.querySelectorAll('.banner-slide').length;
+var bannerDots = document.querySelectorAll('.banner-dot');
+function updateBanner() {
+  if (!bannerSlides) return;
+  bannerSlides.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+  bannerDots.forEach(function(d, i) { d.classList.toggle('active', i === currentSlide); });
+}
+function nextBanner() {
+  currentSlide = (currentSlide + 1) % totalSlides; updateBanner();
+}
+function prevBanner() {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides; updateBanner();
+}
+function goBanner(i) {
+  currentSlide = i; updateBanner();
+}
+// Autoplay
+setInterval(nextBanner, 5000);
 </script>
 {% endblock %}

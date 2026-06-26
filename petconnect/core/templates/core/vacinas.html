@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}PetConnect — Guia de Vacinação{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/vacinas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="vacinas-header">
+  <div class="section-tag">Saúde</div>
+  <h1>Guia de Vacinação</h1>
+  <p>Proteja seu pet com as vacinas essenciais em cada fase da vida.</p>
+</div>
+
+{% if caes or gatos %}
+  {% if caes %}
+  <div class="vacina-group">
+    <h2>🐶 Cães</h2>
+    <div class="vacina-grid">
+      {% for v in caes %}
+      <div class="vacina-card">
+        <h3>{{ v.nome }}</h3>
+        <div class="vacina-meta">
+          {% if v.idade_recomendada %}<span>{{ v.idade_recomendada }}</span>{% endif %}
+          {% if v.periodicidade %}<span>{{ v.periodicidade }}</span>{% endif %}
+        </div>
+        {% if v.descricao %}<p>{{ v.descricao }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if gatos %}
+  <div class="vacina-group">
+    <h2>🐱 Gatos</h2>
+    <div class="vacina-grid">
+      {% for v in gatos %}
+      <div class="vacina-card">
+        <h3>{{ v.nome }}</h3>
+        <div class="vacina-meta">
+          {% if v.idade_recomendada %}<span>{{ v.idade_recomendada }}</span>{% endif %}
+          {% if v.periodicidade %}<span>{{ v.periodicidade }}</span>{% endif %}
+        </div>
+        {% if v.descricao %}<p>{{ v.descricao }}</p>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+{% else %}
+  <div class="vacina-group">
+    <div class="empty-state">
+      <div class="icon">💉</div>
+      <h3>Nenhuma vacina cadastrada ainda</h3>
+      <p>Em breve teremos o guia completo de vacinação para você e seu pet!</p>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}Petconnect — Dashboard ONG{% endblock %}
+{% block title %}PetConnect — Dashboard ONG{% endblock %}
 
 {% block extra_css %}<style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -339,11 +339,11 @@
 {% block header %}
 <nav class="navbar">
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span><span>🐾</span><span class="nect">nect</span>
+    PetConnect
   </a>
   <div class="nav-user">
     <span>{{ ong.nome_ong }}</span>
-    <div class="nav-avatar">PF</div>
+    <div class="nav-avatar">{{ ong.nome_ong|make_list|first|upper }}{{ ong.nome_ong|cut:" "|make_list|first|upper }}</div>
   </div>
 </nav>
 {% endblock %}

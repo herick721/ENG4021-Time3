@@ -1,6 +1,7 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}PetConect — Cadastrar Pet{% endblock %}
+{% block title %}PetConnect — Cadastrar Pet{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -249,12 +250,10 @@
 {% block header %}
 <header>
   <a href="{% url 'index' %}" class="logo">
-    <span class="pet">Pet</span>
-    <span>🐾</span>
-    <span class="nect">nect</span>
+    PetConnect
   </a>
   <div class="nav-user">
-    <span>ONG Patinhas Felizes</span>
+    <span>{{ ong.nome_ong }}</span>
     <div class="nav-avatar">PF</div>
   </div>
 </header>
@@ -272,7 +271,7 @@
     {% endif %}
   </div>
 
-  <form method="POST" action="">
+  <form method="POST" action="" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="card">
       <div class="card-title">📋 Informações básicas</div>
@@ -365,6 +364,27 @@
           <input type="checkbox" name="urgente" {% if pet.urgente %}checked{% endif %} /> 🔥 Urgente
         </label>
         {% endif %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📸 Fotos</div>
+      <div class="form-group">
+        <label>Imagens do pet (máx. 3)</label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:8px;">
+          <div>
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px;color:var(--text-muted);">Imagem 1</label>
+            <input type="file" name="imagem_0" accept="image/*" class="form-control" style="padding:6px;">
+          </div>
+          <div>
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px;color:var(--text-muted);">Imagem 2</label>
+            <input type="file" name="imagem_1" accept="image/*" class="form-control" style="padding:6px;">
+          </div>
+          <div>
+            <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px;color:var(--text-muted);">Imagem 3</label>
+            <input type="file" name="imagem_2" accept="image/*" class="form-control" style="padding:6px;">
+          </div>
+        </div>
       </div>
     </div>
 

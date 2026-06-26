@@ -1,0 +1,75 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}PetConnect — Admin Vacinas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_parceiros.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h1>
+        Gerenciar vacinas
+        <small>Área restrita à equipe PetConnect</small>
+      </h1>
+    </div>
+    <a href="{% url 'admin_vacina_adicionar' %}" class="btn-primary">+ Nova vacina</a>
+  </div>
+
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}" style="padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:14px;font-weight:500;{% if msg.tags == 'success' %}background:#d1fae5;color:#065f46{% else %}background:#fee2e2;color:#991b1b{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="admin-table">
+    {% if vacinas %}
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Espécie</th>
+          <th>Idade recomendada</th>
+          <th>Periodicidade</th>
+          <th>Ativo</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vacina in vacinas %}
+        <tr>
+          <td><strong>{{ vacina.nome }}</strong></td>
+          <td><span class="badge badge-{{ vacina.especie }}">{{ vacina.get_especie_display }}</span></td>
+          <td style="color:var(--text-muted);font-size:13px;">{{ vacina.idade_recomendada }}</td>
+          <td style="color:var(--text-muted);font-size:13px;">{{ vacina.periodicidade|default:"—" }}</td>
+          <td>
+            {% if vacina.ativo %}
+            <span class="badge badge-ativo">Ativo</span>
+            {% else %}
+            <span class="badge badge-inativo">Inativo</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="actions-cell">
+              <a href="{% url 'admin_vacina_editar' vacina.id %}" class="btn-outline">Editar</a>
+              <a href="{% url 'admin_vacina_excluir' vacina.id %}" class="btn-outline" style="border-color:#fee2e2;color:#ef4444;">Excluir</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-list">
+      <p style="font-size:16px;margin-bottom:8px;">Nenhuma vacina cadastrada.</p>
+      <p style="font-size:14px;">Clique em "+ Nova vacina" para começar.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

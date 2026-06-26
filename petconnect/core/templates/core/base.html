@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}PetConect — Encontre seu companheiro{% endblock %}</title>
+<title>{% block title %}PetConnect — Encontre seu companheiro{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}PetConnect — Plataforma de adoção de animais. Encontre seu novo melhor amigo e transforme uma vida.{% endblock %}">
+<meta name="keywords" content="adoção, pets, cães, gatos, animais, ONG, PetConnect">
+<meta name="author" content="PetConnect">
+<meta property="og:title" content="{% block og_title %}PetConnect — Encontre seu companheiro{% endblock %}">
+<meta property="og:description" content="Plataforma de adoção de animais. Encontre seu novo melhor amigo.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PetConnect">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
