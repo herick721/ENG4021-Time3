@@ -55,7 +55,8 @@ body{
   display:flex;align-items:center;gap:2px;
   text-decoration:none;
 }
-  /* nenhum class="pet" ou class="nect" — agora é texto puro */
+.nav-logo .pet { color: var(--teal); }
+.nav-logo .nect { color: var(--orange); }
 .nav-links{
   display:flex;gap:32px;align-items:center;
   list-style:none;
