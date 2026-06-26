@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Usuario, Ong, Adotante, Pet, SolicitacaoAdocao, Favorito
+from .models import Usuario, Ong, Adotante, Pet, SolicitacaoAdocao, Favorito, Parceiro
 
 
 @admin.register(Usuario)
@@ -49,3 +49,10 @@ class FavoritoAdmin(admin.ModelAdmin):
     list_display = ('adotante', 'pet', 'data_adicao')
     search_fields = ('adotante__usuario__username', 'pet__nome')
     raw_id_fields = ('adotante', 'pet')
+
+
+@admin.register(Parceiro)
+class ParceiroAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'tipo', 'ativo', 'data_criacao')
+    list_filter = ('tipo', 'ativo')
+    search_fields = ('nome', 'descricao_curta')

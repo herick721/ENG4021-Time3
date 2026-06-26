@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}PetConnect — Parceiros{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/parceiros.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="section-tag">Parceiros</div>
+  <h1>Nossos parceiros</h1>
+  <p>Produtos e serviços pensados para você e seu pet.</p>
+</div>
+
+<div class="cards-grid">
+  {% for p in parceiros %}
+  <div class="parceiro-card">
+    <div class="parceiro-img" style="position:relative;">
+      <span class="parceiro-tipo tipo-{{ p.tipo }}">{{ p.get_tipo_display }}</span>
+      {{ p.imagem }}
+    </div>
+    <div class="parceiro-body">
+      <h3>{{ p.nome }}</h3>
+      <p>{{ p.descricao_curta }}</p>
+      <a href="{{ p.link_externo }}" target="_blank" rel="noopener noreferrer" class="btn-parceiro">
+        Conhecer parceiro →
+      </a>
+    </div>
+  </div>
+  {% empty %}
+  <div class="empty-state">
+    <div class="empty-icon">🤝</div>
+    <h3>Nenhum parceiro cadastrado ainda</h3>
+    <p>Em breve teremos novidades para você e seu pet!</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
