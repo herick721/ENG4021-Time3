@@ -39,11 +39,15 @@ DEFAULT_ALLOWED_HOSTS = [
     '.github.dev',
     '.app.github.dev',
     '.preview.app.github.dev',
+    '.gitpod.io',
     '0.0.0.0',
 ]
 
-
-ALLOWED_HOSTS = _split_env_list(os.getenv('DJANGO_ALLOWED_HOSTS', '')) or DEFAULT_ALLOWED_HOSTS
+# Em modo DEBUG, aceita qualquer host para facilitar testes em Codespaces, Gitpod, etc.
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+else:
+    ALLOWED_HOSTS = _split_env_list(os.getenv('DJANGO_ALLOWED_HOSTS', '')) or DEFAULT_ALLOWED_HOSTS
 
 CSRF_TRUSTED_ORIGINS = _split_env_list(os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', '')) or [
     'http://localhost:8000',
@@ -53,6 +57,7 @@ CSRF_TRUSTED_ORIGINS = _split_env_list(os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', 
     'https://*.github.dev',
     'https://*.app.github.dev',
     'https://*.preview.app.github.dev',
+    'https://*.gitpod.io',
 ]
 
 

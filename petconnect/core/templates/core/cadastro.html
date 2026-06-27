@@ -536,6 +536,17 @@
 {% block content %}
 <main class="container">
 
+  {% if messages %}
+  <div style="margin-bottom: 20px;">
+    {% for message in messages %}
+    <div style="padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; {% if message.tags == 'error' %}background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA;{% elif message.tags == 'success' %}background: #F0FDF4; color: #16A34A; border: 1px solid #BBF7D0;{% else %}background: #F0F9FF; color: #0284C7; border: 1px solid #BAE6FD;{% endif %}">
+      {% if message.tags == 'error' %}⚠️{% elif message.tags == 'success' %}✅{% else %}ℹ️{% endif %}
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   <div class="intro">
     <h1>Crie sua conta no <span class="accent">PetConnect</span></h1>
     <p>Sem burocracia. Em poucos passos você está pronto para conectar uma vida.</p>
@@ -562,6 +573,7 @@
   <form class="card" id="signup-form" novalidate method="POST" action="">
     {% csrf_token %}
     <input type="hidden" name="current_step" id="current_step" value="{{ current_step|default:'1' }}">
+    <input type="hidden" name="user-type" id="hidden-user-type" value="{{ tipo|default:'adopter' }}">
 
     <!-- ============ ETAPA 1 ============ -->
     <div class="step-panel active" data-panel="1">
@@ -570,14 +582,14 @@
 
       <div class="user-types">
         <label class="user-type" data-type="adopter">
-          <input type="radio" name="user-type" value="adopter" {% if tipo != 'ong' %}checked{% endif %} hidden>
+          <input type="radio" name="user-type" value="adopter" {% if tipo != 'ong' %}checked{% endif %} style="display:none">
           <span class="user-type-icon">🏡</span>
           <h3>Quero adotar</h3>
           <p>Encontrar um animal compatível com sua casa e rotina.</p>
         </label>
 
         <label class="user-type" data-type="ong">
-          <input type="radio" name="user-type" value="ong" {% if tipo == 'ong' %}checked{% endif %} hidden>
+          <input type="radio" name="user-type" value="ong" {% if tipo == 'ong' %}checked{% endif %} style="display:none">
           <span class="user-type-icon">🐾</span>
           <h3>Sou ONG ou resgatador</h3>
           <p>Cadastrar animais e gerenciar candidatos à adoção.</p>
@@ -617,7 +629,7 @@
             <span class="input-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </span>
-            <input type="text" id="fullname" name="fullname" placeholder="Ex.: Ana Paula Silva" class="with-icon" required value="{{ form.fullname.value|default:'' }}">
+            <input type="text" id="fullname" name="fullname" placeholder="Ex.: Ana Paula Silva" class="with-icon" value="{{ form.fullname.value|default:'' }}">
           </div>
         </div>
 
@@ -660,7 +672,7 @@
             <span class="input-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </span>
-            <input type="email" id="email" name="email" placeholder="seu@email.com" class="with-icon" required value="{{ form.email.value|default:'' }}">
+            <input type="email" id="email" name="email" placeholder="seu@email.com" class="with-icon" value="{{ form.email.value|default:'' }}">
           </div>
         </div>
 
@@ -670,7 +682,7 @@
             <span class="input-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </span>
-            <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999" class="with-icon" required>
+            <input type="tel" id="phone" name="phone" placeholder="(11) 99999-9999" class="with-icon">
           </div>
         </div>
 
@@ -678,13 +690,13 @@
           <label for="city">Cidade <span class="required">*</span></label>
           <div class="input-wrap">
             <span class="input-icon">📍</span>
-            <input type="text" id="city" name="city" placeholder="Ex.: São Paulo" class="with-icon" required value="{{ form.city.value|default:'' }}">
+            <input type="text" id="city" name="city" placeholder="Ex.: São Paulo" class="with-icon" value="{{ form.city.value|default:'' }}">
           </div>
         </div>
 
         <div class="field">
           <label for="state">Estado <span class="required">*</span></label>
-          <select id="state" name="state" required>
+          <select id="state" name="state">
             <option value="">Selecione...</option>
             <option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option><option value="AM">AM</option>
             <option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option><option value="ES">ES</option>
@@ -767,7 +779,7 @@
             <span class="input-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
-            <input type="password" id="password" name="password" placeholder="Crie uma senha segura" class="with-icon" minlength="6" required>
+            <input type="password" id="password" name="password" placeholder="Crie uma senha segura" class="with-icon">
             <button type="button" class="password-toggle" id="toggle-pw">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -788,13 +800,13 @@
             <span class="input-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </span>
-            <input type="password" id="password-confirm" name="password-confirm" placeholder="Repita a senha" class="with-icon" required>
+            <input type="password" id="password-confirm" name="password-confirm" placeholder="Repita a senha" class="with-icon">
           </div>
         </div>
       </div>
 
       <label class="checkbox-row">
-        <input type="checkbox" id="terms" required>
+        <input type="checkbox" id="terms">
         <span class="check-box"></span>
         <span>Li e aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a> do PetConnect.</span>
       </label>
@@ -826,6 +838,7 @@
 {% block extra_js %}<script>
   // ---------- TIPO DE USUÁRIO ----------
   const userTypes = document.querySelectorAll('.user-type');
+  const hiddenUserType = document.getElementById('hidden-user-type');
   userTypes.forEach(el => {
     el.addEventListener('click', () => {
       userTypes.forEach(u => u.classList.remove('selected'));
@@ -833,6 +846,8 @@
       const type = el.dataset.type;
       document.body.dataset.userType = type;
       el.querySelector('input').checked = true;
+      // Sincroniza o hidden input para garantir que o tipo chegue no servidor
+      if (hiddenUserType) hiddenUserType.value = type;
     });
   });
   // restaurar tipo selecionado (após erro de validação)
@@ -842,6 +857,7 @@
       u.classList.add('selected');
       u.querySelector('input').checked = true;
       document.body.dataset.userType = savedType;
+      if (hiddenUserType) hiddenUserType.value = savedType;
     }
   });
 

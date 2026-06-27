@@ -115,8 +115,10 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect('index')
 
+    error_type = None  # 'not_found' or 'wrong_password'
+
     if request.method == 'POST':
-        email = request.POST.get('email', '')
+        email = request.POST.get('email', '').strip()
         senha = request.POST.get('senha', '')
 
         # O Django autentica por username, mas nosso login é por email
@@ -124,18 +126,18 @@ def login_view(request):
         try:
             usuario = Usuario.objects.get(email=email)
             user = authenticate(request, username=usuario.username, password=senha)
+            if user is not None:
+                login(request, user)
+                proximo = request.GET.get('next', '/')
+                return redirect(proximo)
+            else:
+                # Usuário existe mas a senha está errada
+                error_type = 'wrong_password'
         except Usuario.DoesNotExist:
-            user = None
+            # Nenhum usuário com esse e-mail
+            error_type = 'not_found'
 
-        if user is not None:
-            login(request, user)
-            # Redireciona para a página que o usuário tentou acessar (next) ou home
-            proximo = request.GET.get('next', '/')
-            return redirect(proximo)
-        else:
-            messages.error(request, 'E-mail ou senha inválidos.')
-
-    return render(request, 'core/login.html')
+    return render(request, 'core/login.html', {'error_type': error_type, 'email': request.POST.get('email', '') if request.method == 'POST' else ''})
 
 
 def cadastro_view(request):
@@ -198,51 +200,57 @@ def cadastro_view(request):
         )
 
         # Cria o perfil específico
-        if tipo == 'ong':
-            nome_ong = request.POST.get('ong_name', '')
-            cnpj = request.POST.get('cnpj', '')
-            responsavel = request.POST.get('responsible', '')
-            sobre = request.POST.get('about_ong', '')
-            # Valida CNPJ (mínimo 14 dígitos)
-            if cnpj:
-                cnpj_limpo = cnpj.replace('.', '').replace('/', '').replace('-', '')
-                if not cnpj_limpo.isdigit() or len(cnpj_limpo) < 14:
-                    messages.error(request, 'CNPJ inválido. Use o formato 00.000.000/0001-00.')
-                    usuario.delete()
-                    return render(request, 'core/cadastro.html', {'form': request.POST, 'current_step': step, 'tipo': tipo})
-            Ong.objects.create(
-                usuario=usuario,
-                nome_ong=nome_ong or f'ONG de {username}',
-                cnpj=cnpj,
-                responsavel=responsavel or username,
-                sobre=sobre,
-            )
-        else:
-            nome = request.POST.get('fullname', '')
-            moradia = request.POST.get('housing', '')
-            idade = request.POST.get('idade', '')
-            ocupacao = request.POST.get('ocupacao', '')
-            moradores = request.POST.get('moradores', '')
-            # Valida idade
-            if idade and idade.isdigit():
-                idade_int = int(idade)
-                if idade_int < 18 or idade_int > 120:
-                    messages.error(request, 'A idade deve estar entre 18 e 120 anos.')
-                    usuario.delete()
-                    return render(request, 'core/cadastro.html', {'form': request.POST, 'current_step': step, 'tipo': tipo})
-            if nome:
-                partes = nome.split(' ', 1)
-                usuario.first_name = partes[0]
-                if len(partes) > 1:
-                    usuario.last_name = partes[1]
-                usuario.save()
-            Adotante.objects.create(
-                usuario=usuario,
-                tipo_moradia=moradia if moradia else None,
-                idade=int(idade) if idade and idade.isdigit() else None,
-                ocupacao=ocupacao if ocupacao else None,
-                moradores=moradores if moradores else None,
-            )
+        try:
+            if tipo == 'ong':
+                nome_ong = request.POST.get('ong_name', '').strip()
+                cnpj = request.POST.get('cnpj', '').strip()
+                responsavel = request.POST.get('responsible', '').strip()
+                sobre = request.POST.get('about_ong', '').strip()
+                # Valida CNPJ (mínimo 14 dígitos)
+                if cnpj:
+                    cnpj_limpo = cnpj.replace('.', '').replace('/', '').replace('-', '')
+                    if not cnpj_limpo.isdigit() or len(cnpj_limpo) < 14:
+                        messages.error(request, 'CNPJ inválido. Use o formato 00.000.000/0001-00.')
+                        usuario.delete()
+                        return render(request, 'core/cadastro.html', {'form': request.POST, 'current_step': step, 'tipo': tipo})
+                Ong.objects.create(
+                    usuario=usuario,
+                    nome_ong=nome_ong or f'ONG de {username}',
+                    cnpj=cnpj if cnpj else None,
+                    responsavel=responsavel or username,
+                    sobre=sobre if sobre else None,
+                )
+            else:
+                nome = request.POST.get('fullname', '').strip()
+                moradia = request.POST.get('housing', '')
+                idade = request.POST.get('idade', '').strip()
+                ocupacao = request.POST.get('ocupacao', '').strip()
+                moradores = request.POST.get('moradores', '').strip()
+                # Valida idade
+                if idade and idade.isdigit():
+                    idade_int = int(idade)
+                    if idade_int < 18 or idade_int > 120:
+                        messages.error(request, 'A idade deve estar entre 18 e 120 anos.')
+                        usuario.delete()
+                        return render(request, 'core/cadastro.html', {'form': request.POST, 'current_step': step, 'tipo': tipo})
+                if nome:
+                    partes = nome.split(' ', 1)
+                    usuario.first_name = partes[0]
+                    if len(partes) > 1:
+                        usuario.last_name = partes[1]
+                    usuario.save()
+                Adotante.objects.create(
+                    usuario=usuario,
+                    tipo_moradia=moradia if moradia else None,
+                    idade=int(idade) if idade and idade.isdigit() else None,
+                    ocupacao=ocupacao if ocupacao else None,
+                    moradores=moradores if moradores else None,
+                )
+        except Exception as e:
+            # Se algo falhar ao criar o perfil, remove o usuário e mostra o erro
+            usuario.delete()
+            messages.error(request, f'Erro ao criar o perfil: {e}')
+            return render(request, 'core/cadastro.html', {'form': request.POST, 'current_step': step, 'tipo': tipo})
 
         # Faz login automático após cadastro
         login(request, usuario)
