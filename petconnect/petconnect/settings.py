@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +27,33 @@ SECRET_KEY = 'django-insecure-=eq%k80@mh$qt&=@!5y+axr)t^hr(_s%*1w1ohp@$y98)%wj@w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+def _split_env_list(value):
+    return [item.strip() for item in value.split(',') if item.strip()]
+
+
+DEFAULT_ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+    '.localhost',
+    '.github.dev',
+    '.app.github.dev',
+    '.preview.app.github.dev',
+    '0.0.0.0',
+]
+
+
+ALLOWED_HOSTS = _split_env_list(os.getenv('DJANGO_ALLOWED_HOSTS', '')) or DEFAULT_ALLOWED_HOSTS
+
+CSRF_TRUSTED_ORIGINS = _split_env_list(os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', '')) or [
+    'http://localhost:8000',
+    'https://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://127.0.0.1:8000',
+    'https://*.github.dev',
+    'https://*.app.github.dev',
+    'https://*.preview.app.github.dev',
+]
 
 
 # Application definition
