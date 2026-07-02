@@ -76,10 +76,14 @@ python manage.py makemigrations core
 python manage.py migrate
 ```
 
-**5. (Opcional) Popule o banco com dados de teste**
+**5. (Opcional) Popule o banco com dados de teste e crie o superuser**
 Para ter alguns dados iniciais já cadastrados para testar o sistema, você pode usar o script de população:
 ```bash
 python populate.py
+```
+Para ter controle total sobre usuários e parceiros, você pode criar um administrador:
+```bash
+python manage.py createsuperuser
 ```
 
 **6. Inicie o servidor**
